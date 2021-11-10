@@ -35,12 +35,13 @@ namespace SnowplowTracker.Storage
             public Guid Id { get; set; }
             public DateTime CreatedAt { get; set; }
             public string Payload { get; set; }
+            public int Priority  { get; set; }
         }
 
         private const string COLLECTION_NAME = "events";
 
-        private readonly LiteDatabase _db;
-        private readonly ReaderWriterLockSlim _dbLock = new ReaderWriterLockSlim();
+        protected readonly LiteDatabase _db;
+        protected readonly ReaderWriterLockSlim _dbLock = new ReaderWriterLockSlim();
 
         /// <summary>
         /// Initializes a new instance of the <see cref="SnowplowTracker.Storage.EventStore"/> class.
@@ -104,7 +105,7 @@ namespace SnowplowTracker.Storage
                 // Get event collection
                 var col = _db.GetCollection<Event>(COLLECTION_NAME);
 
-                col.Insert(new Event { Payload = payload.ToString(), Id = Guid.NewGuid(), CreatedAt = DateTime.UtcNow });
+                col.Insert(new Event { Payload = payload.ToString(), Id = Guid.NewGuid(), CreatedAt = DateTime.UtcNow, Priority = payload.GetPriority()});
 
                 Log.Verbose("EventStore: Event added");
                 return true;
@@ -195,7 +196,7 @@ namespace SnowplowTracker.Storage
                 var events = _db.GetCollection<Event>(COLLECTION_NAME);
 
                 var result = events.FindAll()
-                        .OrderBy(x => x.CreatedAt)
+                        .OrderByDescending(y => y.Priority).ThenBy(x => x.CreatedAt)
                         .Take(range)
                         .Select(x => new EventRow(x.Id, TrackerPayload.From(x.Payload)))
                         .ToList();

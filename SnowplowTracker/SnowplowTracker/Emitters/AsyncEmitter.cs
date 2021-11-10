@@ -120,7 +120,7 @@ namespace SnowplowTracker.Emitters
 			Log.Debug("Emitter: Event consumer starting up");
 
 			while (consuming) {
-				TrackerPayload payload = payloadQueue.Dequeue ();
+				TrackerPayload payload = payloadQueue.Dequeue();
 
 				// If the consumer was shutdown while waiting
 				if (!consuming) {
@@ -166,7 +166,8 @@ namespace SnowplowTracker.Emitters
 				}
 				// Send events!
 				if (events.Count != 0) {
-					Log.Debug("Emitter: Event count: " + events.Count);
+                    events = AddSendBulkID(events);
+                    Log.Debug("Emitter: Event count: " + events.Count);
 					List<RequestResult> results = SendRequests(events);
 					events = null;
 					

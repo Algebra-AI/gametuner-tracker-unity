@@ -94,5 +94,21 @@ namespace SnowplowTracker.Payloads
 				}
 			}
 		}
-	}
+
+		/// <summary>
+		/// Set prority of tracker event
+		/// </summary>
+		/// <param name="priority">prority of event</param>
+        public void SetPriority(int priority) {
+            this.priority = priority;
+        }
+
+		/// <summary>
+		///  Gets prority of tracker event
+		/// </summary>
+		/// <returns>Priority of event</returns>
+        public int GetPriority() {
+            return this.priority;
+		}
+    }
 }

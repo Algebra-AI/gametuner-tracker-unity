@@ -264,6 +264,62 @@ namespace SnowplowTracker.Emitters
             }
         }
 
+        /// <summary>
+        /// TODO: make decision should we enrich event data or context data
+        /// Adds the sent bulk ID to events data
+        /// </summary>
+        /// <param name="events">The event list to add the stm to</param>
+        protected List<EventRow> AddSendBulkID(List<EventRow> events)
+        {
+            List<EventRow> resultRows = new List<EventRow>();
+            if (typeof(ExtendedEventStore) != eventStore.GetType()) {
+                return events;
+            }
+            ExtendedEventStore store = (ExtendedEventStore)eventStore;
+            int lastTransaction = store.GetLastTransactionId();
+           
+            foreach (EventRow item in events)
+            {
+                Dictionary<string, object> dict = item.GetPayload().GetDictionary();
+                string encodedData = string.Empty;
+
+                foreach (KeyValuePair<string, object> dicitem in dict)
+                {                    
+                    if (dicitem.Key == Constants.UNSTRUCTURED_ENCODED) { 
+                    //if (dicitem.Key == Constants.CONTEXT_ENCODED) { 
+                        //Log.Debug("object: " + dicitem.Value);
+                        string decodedData = Utils.Base64DecodeString(dicitem.Value.ToString());
+                        //Log.Debug("object decoded: " + decodedData);
+                        Dictionary<string, object> dataDict = Utils.JSONStringToDict(decodedData);
+                        //Log.Debug("object type: " + dataDict["data"].GetType());
+                        Newtonsoft.Json.Linq.JObject obj = (Newtonsoft.Json.Linq.JObject)dataDict["data"];
+                        //Log.Debug("object type: " + obj["data"].GetType()); 
+                        Newtonsoft.Json.Linq.JArray dataArray = (Newtonsoft.Json.Linq.JArray)obj["data"];
+
+                        Dictionary<string, object> transactionToAdd = new Dictionary<string, object>();
+                        transactionToAdd.Add("key", "transactionId");
+                        transactionToAdd.Add("value", lastTransaction.ToString());
+                        dataArray.Add(Newtonsoft.Json.Linq.JObject.FromObject(transactionToAdd));
+
+                        obj["data"] = dataArray;
+                        dataDict["data"] = obj;
+
+                        encodedData = Utils.Base64EncodeString(Utils.DictToJSONString(dataDict));
+                        //Log.Debug("object enriched: " + Utils.DictToJSONString(dataDict));
+                    }                    
+                }
+
+                if (dict.TryGetValue(Constants.UNSTRUCTURED_ENCODED, out object val) && !string.IsNullOrEmpty(encodedData)) { 
+                    dict[Constants.UNSTRUCTURED_ENCODED] = encodedData;
+                }
+
+                resultRows.Add(new EventRow(item.GetRowId(), TrackerPayload.From(Utils.DictToJSONString(dict))));
+            }
+
+            store.UpdateLastTransactionId();
+            return resultRows;
+        }
+
         // --- Setters
 
         /// <summary>

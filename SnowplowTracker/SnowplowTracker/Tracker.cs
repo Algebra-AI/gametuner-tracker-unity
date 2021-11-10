@@ -29,7 +29,7 @@ using SnowplowTracker.Enums;
 
 namespace SnowplowTracker
 {
-    public class Tracker
+    internal class Tracker
     {
 
         private IEmitter emitter;
@@ -148,28 +148,29 @@ namespace SnowplowTracker
             List<IContext> contexts = newEvent.GetContexts();
             string eventId = newEvent.GetEventId();
             Type eType = newEvent.GetType();
+            int eventPriority = newEvent.GetEventPriority();
 
             if (eType == typeof(PageView) || eType == typeof(Structured))
             {
-                AddTrackerPayload((TrackerPayload)newEvent.GetPayload(), contexts, eventId);
+                AddTrackerPayload((TrackerPayload)newEvent.GetPayload(), contexts, eventId, eventPriority);
             }
             else if (eType == typeof(EcommerceTransaction))
             {
-                AddTrackerPayload((TrackerPayload)newEvent.GetPayload(), contexts, eventId);
+                AddTrackerPayload((TrackerPayload)newEvent.GetPayload(), contexts, eventId, eventPriority);
                 EcommerceTransaction ecommerceTransaction = (EcommerceTransaction)newEvent;
                 foreach (EcommerceTransactionItem item in ecommerceTransaction.GetItems())
                 {
                     item.SetItemId(ecommerceTransaction.GetOrderId());
                     item.SetCurrency(ecommerceTransaction.GetCurrency());
                     item.SetTimestamp(ecommerceTransaction.GetTimestamp());
-                    AddTrackerPayload((TrackerPayload)item.GetPayload(), item.GetContexts(), item.GetEventId());
+                    AddTrackerPayload((TrackerPayload)item.GetPayload(), item.GetContexts(), item.GetEventId(), eventPriority);
                 }
             }
             else if (eType == typeof(Unstructured))
             {
                 Unstructured unstruct = (Unstructured)newEvent;
                 unstruct.SetBase64Encode(this.base64Encoded);
-                AddTrackerPayload((TrackerPayload)unstruct.GetPayload(), contexts, eventId);
+                AddTrackerPayload((TrackerPayload)unstruct.GetPayload(), contexts, eventId, eventPriority);
             }
             else if (eType == typeof(Timing) || eType == typeof(ScreenView))
             {
@@ -187,7 +188,7 @@ namespace SnowplowTracker
         /// </summary>
         /// <param name="payload">The base event payload.</param>
         /// <param name="contexts">The list of contexts from the event.</param>
-        private void AddTrackerPayload(TrackerPayload payload, List<IContext> contexts, string eventId)
+        private void AddTrackerPayload(TrackerPayload payload, List<IContext> contexts, string eventId, int eventPriority)
         {
 
             // Add default parameters to the payload
@@ -195,6 +196,7 @@ namespace SnowplowTracker
             payload.Add(Constants.APP_ID, this.appId);
             payload.Add(Constants.NAMESPACE, this.trackerNamespace);
             payload.Add(Constants.TRACKER_VERSION, Version.VERSION);
+            payload.SetPriority(eventPriority);
 
             // Add the subject data if available
             if (subject != null)
@@ -214,7 +216,7 @@ namespace SnowplowTracker
                 SelfDescribingJson envelope = GetFinalContext(contexts);
                 payload.AddJson(envelope.GetDictionary(), this.base64Encoded, Constants.CONTEXT_ENCODED, Constants.CONTEXT);
             }
-
+            
             Log.Verbose("Tracker: Sending event to the emitter.");
             Log.Verbose(" + Event: " + payload.ToString());
 

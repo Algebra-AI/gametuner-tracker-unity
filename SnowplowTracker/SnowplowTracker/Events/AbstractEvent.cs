@@ -30,8 +30,9 @@ namespace SnowplowTracker.Events
 		protected List<IContext> customContexts = new List<IContext>();
 		protected long timestamp = Utils.GetTimestamp();
 		protected string eventId = Utils.GetGUID();
+        protected int priority = 0;
 
-		public abstract T Self ();
+        public abstract T Self ();
 		public abstract T Build ();
 
 		// --- Builder Methods
@@ -67,6 +68,16 @@ namespace SnowplowTracker.Events
 			if (!String.IsNullOrEmpty (eventId)) {
 				this.eventId = eventId;
 			}
+			return Self ();
+		}
+		
+		/// <summary>
+		/// Sets the event proprity.
+		/// </summary>
+		/// <returns>The event proprity.</returns>
+		/// <param name="eventId">Event proprity.</param>
+		public T SetEventPriority(int priority) {
+			this.priority = priority;
 			return Self ();
 		}
 
@@ -107,6 +118,14 @@ namespace SnowplowTracker.Events
 		/// <returns>The event guid</returns>
 		public  string GetEventId() {
 			return eventId;
+		}
+
+		/// <summary>
+		/// Gets the event priority that has been set.
+		/// </summary>
+		/// <returns>The event priority</returns>
+		public int GetEventPriority() {
+			return priority;
 		}
 
 		/// <summary>

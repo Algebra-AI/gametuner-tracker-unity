@@ -34,9 +34,9 @@ namespace SnowplowTracker {
 		public static void Error(string message) {
 			if (logging && level >= 1) {
 #if UNITY_EDITOR
-				UnityEngine.Debug.LogError(message);
+				UnityEngine.Debug.LogError("SNOWPLOW: " + message);
 #else
-				Console.Error.WriteLine(message);
+				Console.Error.WriteLine("SNOWPLOW: " + message);
 #endif
 			}
 		}
@@ -48,9 +48,9 @@ namespace SnowplowTracker {
 		public static void Debug(string message) {
 			if (logging && level >= 2) {
 #if UNITY_EDITOR
-				UnityEngine.Debug.Log(message);
+				UnityEngine.Debug.Log("SNOWPLOW: " + message);
 #else
-				Console.WriteLine(message);
+				Console.WriteLine("SNOWPLOW: " + message);
 #endif
 			}
 		}
@@ -62,9 +62,9 @@ namespace SnowplowTracker {
 		public static void Verbose(string message) {
 			if (logging && level >= 3) {
 #if UNITY_EDITOR
-				UnityEngine.Debug.Log(message);
+				UnityEngine.Debug.Log("SNOWPLOW: " + message);
 #else
-				Console.WriteLine(message);
+				Console.WriteLine(("SNOWPLOW: " + message));
 #endif
 			}
 		}

@@ -18,6 +18,7 @@
  * License: Apache License Version 2.0
  */
 
+using System;
 using System.Collections.Generic;
 using System.Threading;
 using SnowplowTracker.Enums;
@@ -37,6 +38,7 @@ namespace SnowplowTracker
         private long backgroundTimeout;
         private long checkInterval;
         private long accessedLast;
+         private long backgroundAccessed;
         private bool background;
         private string firstEventId;
         private string userId;
@@ -46,6 +48,10 @@ namespace SnowplowTracker
         private Timer sessionCheckTimer;
         private string SessionPath;
         private readonly StorageMechanism sessionStorage = StorageMechanism.LocalStorage;
+        public delegate void OnSessionStart();
+        public delegate void OnSessionEnd();
+        public OnSessionStart onSessionStart;        
+        public OnSessionEnd onSessionEnd;
 
         /// <summary>
         /// Initializes a new instance of the <see cref="SnowplowTracker.Session"/> class.
@@ -90,7 +96,30 @@ namespace SnowplowTracker
             UpdateSession();
             UpdateAccessedLast();
             UpdateSessionDict();
+            DelegateSessionStart();
             Utils.WriteDictionaryToFile(SessionPath, sessionContext.GetData());
+        }
+
+        /// <summary>
+        /// Invokes the session start.
+        /// </summary>
+        private void DelegateSessionStart()
+        {
+            if (onSessionStart != null)
+            {
+                onSessionStart();
+            }
+        }
+
+        /// <summary>
+        /// Invokes the session end.
+        /// </summary>
+        private void DelegateSessionEnd()
+        {
+            if (onSessionEnd != null)
+            {
+                onSessionEnd();
+            }
         }
 
         // --- Public
@@ -171,6 +200,44 @@ namespace SnowplowTracker
         public void SetBackground(bool truth)
         {
             this.background = truth;
+            if (truth) {
+                GoToBackground();
+            } else {
+                GoToForeground();
+            }
+        }
+
+        /// <summary>
+        /// Set time when the app was last accessed.
+        /// </summary>
+        private void GoToBackground()
+        {
+            backgroundAccessed = Utils.GetTimestamp();
+        }  
+
+        /// <summary>
+        /// Returns from backgorund.
+        /// </summary>
+        private void GoToForeground()
+        {
+            CheckNewSession();
+            StartChecker();
+        } 
+
+        /// <summary>
+        /// Checks is new session is triggered.
+        /// </summary>
+        private void CheckNewSession() {
+            if (backgroundAccessed == 0) {
+                return;
+            }
+
+            long checkTime = Utils.GetTimestamp();
+
+            if (!Utils.IsTimeInRange(backgroundAccessed, checkTime, backgroundTimeout))
+            {
+                DelegateSessionStart();
+            }
         }
 
         /// <summary>
@@ -220,21 +287,36 @@ namespace SnowplowTracker
 
             long checkTime = Utils.GetTimestamp();
             long range = background ? backgroundTimeout : foregroundTimeout;
+            long accessedTime = background ? backgroundAccessed : accessedLast;
 
-            if (!Utils.IsTimeInRange(accessedLast, checkTime, range))
+            if (!Utils.IsTimeInRange(accessedTime, checkTime, range))
             {
                 Log.Debug("Session: Session expired; resetting session.");
-                UpdateSession();
-                UpdateAccessedLast();
-                UpdateSessionDict();
-                Utils.WriteDictionaryToFile(SessionPath, sessionContext.GetData());
+                try
+                {
+                    DelegateSessionEnd();                
+                    UpdateSession();
+                    UpdateAccessedLast();
+                    UpdateSessionDict();                
+                    Utils.WriteDictionaryToFile(SessionPath, sessionContext.GetData());
+                    if (background) {
+                        StopChecker();
+                        return;
+                    }                     
+                    DelegateSessionStart();
+                }
+                catch (Exception e)
+                {
+                    Log.Error(e.Message);
+                }
+                
             }
 
             sessionCheckTimer.Change(checkInterval * 1000, Timeout.Infinite);
         }
 
         /// <summary>
-        /// Updates the session.
+        /// Updates the session. Session is updated on app start and after timer timeout.
         /// </summary>
         private void UpdateSession()
         {

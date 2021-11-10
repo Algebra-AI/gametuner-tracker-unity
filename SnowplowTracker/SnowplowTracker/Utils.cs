@@ -97,6 +97,16 @@ namespace SnowplowTracker
         }
 
         /// <summary>
+        /// Base64 decodes a string
+        /// </summary>
+        /// <returns>the decoded string</returns>
+        public static string Base64DecodeString(string stringToDecode)
+        {
+            byte[] plainTextBytes = System.Convert.FromBase64String(stringToDecode);
+            return BytesToString(plainTextBytes);
+        }
+
+        /// <summary>
         /// Converts an event from a dictionary to a querystring
         /// </summary>
         /// <param name="payload">The event to convert</param>
@@ -119,6 +129,16 @@ namespace SnowplowTracker
         public static byte[] StringToBytes(string str)
         {
             return System.Text.Encoding.UTF8.GetBytes(str);
+        }
+
+        /// <summary>
+        /// Bytes to string.
+        /// </summary>
+        /// <returns>Converts bytes to strings and returns the string</returns>
+        /// <param name="bytes">The bytes to convert</param>
+        public static string BytesToString(byte[] bytes)
+        {
+            return System.Text.Encoding.UTF8.GetString(bytes);
         }
 
         /// <summary>

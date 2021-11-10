@@ -24,12 +24,13 @@ namespace SnowplowTracker.Payloads {
 	public abstract class AbstractPayload : IPayload {
 
 		protected Dictionary<string, object> payload = new Dictionary<string, object>();
+        protected int priority = 0;
 
-		/// <summary>
-		/// Gets the dictionary within the Payload
-		/// </summary>
-		/// <returns>The payload</returns>
-		public Dictionary<string, object> GetDictionary() {
+        /// <summary>
+        /// Gets the dictionary within the Payload
+        /// </summary>
+        /// <returns>The payload</returns>
+        public Dictionary<string, object> GetDictionary() {
 			return payload;
 		}
 
