@@ -1,3 +1,12 @@
+Version 0.5.1 (2021-11-11)
+--------------------------
+Added ClientTracker.cs class as main bridge between unity and plugin
+Extended EventStore.
+Modified Session.cs and logic for calculating session when app goes to background.
+Added build.sh script for buildong project and copy dll.
+Added Wrapper namespace
+Hidden plugin logic behind ClientTracker
+
 Version 0.5.0 (2021-08-23)
 --------------------------
 Replace UnityJSON with Newtonsoft.Json (#41)

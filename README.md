@@ -5,11 +5,41 @@
 [![Release][release-image]][releases]
 [![License][license-image]][license]
 -->
+
+
+
 ## Overview
 
 Add analytics to your Unity games and apps with the **[Snowplow][snowplow]** event tracker for **[Unity][unity]**.
 
 With this tracker you can collect event data from your Unity-based applications, games or frameworks.
+
+Tracker is adopted to Two Desperados needs. Read the wrapper section to see how to use plugin. Below wrapper section is Snowplow legacy documentation (We left it here for further plugin changes)
+
+## Wrapper
+
+First you need to initialize plugin:
+
+```csharp
+ClientTracker.Init(USER_ID);
+```
+
+To trigger analytics event use:
+
+```csharp
+string schema = "iglu:com.twodesperados/event_testing/jsonschema/3-0-0";
+ClientTracker.LogEvent(eventName, schema, parameters, priority);
+```
+**NOTE**:If you make a call of ```LogEvent``` method before Init, event will be discarded, so make sure to call ```Init``` before any event log.
+
+You can setup Log for debugging purposes before init or any time after init:
+
+```csharp
+SnowplowTracker.Log.SetLogLevel(3);
+SnowplowTracker.Log.On();
+```
+
+## Legacy documentation
 
 ## Quick start
 
@@ -27,10 +57,10 @@ With this tracker you can collect event data from your Unity-based applications,
 
 ## Find out more
 
-| Technical Docs                 | Setup Guide               | Roadmap                | Contributing                     |
-|--------------------------------|---------------------------|------------------------|----------------------------------|
-| ![i1][techdocs-image]          | ![i2][setup-image]        | ![i3][roadmap-image]   | ![i4][contributing-image]        |
-| **[Technical Docs][techdocs]** | **[Setup Guide][setup]**  | **[Roadmap][roadmap]** | **[Contributing](CONTRIBUTING.md)** |
+| Technical Docs                 | Setup Guide               | Roadmap                |
+|--------------------------------|---------------------------|------------------------|
+| ![i1][techdocs-image]          | ![i2][setup-image]        | ![i3][roadmap-image]   |
+| **[Technical Docs][techdocs]** | **[Setup Guide][setup]**  | **[Roadmap][roadmap]** |
 
 ## Maintainer Quick start
 
