@@ -20,7 +20,7 @@
 
 namespace SnowplowTracker.Payloads.Contexts
 {
-    public class DesktopContext : AbstractContext<DesktopContext> {
+    internal class DesktopContext : AbstractContext<DesktopContext> {
 
 		/// <summary>
 		/// Sets the type of the OS.

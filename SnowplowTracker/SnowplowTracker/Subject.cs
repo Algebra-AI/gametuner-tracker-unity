@@ -22,7 +22,7 @@ using System;
 using SnowplowTracker.Payloads;
 
 namespace SnowplowTracker {
-	public class Subject {
+	internal class Subject {
 
 		private TrackerPayload standardDict;
 

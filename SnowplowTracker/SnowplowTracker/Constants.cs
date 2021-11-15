@@ -21,7 +21,7 @@
 using System;
 
 namespace SnowplowTracker {
-	public class Constants {
+	internal class Constants {
 
 		// Schemas
 		public readonly static string SCHEMA_PAYLOAD_DATA   = "iglu:com.snowplowanalytics.snowplow/payload_data/jsonschema/1-0-3";

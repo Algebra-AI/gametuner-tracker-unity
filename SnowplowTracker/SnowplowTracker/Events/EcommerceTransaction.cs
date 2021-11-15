@@ -24,7 +24,7 @@ using SnowplowTracker.Payloads;
 
 namespace SnowplowTracker.Events
 {
-    public class EcommerceTransaction : AbstractEvent<EcommerceTransaction> {
+    internal class EcommerceTransaction : AbstractEvent<EcommerceTransaction> {
 
 		private string orderId;
 		private double totalValue;

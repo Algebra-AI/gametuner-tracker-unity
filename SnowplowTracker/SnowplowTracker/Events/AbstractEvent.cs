@@ -25,7 +25,7 @@ using SnowplowTracker.Payloads.Contexts;
 
 namespace SnowplowTracker.Events
 {
-    public abstract class AbstractEvent<T> : IEvent {
+    internal abstract class AbstractEvent<T> : IEvent {
 
 		protected List<IContext> customContexts = new List<IContext>();
 		protected long timestamp = Utils.GetTimestamp();

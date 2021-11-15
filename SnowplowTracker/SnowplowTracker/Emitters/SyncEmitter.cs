@@ -27,7 +27,7 @@ using System;
 
 namespace SnowplowTracker.Emitters
 {
-    public class SyncEmitter : AbstractEmitter {
+    internal class SyncEmitter : AbstractEmitter {
 
         /// <summary>
         /// Initializes a new instance of the <see cref="SnowplowTracker.Emitters.SyncEmitter"/> class.

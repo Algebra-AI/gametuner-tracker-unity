@@ -20,7 +20,7 @@
 
 namespace SnowplowTracker.Enums
 {
-    public enum HttpProtocol {
+    internal enum HttpProtocol {
 		HTTP,
 		HTTPS
 	}

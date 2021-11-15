@@ -5,7 +5,7 @@ using UnityEngine.iOS;
 
 namespace SnowplowTracker.Wrapper
 {
-    public static class IOSNative
+    internal static class IOSNative
     {
         public static string GetIDFA() {
 #if UNITY_IOS

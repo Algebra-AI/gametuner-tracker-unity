@@ -22,7 +22,7 @@ using SnowplowTracker.Payloads;
 
 namespace SnowplowTracker.Events
 {
-    public class Unstructured : AbstractEvent<Unstructured> {
+    internal class Unstructured : AbstractEvent<Unstructured> {
 		
 		private SelfDescribingJson eventData;
 		private bool base64Encode = false;

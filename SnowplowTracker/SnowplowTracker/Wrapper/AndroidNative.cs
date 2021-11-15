@@ -3,7 +3,7 @@ using UnityEngine;
 
 namespace SnowplowTracker.Wrapper
 {
-    public static class AndroidNative
+    internal static class AndroidNative
     {
         public static string GetAdvertisingID() {
             //TODO - napraviti da bude safe, tj sta ako nema instaliran google play service

@@ -20,7 +20,7 @@
 
 namespace SnowplowTracker.Enums
 {
-    public class DevicePlatforms {
+    internal class DevicePlatforms {
 
 		public string Value { get; set; }
 

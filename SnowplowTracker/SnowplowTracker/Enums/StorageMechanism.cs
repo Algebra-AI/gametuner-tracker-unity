@@ -20,7 +20,7 @@
 
 namespace SnowplowTracker.Enums
 {
-    public class StorageMechanism {
+    internal class StorageMechanism {
 		
 		public string Value { get; set; }
 		

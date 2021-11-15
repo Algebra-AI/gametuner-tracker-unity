@@ -26,7 +26,7 @@ namespace SnowplowTracker.Payloads.Contexts
 	/// TODO - redefinisati custom context ukoliko nam bude trebalo
 	/// za sada je samo primer mobile context-a
 	/// </summary>
-    public class CustomContext : AbstractContext<CustomContext> {
+    internal class CustomContext : AbstractContext<CustomContext> {
 
 		/// <summary>
 		/// Sets the type of the os.

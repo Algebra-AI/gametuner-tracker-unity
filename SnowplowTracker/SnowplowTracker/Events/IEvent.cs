@@ -24,7 +24,7 @@ using SnowplowTracker.Payloads.Contexts;
 
 namespace SnowplowTracker.Events
 {
-    public interface IEvent {
+    internal interface IEvent {
 
 		/// <summary>
 		/// Gets the list of custom contexts attached to the event.

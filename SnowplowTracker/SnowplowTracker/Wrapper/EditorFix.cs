@@ -7,7 +7,7 @@ namespace SnowplowTracker.Wrapper
     /// Script that creates GameObject and adds the SnowplowEditorFix component to it.
     /// It fix the issue in Unity editor when you stop playing the game, sesson checker continues to run.
     /// </summary>
-    public class SnowplowEditorFix : MonoBehaviour
+    internal class SnowplowEditorFix : MonoBehaviour
     {
         private static SnowplowEditorFix _instance;
 

@@ -23,7 +23,7 @@ using System.Collections.Generic;
 
 namespace SnowplowTracker.Payloads
 {
-    public class TrackerPayload : AbstractPayload {
+    internal class TrackerPayload : AbstractPayload {
 
         public static TrackerPayload From(string json)
         {

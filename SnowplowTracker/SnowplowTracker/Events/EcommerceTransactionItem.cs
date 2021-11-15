@@ -23,7 +23,7 @@ using SnowplowTracker.Payloads;
 
 namespace SnowplowTracker.Events
 {
-    public class EcommerceTransactionItem : AbstractEvent<EcommerceTransactionItem> {
+    internal class EcommerceTransactionItem : AbstractEvent<EcommerceTransactionItem> {
 
 		private string itemId;
 		private string sku;

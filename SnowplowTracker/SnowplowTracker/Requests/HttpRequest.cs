@@ -3,7 +3,7 @@ using System.Net.Http;
 
 namespace SnowplowTracker.Requests
 {
-    public class HttpRequest
+    internal class HttpRequest
     {
         public Enums.HttpMethod Method { get; }
         public Uri CollectorUri { get; }

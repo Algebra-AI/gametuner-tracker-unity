@@ -28,7 +28,7 @@ using LiteDB;
 
 namespace SnowplowTracker.Storage
 {
-    public class EventStore : IStore
+    internal class EventStore : IStore
     {
         public class Event
         {

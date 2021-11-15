@@ -24,7 +24,7 @@ using SnowplowTracker.Enums;
 using SnowplowTracker.Storage;
 
 namespace SnowplowTracker.Emitters {
-	public interface IEmitter {
+	internal interface IEmitter {
 
 		/// <summary>
 		/// Adds an event payload to the database.

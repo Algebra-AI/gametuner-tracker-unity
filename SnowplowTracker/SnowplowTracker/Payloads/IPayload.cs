@@ -22,7 +22,7 @@ using System;
 using System.Collections.Generic;
 
 namespace SnowplowTracker.Payloads {
-	public interface IPayload {
+	internal interface IPayload {
 
 		/// <summary>
 		/// Gets the dictionary within the Payload

@@ -23,7 +23,7 @@ using SnowplowTracker.Payloads;
 
 namespace SnowplowTracker.Events
 {
-    public class Structured : AbstractEvent<Structured> {
+    internal class Structured : AbstractEvent<Structured> {
 
 		private string category;
         private string action;

@@ -30,7 +30,7 @@ using System.Text;
 
 namespace SnowplowTracker.Emitters
 {
-    public abstract class AbstractEmitter : IEmitter
+    internal abstract class AbstractEmitter : IEmitter
     {
         protected int POST_WRAPPER_BYTES = 88; // "schema":"iglu:com.snowplowanalytics.snowplow/payload_data/jsonschema/1-0-3","data":[]
         protected int POST_STM_BYTES = 22;     // "stm":"1443452851000",

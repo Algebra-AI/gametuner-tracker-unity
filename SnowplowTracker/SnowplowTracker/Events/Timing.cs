@@ -24,7 +24,7 @@ using SnowplowTracker.Payloads;
 
 namespace SnowplowTracker.Events
 {
-    public class Timing : AbstractEvent<Timing> {
+    internal class Timing : AbstractEvent<Timing> {
 
 		private string category;
 		private string variable;

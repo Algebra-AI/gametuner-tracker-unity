@@ -7,7 +7,7 @@ namespace SnowplowTracker.Wrapper
     /// <summary>
     /// Colect device data using Unity API.
     /// </summary>
-    public class UnityUtils
+    internal class UnityUtils
     {
         /// <summary>
         /// Gets device platform

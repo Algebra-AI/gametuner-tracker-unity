@@ -22,7 +22,7 @@ using System.Collections.Generic;
 
 namespace SnowplowTracker.Payloads.Contexts
 {
-    public interface IContext {
+    internal interface IContext {
 
 		/// <summary>
 		/// Gets the context as a self describing json.

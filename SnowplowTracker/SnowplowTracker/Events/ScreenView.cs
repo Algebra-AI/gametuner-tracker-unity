@@ -23,7 +23,7 @@ using SnowplowTracker.Payloads;
 
 namespace SnowplowTracker.Events
 {
-    public class ScreenView : AbstractEvent<ScreenView> {
+    internal class ScreenView : AbstractEvent<ScreenView> {
 		
 		private string name;
 		private string id;

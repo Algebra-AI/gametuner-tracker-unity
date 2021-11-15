@@ -22,7 +22,7 @@ using SnowplowTracker.Enums;
 
 namespace SnowplowTracker.Payloads.Contexts
 {
-    public class MobileContext : AbstractContext<MobileContext> {
+    internal class MobileContext : AbstractContext<MobileContext> {
 
 		/// <summary>
 		/// Sets the type of the os.

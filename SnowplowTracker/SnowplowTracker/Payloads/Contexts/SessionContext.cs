@@ -22,7 +22,7 @@ using SnowplowTracker.Enums;
 
 namespace SnowplowTracker.Payloads.Contexts
 {
-    public class SessionContext : AbstractContext<SessionContext> {
+    internal class SessionContext : AbstractContext<SessionContext> {
 
 		/// <summary>
 		/// Sets the user identifier.

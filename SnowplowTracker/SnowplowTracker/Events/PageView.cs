@@ -23,7 +23,7 @@ using SnowplowTracker.Payloads;
 
 namespace SnowplowTracker.Events
 {
-    public class PageView : AbstractEvent<PageView> {
+    internal class PageView : AbstractEvent<PageView> {
 
 		private string pageUrl;
 		private string pageTitle;

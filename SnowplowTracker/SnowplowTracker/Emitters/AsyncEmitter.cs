@@ -29,7 +29,7 @@ using SnowplowTracker.Collections;
 
 namespace SnowplowTracker.Emitters
 {
-    public class AsyncEmitter : AbstractEmitter {
+    internal class AsyncEmitter : AbstractEmitter {
 
 		// Emitter loop variables
 		private readonly object emitLock = new object ();

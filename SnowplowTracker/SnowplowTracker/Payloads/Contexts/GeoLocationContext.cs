@@ -20,7 +20,7 @@
 
 namespace SnowplowTracker.Payloads.Contexts
 {
-    public class GeoLocationContext : AbstractContext<GeoLocationContext> {
+    internal class GeoLocationContext : AbstractContext<GeoLocationContext> {
 
 		/// <summary>
 		/// Sets the latitude.

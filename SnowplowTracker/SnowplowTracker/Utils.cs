@@ -28,7 +28,7 @@ using Newtonsoft.Json;
 
 namespace SnowplowTracker
 {
-    public class Utils
+    internal class Utils
     {
         /// <summary>
         /// Returns the current time since the UNIX Epoch

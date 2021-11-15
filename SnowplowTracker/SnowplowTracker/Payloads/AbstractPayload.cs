@@ -21,7 +21,7 @@
 using System.Collections.Generic;
 
 namespace SnowplowTracker.Payloads {
-	public abstract class AbstractPayload : IPayload {
+	internal abstract class AbstractPayload : IPayload {
 
 		protected Dictionary<string, object> payload = new Dictionary<string, object>();
         protected int priority = 0;

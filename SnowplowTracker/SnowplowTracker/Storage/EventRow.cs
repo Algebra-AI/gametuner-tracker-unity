@@ -23,7 +23,7 @@ using SnowplowTracker.Payloads;
 
 namespace SnowplowTracker.Storage
 {
-    public class EventRow {
+    internal class EventRow {
 
 		private Guid rowId;
 		private TrackerPayload payload;

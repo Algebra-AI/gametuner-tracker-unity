@@ -27,7 +27,7 @@ using UnityEngine;
 
 namespace SnowplowTracker
 {
-    public class Session
+    internal class Session
     {
 
         private string SESSION_DEFAULT_PATH = "snowplow_session.dict";

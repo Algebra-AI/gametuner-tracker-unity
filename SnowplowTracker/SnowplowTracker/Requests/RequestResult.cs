@@ -23,7 +23,7 @@ using System.Collections.Generic;
 
 namespace SnowplowTracker.Requests
 {
-    public class RequestResult
+    internal class RequestResult
     {
         public bool success;
         public List<Guid> rowIds;

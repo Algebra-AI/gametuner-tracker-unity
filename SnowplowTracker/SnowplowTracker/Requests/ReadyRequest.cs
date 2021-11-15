@@ -27,7 +27,7 @@ using SnowplowTracker.Collections;
 
 namespace SnowplowTracker.Requests
 {
-    public class ReadyRequest
+    internal class ReadyRequest
     {
         private static readonly HttpClient client = new HttpClient
         {

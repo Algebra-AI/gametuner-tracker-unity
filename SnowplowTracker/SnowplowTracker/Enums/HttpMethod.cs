@@ -20,7 +20,7 @@
 
 namespace SnowplowTracker.Enums
 {
-    public enum HttpMethod {
+    internal enum HttpMethod {
 		GET,
 		POST
 	}

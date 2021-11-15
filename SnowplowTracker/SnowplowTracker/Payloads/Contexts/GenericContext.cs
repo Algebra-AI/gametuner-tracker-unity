@@ -22,7 +22,7 @@ using System.Collections.Generic;
 
 namespace SnowplowTracker.Payloads.Contexts
 {
-    public class GenericContext : AbstractContext<GenericContext> {
+    internal class GenericContext : AbstractContext<GenericContext> {
 
 		/// <summary>
 		/// Sets the schema.

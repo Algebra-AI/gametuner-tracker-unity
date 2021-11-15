@@ -22,7 +22,7 @@ using System;
 
 namespace SnowplowTracker.Payloads
 {
-    public class SelfDescribingJson : AbstractPayload {
+    internal class SelfDescribingJson : AbstractPayload {
 
 		/// <summary>
 		/// Initializes a new instance of the <see cref="SnowplowTracker.Payload.SelfDescribingJson"/> class.

@@ -27,7 +27,7 @@ using System.Collections.Generic;
 using System.IO;
 
 namespace SnowplowTracker.Collections {
-	public class ConcurrentQueue<T> {
+	internal class ConcurrentQueue<T> {
 
 		private readonly Queue<T> q = new Queue<T>();
 

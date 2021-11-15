@@ -23,7 +23,7 @@ using System.Collections.Generic;
 
 namespace SnowplowTracker.Payloads.Contexts
 {
-    public abstract class AbstractContext<T> : IContext {
+    internal abstract class AbstractContext<T> : IContext {
 
 		protected SelfDescribingJson context;
 		protected string schema;

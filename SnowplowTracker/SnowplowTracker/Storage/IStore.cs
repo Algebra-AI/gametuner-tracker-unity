@@ -24,7 +24,7 @@ using SnowplowTracker.Payloads;
 
 namespace SnowplowTracker.Storage
 {
-    public interface IStore
+    internal interface IStore
     {
         bool AddEvent(TrackerPayload payload);
         bool DeleteEvents(List<Guid> rowIds);

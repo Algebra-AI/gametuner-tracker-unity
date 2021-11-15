@@ -20,7 +20,7 @@
 
 namespace SnowplowTracker.Enums
 {
-    public class NetworkType {
+    internal class NetworkType {
 		
 		public string Value { get; set; }
 		

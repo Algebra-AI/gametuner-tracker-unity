@@ -2,7 +2,7 @@ using System;
 
 namespace SnowplowTracker.Storage
 {
-    public class ExtendedEventStore : EventStore
+    internal class ExtendedEventStore : EventStore
     {
 
         public class EventsMetaData { 
