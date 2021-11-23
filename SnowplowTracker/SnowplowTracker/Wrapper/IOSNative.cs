@@ -1,26 +1,26 @@
 using System;
-#if UNITY_IOS
+using UnityEngine;
 using UnityEngine.iOS;
-#endif
 
 namespace SnowplowTracker.Wrapper
 {
     internal static class IOSNative
     {
         public static string GetIDFA() {
-#if UNITY_IOS
-            return Device.advertisingIdentifier;
-#else
+
+            if (Application.platform == RuntimePlatform.IPhonePlayer)
+            {
+                return Device.advertisingIdentifier;
+            }
             return string.Empty;
-#endif
         }
 
         public static string GetIDFV() {
-#if UNITY_IOS
-            return Device.vendorIdentifier;
-#else
+            if (Application.platform == RuntimePlatform.IPhonePlayer)
+            {
+                return Device.vendorIdentifier;
+            }
             return string.Empty;
-#endif
         }
     }
 }

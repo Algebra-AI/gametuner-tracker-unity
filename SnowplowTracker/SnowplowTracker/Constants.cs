@@ -33,6 +33,8 @@ namespace SnowplowTracker {
 		public readonly static string SCHEMA_DESKTOP        = "iglu:com.snowplowanalytics.snowplow/desktop_context/jsonschema/1-0-0";
 		public readonly static string SCHEMA_MOBILE         = "iglu:com.snowplowanalytics.snowplow/mobile_context/jsonschema/1-0-1";
 		public readonly static string SCHEMA_GEO_LOCATION   = "iglu:com.snowplowanalytics.snowplow/geolocation_context/jsonschema/1-1-0";
+		public readonly static string SCHEMA_DEVICE_CONTEXT = "iglu:com.twodesperados/device_context/jsonschema/1-0-0";
+		public readonly static string SCHEMA_EVENT_CONTEXT  = "iglu:com.twodesperados/event_context/jsonschema/1-0-0";
 
 		// Event Types
 		public readonly static string EVENT_PAGE_VIEW       = "pv";
@@ -73,9 +75,38 @@ namespace SnowplowTracker {
 		public readonly static string MOBILE_ANDROID_IDFA   = "androidIdfa";
 		public readonly static string MOBILE_NET_TYPE       = "networkType";
 		public readonly static string MOBILE_NET_TECH       = "networkTechnology";
-		
-		// Geo-Location Context
-		public readonly static string GEO_LAT               = "latitude";
+
+		// Device Context
+		public readonly static string DEVICE_CATEGORY       = "device_category";
+		public readonly static string DEVICE_MANUFACTURER   = "device_manufacturer";
+		public readonly static string DEVICE_MODEL    	 	= "model";
+		public readonly static string DEVICE_OS_VERSION     = "os_version";
+		public readonly static string DEVICE_CPU_TYPE		= "cpu_type";
+		public readonly static string DEVICE_GPU	        = "gpu";
+		public readonly static string DEVICE_RAM_SIZE       = "ram_size";
+		public readonly static string DEVICE_SCREEN_RES     = "screen_resolution";
+		public readonly static string DEVICE_LANGUAGE       = "device_language";
+		public readonly static string DEVICE_TIMEZONE       = "device_timezone";
+		public readonly static string DEVICE_SOURCE         = "source";
+		public readonly static string DEVICE_MEDIUM         = "medium";
+		public readonly static string DEVICE_CAMPAIGN       = "campaign";
+		public readonly static string DEVICE_BUILD_VERSION  = "build_version";
+		public readonly static string DEVICE_DEVICE_ID      = "device_id";
+		public readonly static string DEVICE_ADVERTISING_ID = "advertising_id";
+		public readonly static string DEVICE_IDFA		    = "idfa";
+		public readonly static string DEVICE_IDFV		    = "idfv";
+		public readonly static string DEVICE_IS_HACKED	    = "is_hacked";
+
+		//Event Context
+		public readonly static string EVENT_SESSION_ID	    = "session_id"; 
+		public readonly static string EVENT_INDEX	 	    = "event_index"; 
+		public readonly static string EVENT_SESSION_INDEX   = "event_session_index"; 
+		public readonly static string EVENT_PREVIOUS_EVENT  = "previous_event"; 
+		public readonly static string EVENT_SENDBOX_MODE    = "sandbox_mode";
+        public readonly static string EVENT_TRANSACTION_ID  = "transaction_id";
+
+        // Geo-Location Context
+        public readonly static string GEO_LAT               = "latitude";
 		public readonly static string GEO_LONG              = "longitude";
 		public readonly static string GEO_LAT_LONG_ACC      = "latitudeLongitudeAccuracy";
 		public readonly static string GEO_ALT               = "altitude";

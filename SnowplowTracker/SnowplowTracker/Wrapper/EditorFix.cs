@@ -12,10 +12,14 @@ namespace SnowplowTracker.Wrapper
         private static SnowplowEditorFix _instance;
 
         [RuntimeInitializeOnLoadMethod(RuntimeInitializeLoadType.BeforeSceneLoad)]
-        public static void Init() { 
-            if(_instance == null) {
-                _instance = new GameObject("SnowplowEditorFix").AddComponent<SnowplowEditorFix>();
-                DontDestroyOnLoad(_instance.gameObject);
+        public static void Init() {
+            if (Application.isEditor)
+            {
+                if (_instance == null)
+                {
+                    _instance = new GameObject("SnowplowEditorFix").AddComponent<SnowplowEditorFix>();
+                    DontDestroyOnLoad(_instance.gameObject);
+                }
             }
         }
 

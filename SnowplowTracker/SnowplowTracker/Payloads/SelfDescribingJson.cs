@@ -61,9 +61,6 @@ namespace SnowplowTracker.Payloads
 		/// <returns>The SelfDescribingJson</returns>
 		/// <param name="data">A data Object</param>
 		public SelfDescribingJson SetData(Object data) {
-			if (data == null) {
-				return this;
-			}
 			payload [Constants.DATA] = data;
 			return this;
 		}

@@ -39,9 +39,9 @@ namespace SnowplowTracker
         private string appId;
         private DevicePlatforms platform;
         private bool base64Encoded;
-
-        private bool dataCollection = false;
+        private bool dataCollection;
         private bool synchronous;
+        private long lastTrackEventTime;
 
         /// <summary>
         /// Initializes a new instance of the <see cref="SnowplowTracker.Tracker"/> class.
@@ -126,6 +126,7 @@ namespace SnowplowTracker
             {
                 return;
             }
+            SetLastTrackEventTime(newEvent.GetTimestamp());
             if (synchronous)
             {
                 ProcessEvent(newEvent);
@@ -205,10 +206,13 @@ namespace SnowplowTracker
             }
 
             // Add the session context if available
+            // Session context is disabled. We added session context to the payload for some events.
+            /*
             if (session != null)
             {
                 contexts.Add(session.GetSessionContext(eventId));
             }
+            */
 
             // Build the final context and add it to the payload
             if (contexts != null && contexts.Count > 0)
@@ -323,6 +327,15 @@ namespace SnowplowTracker
             this.base64Encoded = base64Encoded;
         }
 
+        /// <summary>
+        /// Sets last tracked event time.
+        /// </summary>
+        /// <param name="time">Unix timestamp</param>
+        private void SetLastTrackEventTime(long time)
+        {
+            lastTrackEventTime = time;
+        }
+
         // --- Getters
 
         /// <summary>
@@ -386,6 +399,15 @@ namespace SnowplowTracker
         public bool GetBase64Encoded()
         {
             return this.base64Encoded;
+        }
+
+        /// <summary>
+        /// Gets last tracked event time.
+        /// </summary>
+        /// <returns>Unix timestamp of last tracked event</returns>
+        public long GetLastTrackEventTime()
+        {
+            return lastTrackEventTime;
         }
     }
 }

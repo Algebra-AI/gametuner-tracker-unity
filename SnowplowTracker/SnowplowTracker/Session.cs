@@ -38,7 +38,7 @@ namespace SnowplowTracker
         private long backgroundTimeout;
         private long checkInterval;
         private long accessedLast;
-         private long backgroundAccessed;
+        private long backgroundAccessed;
         private bool background;
         private string firstEventId;
         private string userId;
@@ -47,7 +47,7 @@ namespace SnowplowTracker
         private int sessionIndex;
         private Timer sessionCheckTimer;
         private string SessionPath;
-        private readonly StorageMechanism sessionStorage = StorageMechanism.LocalStorage;
+        private readonly StorageMechanism sessionStorage = StorageMechanism.Litedb;
         public delegate void OnSessionStart();
         public delegate void OnSessionEnd();
         public OnSessionStart onSessionStart;        
@@ -274,6 +274,30 @@ namespace SnowplowTracker
         public bool GetBackground()
         {
             return this.background;
+        }
+
+        /// <summary>
+        /// Gets session index.
+        /// </summary>
+        /// <returns>Session index</returns>
+        public int GetSessionIndex() { 
+            return this.sessionIndex;
+        }
+
+        /// <summary>
+        /// Gets previous session id.
+        /// </summary>
+        /// <returns>Session ID</returns>
+        public string GetPreviousSession() { 
+            return this.previousSessionId;
+        }
+
+        /// <summary>
+        /// Gets current session id.
+        /// </summary>
+        /// <returns>Sessin id</returns>
+        public string GetSessionID() {
+            return currentSessionId;
         }
 
         // --- Private

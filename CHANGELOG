@@ -1,9 +1,22 @@
+Version 0.5.2 (2021-11-23)
+--------------------------
+Add custom context (event and device)
+Fix Log, removed define symbols (They don't work in native plugin)
+Fixed Session StorageMechanism (LITEDB -> SQLITE)
+Add last triggerd event time to Tracker object
+Add transactionID to event context
+SelfDescribeJson now can accept empty/null data
+Add event counter
+Fix AndroidNative and IOSNative
+Fix define symbols in whole project
+Add EventNames available for usage on client side
+
 Version 0.5.1 (2021-11-11)
 --------------------------
 Added ClientTracker.cs class as main bridge between unity and plugin
 Extended EventStore.
 Modified Session.cs and logic for calculating session when app goes to background.
-Added build.sh script for buildong project and copy dll.
+Added build.sh script for building project and copy dll.
 Added Wrapper namespace
 Hidden plugin logic behind ClientTracker
 

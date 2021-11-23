@@ -1,4 +1,5 @@
 using System;
+using System.Globalization;
 using SnowplowTracker.Enums;
 using UnityEngine;
 
@@ -9,6 +10,38 @@ namespace SnowplowTracker.Wrapper
     /// </summary>
     internal class UnityUtils
     {
+        /// <summary>
+        /// Gets CPU type
+        /// </summary>
+        /// <returns>CPU type</returns>
+        public static string GetCpuType() {
+            string cpuType = string.Empty;
+            if (CultureInfo.InvariantCulture.CompareInfo.IndexOf(SystemInfo.processorType, "ARM", CompareOptions.IgnoreCase) >= 0)
+            {
+                if (Environment.Is64BitProcess)
+                    cpuType = "ARM64";
+                else
+                    cpuType = "ARM";
+            }
+            else
+            {
+                // Must be in the x86 family.
+                if (Environment.Is64BitProcess)
+                    cpuType = "x86_64";
+                else
+                    cpuType = "x86";
+            }
+            return cpuType;
+        }
+
+        /// <summary>
+        /// Get build (app) version.
+        /// </summary>
+        /// <returns>Build version</returns>
+        public static string GetBuildVersion() {
+            return Application.version;
+        }
+
         /// <summary>
         /// Gets device platform
         /// </summary>
@@ -114,7 +147,92 @@ namespace SnowplowTracker.Wrapper
 		    return res;
         }
 
-        internal static string GetDeviceManufacturer()
+        /// <summary>
+        /// Gets RAM memory size
+        /// </summary>
+        /// <returns>RAM size</returns>
+        internal static int GetRamSize()
+        {
+            return SystemInfo.systemMemorySize;  
+        }
+
+        /// <summary>
+        /// Gets GPU type
+        /// </summary>
+        /// <returns>GPU type</returns>
+        internal static string GetGpu()
+        {
+            return SystemInfo.graphicsDeviceName;
+        }
+
+        /// <summary>
+        /// Gets device id. Using Unity API.
+        /// </summary>
+        /// <returns>Device ID</returns>
+        internal static string GetDevideID()
+        {
+            return SystemInfo.deviceUniqueIdentifier;
+        }
+
+        /// <summary>
+        /// Gets diagonal size in inches
+        /// </summary>
+        /// <returns>Diagonal of screen</returns>
+        private static float DeviceDiagonalSizeInInches()
+        {
+            float screenWidth = Screen.width / Screen.dpi;
+            float screenHeight = Screen.height / Screen.dpi;
+            float diagonalInches = Mathf.Sqrt(Mathf.Pow(screenWidth, 2) + Mathf.Pow(screenHeight, 2));
+    
+            return diagonalInches;
+        }
+
+        /// <summary>
+        /// Gets device category
+        /// </summary>
+        /// <returns>Device category</returns>
+        public static string GetDeviceCategory()
+        {
+            string deviceCat = "desktop";
+            if(Application.isMobilePlatform)
+            {
+                if(Application.platform == RuntimePlatform.Android)
+                {
+                    float aspectRatio = Mathf.Max(Screen.width, Screen.height) / Mathf.Min(Screen.width, Screen.height);
+                    bool isTablet = (DeviceDiagonalSizeInInches() > 6.5f && aspectRatio < 2f);
+            
+                    if (isTablet)
+                    {
+                        deviceCat = "tablet";
+                    }
+                    else
+                    {
+                        deviceCat = "mobile";
+                    }
+                }
+                else if(Application.platform == RuntimePlatform.IPhonePlayer)
+                {
+                    bool deviceIsIpad = UnityEngine.iOS.Device.generation.ToString().Contains("iPad");
+                    if (deviceIsIpad)
+                    {
+                        deviceCat = "tablet";
+                    }
+                    bool deviceIsIphone = UnityEngine.iOS.Device.generation.ToString().Contains("iPhone");
+                    if (deviceIsIphone)
+                    {
+                        deviceCat = "mobile";
+                    }
+                }
+            }
+
+            return deviceCat;
+        }
+
+        /// <summary>
+        /// Gets device manufacturer
+        /// </summary>
+        /// <returns>Device manufactuer</returns>
+        public static string GetDeviceManufacturer()
         {
             string deviceModel = GetDeviceModel();
             if(string.IsNullOrEmpty(deviceModel))
@@ -186,7 +304,7 @@ namespace SnowplowTracker.Wrapper
         /// Gets root status
         /// </summary>
         /// <returns>Root status</returns>
-        private static string GetRootStatus() {
+        public static string GetRootStatus() {
             return Application.sandboxType.ToString();
         }
 

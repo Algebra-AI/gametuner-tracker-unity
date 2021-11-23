@@ -21,14 +21,22 @@ Tracker is adopted to Two Desperados needs. Read the wrapper section to see how 
 First you need to initialize plugin:
 
 ```csharp
-ClientTracker.Init(USER_ID);
+string endpointUrl = "192.168.1.1:8080"; // URL of server, data team can provide you URL
+string analyticsAppID = "game_name";     // 'wokawoka' for Woka Woka; 'violasquest' for Viola's Quest
+string store = "store_name";             // GooglePlay, AppleStore, Amazon...
+string userID = "user_id";               // Unique user ID
+bool isSandboxEnabled = false;           // Is debug build
+ClientTracker.Init(endpointUrl, analyticsAppID, store, userID, isSandboxEnabled);
 ```
 
 To trigger analytics event use:
 
 ```csharp
-string schema = "iglu:com.twodesperados/event_testing/jsonschema/3-0-0";
-ClientTracker.LogEvent(eventName, schema, parameters, priority);
+string eventName = "name_of_event";      // level_player, transaction...
+string schemaVersion = "1-0-0";          // version of event schema
+Dictionary<string, object> parameters;   // parameters of event. It can be null object
+int priority = 0;                        // Priority of event. Higher the number, higher is prority
+ClientTracker.LogEvent(eventName, schschemaVersionema, parameters, priority);
 ```
 **NOTE**:If you make a call of ```LogEvent``` method before Init, event will be discarded, so make sure to call ```Init``` before any event log.
 
@@ -37,6 +45,12 @@ You can setup Log for debugging purposes before init or any time after init:
 ```csharp
 SnowplowTracker.Log.SetLogLevel(3);
 SnowplowTracker.Log.On();
+```
+
+Some of default events are defined in class ```EventNames.cs``` so yuo can use it like
+
+```csharp
+ClientTracker.LogEvent(eventName, EventNames.EVENT_PURCHASE, parameters, priority);
 ```
 
 ## Legacy documentation
