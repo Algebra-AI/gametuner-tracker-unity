@@ -49,7 +49,7 @@ namespace SnowplowTracker.Wrapper
 
             // Create Emitter and Tracker
             ExtendedEventStore extendedStore = new ExtendedEventStore();
-            IEmitter emitter = new AsyncEmitter(endpointUrl, HttpProtocol.HTTP, HttpMethod.POST, sendLimit: 100, 52000, 52000, extendedStore);
+            IEmitter emitter = new AsyncEmitter(endpointUrl, HttpProtocol.HTTPS, HttpMethod.POST, sendLimit: 100, 52000, 52000, extendedStore);
             
             //TODO: zameniti sekunde sa dogovorenim vrednostima
             Session session = new Session("snowplow_session_data.dict", 72000, 1800, 15);
