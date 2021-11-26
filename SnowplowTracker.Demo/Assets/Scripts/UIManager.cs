@@ -26,12 +26,7 @@ public class UIManager : MonoBehaviour
     public void LoadGameScene(bool restart)
     {           
         SceneManager.LoadSceneAsync("GameplayScene").completed += (x) => {
-            TrackerManager.SnowplowTracker.Track(
-                new ScreenView()
-                    .SetId("GameplayScene")
-                    .SetName(restart ? "RestartGame" : "StartGame")
-                    .SetCustomContext(TrackerManager.GetExampleContextList())
-                    .Build());
+            TrackerManager.LogEventSnowplow(restart ? "RestartGame" : "StartGame", "1-0-0", null, 0);  
         };
     }
 
@@ -45,12 +40,7 @@ public class UIManager : MonoBehaviour
         _message = $"Time to Complete: {timeToComplete.TotalSeconds.ToString("0.00")}s";
 
         SceneManager.LoadSceneAsync("EndScene").completed += (x) => {
-            TrackerManager.SnowplowTracker.Track(
-                new ScreenView()
-                    .SetId("EndScene")
-                    .SetName("EndGame")
-                    .SetCustomContext(TrackerManager.GetExampleContextList())
-                    .Build());
+            TrackerManager.LogEventSnowplow("ScreenView", "1-0-0", null, 0);
         };
     }
 }

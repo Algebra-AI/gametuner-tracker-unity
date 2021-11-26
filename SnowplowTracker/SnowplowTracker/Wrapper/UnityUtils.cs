@@ -337,5 +337,13 @@ namespace SnowplowTracker.Wrapper
         public static int GetScreenHeight() {
             return Screen.height;
         }
+
+        public static bool IsWebGLPlatform() {
+            if (UnityEngine.Application.platform == UnityEngine.RuntimePlatform.WebGLPlayer)
+            {
+                return true;
+            }
+            return false;
+        }
     }
 }

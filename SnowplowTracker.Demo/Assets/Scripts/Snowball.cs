@@ -25,14 +25,7 @@ public class Snowball : MonoBehaviour
         {
             transform.position = new Vector3(platform.transform.position.x, -90, 0);
             GetComponent<Rigidbody2D>().velocity = Vector2.down * speed;
-
-            TrackerManager.SnowplowTracker.Track(
-                new Structured()
-                    .SetCategory("UnityDemo")
-                    .SetAction("Gameplay")
-                    .SetLabel("SnowballOutOfBounds")
-                    .SetCustomContext(TrackerManager.GetExampleContextList())
-                    .Build());     
+            TrackerManager.LogEventSnowplow("SnowballOutOfBounds", "1-0-0", null, 0);  
         }
     }
 

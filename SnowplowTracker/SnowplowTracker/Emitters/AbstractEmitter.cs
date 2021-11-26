@@ -164,7 +164,9 @@ namespace SnowplowTracker.Emitters
                         Log.Debug("Sending POST with byte-size: " + (payloadByteSize + POST_WRAPPER_BYTES));
                         List<Dictionary<string, object>> singlePayloadPost = new List<Dictionary<string, object>> { payload.GetDictionary() };
                         List<Guid> singlePayloadId = new List<Guid> { eventRows[i].GetRowId() };
-                        new ReadyRequest(new HttpRequest(Enums.HttpMethod.POST, collectorUri, GetPOSTRequest(singlePayloadPost)), singlePayloadId, true, resultQueue).Send();
+                        string requestData = GetPOSTRequestString(singlePayloadPost);
+                        new ReadyRequest(new HttpRequest(Enums.HttpMethod.POST, collectorUri, GetPOSTRequestContent(requestData), requestData), singlePayloadId, true, resultQueue).Send();
+                        //new WebReadyRequest(new HttpRequest(Enums.HttpMethod.POST, collectorUri, GetPOSTRequestContent(requestData), requestData), singlePayloadId, true, resultQueue).Send();
                         count++;
                     }
                     else if ((totalByteSize + payloadByteSize + POST_WRAPPER_BYTES + (payloadDicts.Count - 1)) > byteLimitPost)
@@ -172,7 +174,9 @@ namespace SnowplowTracker.Emitters
                         Log.Debug("Emitter: Byte limit reached: " + (totalByteSize + payloadByteSize + POST_WRAPPER_BYTES + (payloadDicts.Count - 1)) +
                                    " is > " + byteLimitPost);
                         Log.Debug("Emitter: Sending POST with byte-size: " + (totalByteSize + POST_WRAPPER_BYTES + (payloadDicts.Count - 1)));
-                        new ReadyRequest(new HttpRequest(Enums.HttpMethod.POST, collectorUri, GetPOSTRequest(payloadDicts)), rowIds, false, resultQueue).Send();
+                        string requestData = GetPOSTRequestString(payloadDicts);
+                        new ReadyRequest(new HttpRequest(Enums.HttpMethod.POST, collectorUri, GetPOSTRequestContent(requestData), requestData), rowIds, false, resultQueue).Send();
+                        //new WebReadyRequest(new HttpRequest(Enums.HttpMethod.POST, collectorUri, GetPOSTRequestContent(requestData), requestData), rowIds, false, resultQueue).Send();
                         count++;
 
                         // Reset collections
@@ -191,7 +195,9 @@ namespace SnowplowTracker.Emitters
                 if (payloadDicts.Count > 0)
                 {
                     Log.Debug("Emitter: Sending POST with byte-size: " + (totalByteSize + POST_WRAPPER_BYTES + (payloadDicts.Count - 1)));
-                    new ReadyRequest(new HttpRequest(Enums.HttpMethod.POST, collectorUri, GetPOSTRequest(payloadDicts)), rowIds, false, resultQueue).Send();
+                    string requestData = GetPOSTRequestString(payloadDicts);
+                    new ReadyRequest(new HttpRequest(Enums.HttpMethod.POST, collectorUri, GetPOSTRequestContent(requestData), requestData), rowIds, false, resultQueue).Send();
+                    //new WebReadyRequest(new HttpRequest(Enums.HttpMethod.POST, collectorUri, GetPOSTRequestContent(requestData), requestData), rowIds, false, resultQueue).Send();
                     count++;
                 }
             }
@@ -222,6 +228,25 @@ namespace SnowplowTracker.Emitters
             HttpContent httpContent = new StringContent(sdj.ToString(), Encoding.UTF8, Constants.POST_CONTENT_TYPE);
             return httpContent;
         }
+
+        protected string GetPOSTRequestString(List<Dictionary<string, object>> events)
+        {
+            // Add STM to event
+            AddSentTimeToEvents(events);
+
+            // Build the event
+            SelfDescribingJson sdj = new SelfDescribingJson(Constants.SCHEMA_PAYLOAD_DATA, events);
+
+            return sdj.ToString();
+        }
+
+        protected HttpContent GetPOSTRequestContent(string data)
+        {
+            // Build the HTTP Content Body
+            HttpContent httpContent = new StringContent(data, Encoding.UTF8, Constants.POST_CONTENT_TYPE);
+            return httpContent;
+        }
+
 
         /// <summary>
         /// Gets a ready request containing a GET

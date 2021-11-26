@@ -21,14 +21,8 @@ public class GameplayManager : MonoBehaviour
 
         _stopwatch = new Stopwatch();
         _stopwatch.Restart();
-
-        TrackerManager.SnowplowTracker.Track(
-            new Structured()
-                .SetCategory("UnityDemo")
-                .SetAction("Gameplay")
-                .SetLabel("Start")
-                .SetCustomContext(TrackerManager.GetExampleContextList())
-                .Build());
+    
+        TrackerManager.LogEventSnowplow("Start", "1-0-0", null, 0);
     }
 
     /// <summary>
@@ -40,16 +34,7 @@ public class GameplayManager : MonoBehaviour
         if (cubes.Length == 0 && _stopwatch.IsRunning)
         {
             _stopwatch.Stop();
-            TrackerManager.SnowplowTracker.Track(
-                new Unstructured().SetEventData(new SelfDescribingJson(
-                    "iglu:com.snowplowanalytics.snowplow/timing/jsonschema/1-0-0",
-                    new {
-                        category = "Gameplay",
-                        variable = "TimeToComplete",
-                        timing = _stopwatch.Elapsed.TotalSeconds
-                    }
-                ))
-            );
+            TrackerManager.LogEventSnowplow("TimeToComplete", "1-0-0", null, 0);
             uiManager.LoadEndScene(_stopwatch.Elapsed);
         }
     }

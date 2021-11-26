@@ -32,21 +32,21 @@ namespace SnowplowTracker
 
         private string SESSION_DEFAULT_PATH = "snowplow_session.dict";
 
-        private SessionContext sessionContext;
+        protected SessionContext sessionContext;
 
-        private long foregroundTimeout;
-        private long backgroundTimeout;
-        private long checkInterval;
-        private long accessedLast;
-        private long backgroundAccessed;
-        private bool background;
+        protected long foregroundTimeout;
+        protected long backgroundTimeout;
+        protected long checkInterval;
+        protected long accessedLast;
+        protected long backgroundAccessed;
+        protected bool background;
         private string firstEventId;
         private string userId;
         private string currentSessionId;
         private string previousSessionId;
         private int sessionIndex;
-        private Timer sessionCheckTimer;
-        private string SessionPath;
+        protected Timer sessionCheckTimer;
+        protected string SessionPath;
         private readonly StorageMechanism sessionStorage = StorageMechanism.Litedb;
         public delegate void OnSessionStart();
         public delegate void OnSessionEnd();
@@ -103,7 +103,7 @@ namespace SnowplowTracker
         /// <summary>
         /// Invokes the session start.
         /// </summary>
-        private void DelegateSessionStart()
+        protected void DelegateSessionStart()
         {
             if (onSessionStart != null)
             {
@@ -114,7 +114,7 @@ namespace SnowplowTracker
         /// <summary>
         /// Invokes the session end.
         /// </summary>
-        private void DelegateSessionEnd()
+        protected void DelegateSessionEnd()
         {
             if (onSessionEnd != null)
             {
@@ -145,7 +145,7 @@ namespace SnowplowTracker
         /// <summary>
         /// Starts the session checker.
         /// </summary>
-        public void StartChecker()
+        public virtual void StartChecker()
         {
             if (sessionCheckTimer == null)
             {
@@ -156,7 +156,7 @@ namespace SnowplowTracker
         /// <summary>
         /// Stops the session checker.
         /// </summary>
-        public void StopChecker()
+        public virtual void StopChecker()
         {
             if (sessionCheckTimer != null)
             {
@@ -305,7 +305,7 @@ namespace SnowplowTracker
         /// <summary>
         /// Checks the session.
         /// </summary>
-        private void CheckSession(object state)
+        protected virtual void CheckSession(object state)
         {
             Log.Verbose("Session: Checking session...");
 
@@ -342,7 +342,7 @@ namespace SnowplowTracker
         /// <summary>
         /// Updates the session. Session is updated on app start and after timer timeout.
         /// </summary>
-        private void UpdateSession()
+        protected void UpdateSession()
         {
             previousSessionId = currentSessionId;
             currentSessionId = Utils.GetGUID();
@@ -353,7 +353,7 @@ namespace SnowplowTracker
         /// <summary>
         /// Updates the accessed last.
         /// </summary>
-        private void UpdateAccessedLast()
+        protected void UpdateAccessedLast()
         {
             accessedLast = Utils.GetTimestamp();
         }
@@ -361,7 +361,7 @@ namespace SnowplowTracker
         /// <summary>
         /// Updates the session dict.
         /// </summary>
-        private void UpdateSessionDict()
+        protected void UpdateSessionDict()
         {
             SessionContext newSessionContext = new SessionContext()
                     .SetUserId(userId)

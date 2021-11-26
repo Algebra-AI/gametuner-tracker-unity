@@ -49,10 +49,19 @@ namespace SnowplowTracker.Wrapper
 
             // Create Emitter and Tracker
             ExtendedEventStore extendedStore = new ExtendedEventStore();
-            IEmitter emitter = new AsyncEmitter(endpointUrl, HttpProtocol.HTTPS, HttpMethod.POST, sendLimit: 100, 52000, 52000, extendedStore);
-            
-            //TODO: zameniti sekunde sa dogovorenim vrednostima
+            IEmitter emitter;
             Session session = new Session("snowplow_session_data.dict", 72000, 1800, 15);
+            if (UnityUtils.IsWebGLPlatform())
+            {
+                emitter = new SyncEmitter(endpointUrl, HttpProtocol.HTTPS, HttpMethod.POST, sendLimit: 2, 52000, 52000, extendedStore);
+                session = new SyncSession("snowplow_session_data.dict", 72000, 1800, 15);
+            } else { 
+                emitter = new AsyncEmitter(endpointUrl, HttpProtocol.HTTPS, HttpMethod.POST, sendLimit: 100, 52000, 52000, extendedStore);
+                session = new Session("snowplow_session_data.dict", 72000, 1800, 15);
+            }
+
+            //TODO: zameniti sekunde sa dogovorenim vrednostima
+            //Session session = new Session("snowplow_session_data.dict", 72000, 1800, 15);
             //Session session = new Session("sessionPath", 120, 30, 15);
             session.onSessionStart = OnSessionStartEvent;
             session.onSessionEnd = OnSessionEndEvent;

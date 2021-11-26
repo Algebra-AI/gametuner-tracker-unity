@@ -9,14 +9,8 @@ public class Ice : MonoBehaviour
     /// <param name="other"></param>
     private void OnCollisionEnter2D(Collision2D other) {
         if (other.gameObject.name == "Snowball")
-            Destroy(gameObject);  
+            Destroy(gameObject);
 
-        TrackerManager.SnowplowTracker.Track(
-            new Structured()
-                .SetCategory("UnityDemo")
-                .SetAction("Gameplay")
-                .SetLabel("IceBlockDestroy")
-                .SetCustomContext(TrackerManager.GetExampleContextList())
-                .Build());
+        TrackerManager.LogEventSnowplow("IceBlockDestroy", "1-0-0", null, 0);
     }
 }
