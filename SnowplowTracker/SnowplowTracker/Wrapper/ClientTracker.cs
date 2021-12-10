@@ -33,7 +33,7 @@ namespace SnowplowTracker.Wrapper
         /// <param name="analyticsAppID">Analytics app id, you will get it from data team.</param>
         /// <param name="store">Store name. Eg. GooglePlay, ITunes, Amazon...</param>
         /// <param name="userID">Unique user id</param>
-        public static void Init(string endpointUrl, string analyticsAppID, string store, string userID, bool isSandboxEnabled) { 
+        public static void Init(string endpointUrl, string analyticsAppID, string store, bool isSandboxEnabled, bool useHttps = true, string userID = null) { 
             
             if (isInitialized) {
                 Log.Debug("Tracker is already initialized");
@@ -49,16 +49,23 @@ namespace SnowplowTracker.Wrapper
 
             // Create Emitter and Tracker
             ExtendedEventStore extendedStore = new ExtendedEventStore();
-            IEmitter emitter = new AsyncEmitter(endpointUrl, HttpProtocol.HTTPS, HttpMethod.POST, sendLimit: 100, 52000, 52000, extendedStore);
+            HttpProtocol protocol = useHttps ? HttpProtocol.HTTPS : HttpProtocol.HTTP;
+            IEmitter emitter = new AsyncEmitter(endpointUrl, protocol, HttpMethod.POST, sendLimit: 100, 52000, 52000, extendedStore);
             
             //TODO: zameniti sekunde sa dogovorenim vrednostima
-            Session session = new Session("snowplow_session_data.dict", 72000, 1800, 15);
+            Session session = new Session("snowplow_session_data.dict", 72000, 300, 15);
             //Session session = new Session("sessionPath", 120, 30, 15);
             session.onSessionStart = OnSessionStartEvent;
             session.onSessionEnd = OnSessionEndEvent;
 
             Subject subject = new Subject();
-            subject.SetUserId(userID);
+            string tempUserID = GetUserIDFromCache(extendedStore);
+            if (userID != null)
+            {
+                tempUserID = userID;
+                UpdateUserIDInCache(userID, extendedStore);
+            }
+            subject.SetUserId(tempUserID);
 
             deviceContext = GetDeviceContext();
 
@@ -83,6 +90,16 @@ namespace SnowplowTracker.Wrapper
             UnityEngine.Application.focusChanged += SetFocus;
             UnityMainThreadDispatcher.Instance.onQuit += OnSessionEndOnQuit;
             Log.Debug("Tracker initialized");            
+        }
+
+        public static void SetUserId(string userId) {
+            if (!isInitialized) { 
+                Log.Debug("Tracker is not initialized");
+                return;
+            }
+
+            UpdateUserIDInCache(userId, (ExtendedEventStore)(tracker.GetEmitter().GetEventStore()));
+            tracker.GetSubject().SetUserId(userId);
         }
 
         /// <summary>
@@ -197,12 +214,31 @@ namespace SnowplowTracker.Wrapper
             return lastEventName;
         }
 
-
+        /// <summary>
+        /// Gets event index
+        /// </summary>
+        /// <returns>Event index</returns>
         private static int GetEventIndex() { 
             ExtendedEventStore store = (ExtendedEventStore)(tracker.GetEmitter().GetEventStore());
             int eventIndex = store.GetEventIndex();
             store.UpdateEventIndex();
             return eventIndex;
+        }
+
+        /// <summary>
+        /// Gets userID from cache.
+        /// </summary>
+        /// <returns>UserID</returns>
+        private static string GetUserIDFromCache(ExtendedEventStore store) { 
+            return store.GetCacheUserId();
+        }
+
+        /// <summary>
+        /// Updates userID in cache.
+        /// </summary>
+        /// <param name="userID"></param>
+        private static void UpdateUserIDInCache(string userID, ExtendedEventStore store) { 
+            store.UpdateUserId(userID);
         }
 
         /// <summary>

@@ -160,7 +160,7 @@ namespace SnowplowTracker.Emitters
 
 				if (emitLock != null) {
 				    lock (emitLock) {
-					    events = eventStore.GetEvents(sendLimit);
+					    events = GetValidatedEvents(eventStore.GetEvents(sendLimit));
 					    Monitor.Pulse(emitLock);
 				    }
 				}
@@ -201,8 +201,11 @@ namespace SnowplowTracker.Emitters
 					} else {
 						Log.Debug("Emitter: All events sent successfully; waiting for more...");
 					}
+				} else { 
+					Log.Debug("Emitter: No valid events to send; waiting for userID...");
+					Thread.Sleep(FAIL_VALIDATION_INTERVAL);
 				}
-			}
+            }
 		}
 
 		// --- Helpers

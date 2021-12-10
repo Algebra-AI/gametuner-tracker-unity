@@ -18,6 +18,7 @@ namespace SnowplowTracker.Storage
         private const string COLLECTION_METADATA_LAST_ADDED_EVENT       = "lastAddedEventName";
         private const string COLLECTION_METADATA_LAST_TRANSACTION_ID    = "lastTransactionId";
         private const string COLLECTION_METADATA_EVENT_INDEX            = "eventIndex";
+        private const string COLLECTION_METADATA_USER_ID                = "userId";
 
         public ExtendedEventStore() : base() { 
             try
@@ -228,6 +229,71 @@ namespace SnowplowTracker.Storage
             catch (Exception e)
             {
                 Log.Error("EventStore: Last transaction failed to save");
+                Log.Error(e.ToString());
+                return false;
+            }
+            finally
+            {
+                _dbLock.ExitWriteLock();
+            }
+        }
+
+        /// <summary>
+        /// Gets user id from cache.
+        /// </summary>
+        /// <returns>Cached userID</returns>
+        public string GetCacheUserId() { 
+            try
+            {
+                _dbLock.EnterReadLock();
+                // Get event collection
+                var colData = _db.GetCollection<EventsMetaData>(COLLECTION_METADATA);
+
+                var result = colData.FindOne(x => x.Id == COLLECTION_METADATA_USER_ID);
+                if (result == null) {
+                    return string.Empty;
+                }
+
+                return result.ValueString;
+            }
+            catch (Exception e)
+            {
+                Log.Error($"EventStore: Get user id failed");
+                Log.Error(e.ToString());
+                return string.Empty;
+            }
+            finally
+            {
+                _dbLock.ExitReadLock();
+            }
+        }
+
+        /// <summary>
+        /// Update user id.
+        /// </summary>
+        /// <returns>Is user id updated</returns>
+        public bool UpdateUserId(string userID)
+        {
+            try
+            {
+                _dbLock.EnterWriteLock();
+                // Get event collection
+                var colData = _db.GetCollection<EventsMetaData>(COLLECTION_METADATA);
+
+                var result = colData.FindOne(x => x.Id == COLLECTION_METADATA_USER_ID);
+                EventsMetaData metadata = new EventsMetaData { Id = COLLECTION_METADATA_USER_ID, ValueString = userID };
+
+                if (result == null) { 
+                    colData.Insert(metadata);
+                } else {
+                    colData.Update(metadata);
+                }
+               
+                return true;
+            }
+            catch (Exception e)
+            {
+                Log.Error("EventStore: UserID failed to save");
                 Log.Error(e.ToString());
                 return false;
             }

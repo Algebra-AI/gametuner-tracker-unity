@@ -86,7 +86,7 @@ namespace SnowplowTracker.Emitters
 		private void EmitLoop() {
 			Log.Debug("Emitter: EmitLoop starting...");
 			while (eventStore.GetEventCount() != 0) {
-				List<EventRow> events = eventStore.GetEvents(sendLimit);
+				List<EventRow> events = GetValidatedEvents(eventStore.GetEvents(sendLimit));
 				events = AddSendBulkID(events);
 				if (events.Count != 0) {
 					Log.Debug("Emitter: Event count: " + events.Count);

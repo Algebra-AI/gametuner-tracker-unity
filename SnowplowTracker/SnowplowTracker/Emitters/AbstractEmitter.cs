@@ -35,6 +35,7 @@ namespace SnowplowTracker.Emitters
         protected int POST_WRAPPER_BYTES = 88; // "schema":"iglu:com.snowplowanalytics.snowplow/payload_data/jsonschema/1-0-3","data":[]
         protected int POST_STM_BYTES = 22;     // "stm":"1443452851000",
         protected int FAIL_INTERVAL = 10000;  // If all events failed to send
+        protected int FAIL_VALIDATION_INTERVAL = 50000;  // If events failed to validate
 
         protected string endpoint;
         protected Uri collectorUri;
@@ -291,11 +292,80 @@ namespace SnowplowTracker.Emitters
             return resultRows;
         }
 
+        /// <summary>
+        /// Gets valid events. Checks if the event has user_id field and if it has, adds the stm to the event.
+        /// </summary>
+        /// <param name="events">List of events in storage</param>
+        /// <returns>List of validated events</returns>
+        protected List<EventRow> GetValidatedEvents(List<EventRow> events) { 
+            List<EventRow> resultRows = new List<EventRow>();
+            if (events == null) { 
+                return events;
+            }
+
+            if (typeof(ExtendedEventStore) != eventStore.GetType()) {
+                return events;
+            }
+
+            ExtendedEventStore store = (ExtendedEventStore)eventStore;
+            string userId = store.GetCacheUserId();
+        
+            foreach (EventRow item in events)
+            {
+                EventRow tempEvent = CheckUserId(item, userId);
+                if(tempEvent != null) {
+                    resultRows.Add(tempEvent);
+                }
+            }
+
+            return resultRows;
+        }
+
+        /// <summary>
+        /// Checks if the event has user_id field.
+        /// </summary>
+        /// <param name="eventRow">Event data</param>
+        /// <param name="userID">Cached userID</param>
+        /// <returns>Validated event or null</returns>
+        private EventRow CheckUserId(EventRow eventRow, string userID) {
+
+            try
+            {
+                Dictionary<string, object> dict = eventRow.GetPayload().GetDictionary();
+                string encodedData = string.Empty;
+
+                if (dict.ContainsKey(Constants.UID))
+                {
+                    if(!string.IsNullOrEmpty(dict[Constants.UID].ToString())) {
+                        return eventRow;
+                    }
+                } 
+
+                if(string.IsNullOrEmpty(userID)) {
+                    return null;
+                }
+
+                dict[Constants.UID] = userID;
+                return new EventRow(eventRow.GetRowId(), TrackerPayload.From(Utils.DictToJSONString(dict)));
+            }
+            catch (System.Exception e)
+            {
+                Log.Error("Emitter: caught exception in CheckUserId: " + e.Message);
+                return eventRow;
+            }    
+        }
+
+        /// <summary>
+        /// Adds the bulk ID to the event context.
+        /// </summary>
+        /// <param name="eventRow">Event data</param>
+        /// <param name="transactionId">Transaction id</param>
+        /// <returns>Updated event</returns>
         private EventRow AddTransactionIDToContext(EventRow eventRow, int transactionId) { 
 
             try
             {
-                 Dictionary<string, object> dict = eventRow.GetPayload().GetDictionary();
+                Dictionary<string, object> dict = eventRow.GetPayload().GetDictionary();
                 string encodedData = string.Empty;
 
                 foreach (KeyValuePair<string, object> dicitem in dict)
@@ -308,7 +378,6 @@ namespace SnowplowTracker.Emitters
 
                         foreach (Newtonsoft.Json.Linq.JObject contextItem in dataArray)
                         {
-                            Log.Debug("dataArray item: " + contextItem["schema"].ToString() + " data: " + contextItem["data"].ToString()); 
                             if (contextItem["schema"].ToString() == Constants.SCHEMA_EVENT_CONTEXT) { 
                                 Newtonsoft.Json.Linq.JObject event_ContextData = (Newtonsoft.Json.Linq.JObject)contextItem["data"];
                                 event_ContextData.Add(Constants.EVENT_TRANSACTION_ID, transactionId);
