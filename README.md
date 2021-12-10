@@ -26,8 +26,22 @@ string analyticsAppID = "game_name";     // 'wokawoka' for Woka Woka; 'violasque
 string store = "store_name";             // GooglePlay, AppleStore, Amazon...
 string userID = "user_id";               // Unique user ID
 bool isSandboxEnabled = false;           // Is debug build
-ClientTracker.Init(endpointUrl, analyticsAppID, store, userID, isSandboxEnabled);
+ClientTracker.Init(endpointUrl, analyticsAppID, store, isSandboxEnabled, useHttps = true, userID = userID );
 ```
+
+Fields ```useHttps``` and ```userID``` are now optional. 
+
+If you want to test with Micro, then setup ```useHttps``` to ```false```
+
+Since our games are offline, you may not have userId on Init, for that reason we left userID as optional field. Also, you can find method to set userID once you got validated id from server. 
+
+Use this method after initialization of plugin.
+
+```csharp
+ClientTracker.SetUserId(userID);
+```
+
+Plugin will handle caching of userID and triggered events.
 
 To trigger analytics event use:
 
