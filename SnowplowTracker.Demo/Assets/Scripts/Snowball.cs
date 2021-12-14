@@ -24,15 +24,7 @@ public class Snowball : MonoBehaviour
         if (viewportPoint.x <= 0 || viewportPoint.x >= 1 || viewportPoint.y <= 0 || viewportPoint.y >= 1)
         {
             transform.position = new Vector3(platform.transform.position.x, -90, 0);
-            GetComponent<Rigidbody2D>().velocity = Vector2.down * speed;
-
-            TrackerManager.SnowplowTracker.Track(
-                new Structured()
-                    .SetCategory("UnityDemo")
-                    .SetAction("Gameplay")
-                    .SetLabel("SnowballOutOfBounds")
-                    .SetCustomContext(TrackerManager.GetExampleContextList())
-                    .Build());     
+            GetComponent<Rigidbody2D>().velocity = Vector2.down * speed;  
         }
     }
 

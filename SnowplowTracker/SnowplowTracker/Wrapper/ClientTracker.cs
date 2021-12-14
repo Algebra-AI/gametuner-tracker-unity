@@ -109,13 +109,19 @@ namespace SnowplowTracker.Wrapper
         /// <param name="schemaVersion">Varsion of event schema</param>
         /// <param name="parameters">Event parameters</param>
         /// <param name="priority">Priority of event. 0 is default. Bigger the number is, priority is higher</param>
-        public static void LogEvent(string eventName, string schemaVersion, Dictionary<string, object> parameters, int priority = 0) { 
+        /// <param name="contexts">List of contexts names. null is default.</param>
+        public static void LogEvent(
+                string eventName, 
+                string schemaVersion, 
+                Dictionary<string, object> parameters, 
+                int priority = 0,
+                List<ContextName> contexts = null) { 
             if (!isInitialized) {
                 Log.Error("Tracker isn't initialized");
                 return;
             }
 
-            LogEvent(eventName, schemaVersion, parameters, null, priority); 
+            LogEvent(eventName, schemaVersion, parameters, GetContexts(contexts), priority); 
         }
 
         /// <summary>
@@ -130,6 +136,30 @@ namespace SnowplowTracker.Wrapper
         }
 
         ///  PRIVATE METHODS
+        
+        /// <summary>
+        /// Create IContext list of ContextName
+        /// </summary>
+        /// <param name="contextNames">List of context names</param>
+        /// <returns>List of Icontext</returns>
+        private static List<IContext> GetContexts(List<ContextName> contextNames) {
+
+            List<IContext> contexts = new List<IContext>();
+            if(contextNames != null) {
+                foreach(ContextName cn in contextNames) {
+                    switch (cn)
+                    {
+                        case ContextName.DEVICE_CONTEXT:
+                            contexts.Add(GetDeviceContext());
+                            break;
+                        default:
+                            break;
+                    }
+                }
+            }
+
+            return contexts;
+        }
     
         /// <summary>
         /// Method subscribed to sesson start event.
@@ -248,7 +278,12 @@ namespace SnowplowTracker.Wrapper
         /// <param name="schema">Shema of event</param>
         /// <param name="parameters">Event parameters</param>
         /// <param name="priority">Priority of event. 0 is default. Bigger the number is, priority is higher</param>
-        private static void LogEvent(string eventName, string schemaVersion, Dictionary<string, object> parameters, List<IContext> context, int priority = 0) { 
+        private static void LogEvent(
+                string eventName, 
+                string schemaVersion, 
+                Dictionary<string, object> parameters, 
+                List<IContext> context, 
+                int priority = 0) { 
             if (!isInitialized) {
                 Log.Error("Tracker isn't initialized");
                 return;

@@ -38,7 +38,7 @@ namespace SnowplowTracker.Storage
             public int Priority  { get; set; }
         }
 
-        private const string COLLECTION_NAME = "events";
+        protected const string COLLECTION_NAME = "events";
 
         protected readonly LiteDatabase _db;
         protected readonly ReaderWriterLockSlim _dbLock = new ReaderWriterLockSlim();

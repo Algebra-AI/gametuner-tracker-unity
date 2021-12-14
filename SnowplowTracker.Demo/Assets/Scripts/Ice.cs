@@ -1,4 +1,6 @@
-﻿using SnowplowTracker.Events;
+﻿using System.Collections.Generic;
+using SnowplowTracker;
+using SnowplowTracker.Events;
 using UnityEngine;
 
 public class Ice : MonoBehaviour
@@ -11,12 +13,12 @@ public class Ice : MonoBehaviour
         if (other.gameObject.name == "Snowball")
             Destroy(gameObject);  
 
-        TrackerManager.SnowplowTracker.Track(
-            new Structured()
-                .SetCategory("UnityDemo")
-                .SetAction("Gameplay")
-                .SetLabel("IceBlockDestroy")
-                .SetCustomContext(TrackerManager.GetExampleContextList())
-                .Build());
+        Dictionary<string, object> eventAttribute = new Dictionary<string, object>();
+        eventAttribute.Add("stash", 5);
+        eventAttribute.Add("amount", 10);
+        eventAttribute.Add("currency_id", "gold");
+        eventAttribute.Add("group_id", "group1");
+        eventAttribute.Add("reason", "gift");
+        TrackerManager.LogEvent(EventNames.EVENT_CURRENCY_CHANGE, "1-0-0", eventAttribute);
     }
 }

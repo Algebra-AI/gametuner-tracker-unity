@@ -302,5 +302,34 @@ namespace SnowplowTracker.Storage
                 _dbLock.ExitWriteLock();
             }
         }
+
+        public bool UpdateEvent(EventRow eventRow)
+        {
+            try
+            {
+                _dbLock.EnterWriteLock();
+                // Get event collection
+                var colData = _db.GetCollection<Event>(COLLECTION_NAME);
+
+                var result = colData.FindOne(x => x.Id == eventRow.GetRowId());
+
+                if (result != null) { 
+                    result.Payload = eventRow.GetPayload().ToString();
+                    colData.Update(result);
+                } 
+
+                return true;
+            }
+            catch (Exception e)
+            {
+                Log.Error("EventStore: UserID failed to save");
+                Log.Error(e.ToString());
+                return false;
+            }
+            finally
+            {
+                _dbLock.ExitWriteLock();
+            }
+        }
     }
 }

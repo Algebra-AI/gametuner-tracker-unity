@@ -104,6 +104,7 @@ namespace SnowplowTracker {
 		public readonly static string EVENT_PREVIOUS_EVENT  = "previous_event"; 
 		public readonly static string EVENT_SENDBOX_MODE    = "sandbox_mode";
         public readonly static string EVENT_TRANSACTION_ID  = "transaction_id";
+		public readonly static string EVENT_IS_ONLINE  		= "is_online";
 
         // Geo-Location Context
         public readonly static string GEO_LAT               = "latitude";

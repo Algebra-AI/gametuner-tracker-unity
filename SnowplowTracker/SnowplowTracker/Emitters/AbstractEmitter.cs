@@ -285,7 +285,9 @@ namespace SnowplowTracker.Emitters
            
             foreach (EventRow item in events)
             {
-                resultRows.Add(AddTransactionIDToContext(item, lastTransaction));
+                EventRow tempItem = AddTransactionIDToContext(item, lastTransaction);
+                resultRows.Add(tempItem);
+                store.UpdateEvent(item);
             }
 
             store.UpdateLastTransactionId();
@@ -380,7 +382,12 @@ namespace SnowplowTracker.Emitters
                         {
                             if (contextItem["schema"].ToString() == Constants.SCHEMA_EVENT_CONTEXT) { 
                                 Newtonsoft.Json.Linq.JObject event_ContextData = (Newtonsoft.Json.Linq.JObject)contextItem["data"];
-                                event_ContextData.Add(Constants.EVENT_TRANSACTION_ID, transactionId);
+                                event_ContextData[Constants.EVENT_TRANSACTION_ID] = transactionId;
+                                if (event_ContextData.ContainsKey(Constants.EVENT_IS_ONLINE)) { 
+                                    event_ContextData[Constants.EVENT_IS_ONLINE] = false;
+                                } else { 
+                                    event_ContextData.Add(Constants.EVENT_IS_ONLINE, true);
+                                }
                             }
                         }
 
