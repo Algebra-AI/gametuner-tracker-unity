@@ -19,6 +19,7 @@ namespace SnowplowTracker.Storage
         private const string COLLECTION_METADATA_LAST_TRANSACTION_ID    = "lastTransactionId";
         private const string COLLECTION_METADATA_EVENT_INDEX            = "eventIndex";
         private const string COLLECTION_METADATA_USER_ID                = "userId";
+        private const string COLLECTION_METADATA_REGISTRATION_TIME      = "registrationTime";
 
         public ExtendedEventStore() : base() { 
             try
@@ -318,6 +319,72 @@ namespace SnowplowTracker.Storage
                     colData.Update(result);
                 } 
 
+                return true;
+            }
+            catch (Exception e)
+            {
+                Log.Error("EventStore: UserID failed to save");
+                Log.Error(e.ToString());
+                return false;
+            }
+            finally
+            {
+                _dbLock.ExitWriteLock();
+            }
+        }
+
+        //COLLECTION_METADATA_REGISTRATION_TIME
+        /// <summary>
+        /// Gets registration time.
+        /// </summary>
+        /// <returns>Registration time</returns>
+        public long GetRegistrationTime() { 
+            try
+            {
+                _dbLock.EnterReadLock();
+                // Get event collection
+                var colData = _db.GetCollection<EventsMetaData>(COLLECTION_METADATA);
+
+                var result = colData.FindOne(x => x.Id == COLLECTION_METADATA_REGISTRATION_TIME);
+                if (result == null) {
+                    return 0L;
+                }
+
+                return Convert.ToInt64(result.ValueString);
+            }
+            catch (Exception e)
+            {
+                Log.Error($"EventStore: Get user id failed");
+                Log.Error(e.ToString());
+                return 0L;
+            }
+            finally
+            {
+                _dbLock.ExitReadLock();
+            }
+        }
+
+        /// <summary>
+        /// Sets registration time.
+        /// </summary>
+        /// <returns>Is registration time updated</returns>
+        public bool SetRegistrationTime(long registrationTime)
+        {
+            try
+            {
+                _dbLock.EnterWriteLock();
+                // Get event collection
+                var colData = _db.GetCollection<EventsMetaData>(COLLECTION_METADATA);
+
+                var result = colData.FindOne(x => x.Id == COLLECTION_METADATA_REGISTRATION_TIME);
+                EventsMetaData metadata = new EventsMetaData { Id = COLLECTION_METADATA_REGISTRATION_TIME, ValueString = registrationTime.ToString() };
+
+                if (result == null) { 
+                    colData.Insert(metadata);
+                } else {
+                    colData.Update(metadata);
+                }
+               
                 return true;
             }
             catch (Exception e)

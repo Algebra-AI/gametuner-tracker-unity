@@ -84,13 +84,14 @@ namespace SnowplowTracker.Wrapper
 
             if(session.GetSessionIndex() == 1) {
                 TriggerRegistration();
+                SaveRegistrationTime(extendedStore);
             }
             
             OnSessionStartEvent();
             UnityEngine.Application.focusChanged += SetFocus;
             UnityMainThreadDispatcher.Instance.onQuit += OnSessionEndOnQuit;
             Log.Debug("Tracker initialized");            
-        }
+        }        
 
         public static void SetUserId(string userId) {
             if (!isInitialized) { 
@@ -122,6 +123,19 @@ namespace SnowplowTracker.Wrapper
             }
 
             LogEvent(eventName, schemaVersion, parameters, GetContexts(contexts), priority); 
+        }
+
+        /// <summary>
+        /// Gets registration time from cache.
+        /// </summary>
+        /// <returns>Unix timestamp of registration time</returns>
+        public static long GetRegistrationTime() { 
+            if (!isInitialized) {
+                Log.Error("Tracker isn't initialized");
+                return 0;
+            }
+
+            return ((ExtendedEventStore)tracker.GetEmitter().GetEventStore()).GetRegistrationTime();
         }
 
         /// <summary>
@@ -230,7 +244,16 @@ namespace SnowplowTracker.Wrapper
             Dictionary<string, object> eventParams = new Dictionary<string, object>();
             eventParams.Add("store", storeName);  
             LogEvent(EventNames.EVENT_REGISTRATION, "1-0-0", eventParams, new List<IContext> { deviceContext } );
-        }        
+        }    
+
+        /// <summary>
+        /// Save registration time
+        /// </summary>
+        /// <param name="extendedStore">Store object</param>
+        private static void SaveRegistrationTime(ExtendedEventStore extendedStore)
+        {
+            extendedStore.SetRegistrationTime(Utils.GetTimestamp());
+        }    
 
         /// <summary>
         /// Gets name of last triggered event
