@@ -1,3 +1,7 @@
+Version 0.5.4 (2021-12-14)
+--------------------------
+Add GetRegistration time to ClientTracker
+
 Version 0.5.3 (2021-12-14)
 --------------------------
 Add support to handle events without userid
