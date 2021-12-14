@@ -1,3 +1,12 @@
+Version 0.5.3 (2021-12-14)
+--------------------------
+Add support to handle events without userid
+ClientTracke.Init now has userId and useHttps as optional paramters
+Add SetUserId to ClientTracker
+Add field list of context name to LogEvent as optional
+Add is_online field to event_context
+Demo project updated to support ClientTracker
+
 Version 0.5.2 (2021-11-23)
 --------------------------
 Add custom context (event and device)

@@ -50,7 +50,10 @@ string eventName = "name_of_event";      // level_player, transaction...
 string schemaVersion = "1-0-0";          // version of event schema
 Dictionary<string, object> parameters;   // parameters of event. It can be null object
 int priority = 0;                        // Priority of event. Higher the number, higher is prority
-ClientTracker.LogEvent(eventName, schschemaVersionema, parameters, priority);
+List<ContextName> listIfContext = 
+    new List<ContextName> { ContextName.DEVICE_CONTEXT }  // List of contexts that needs to be associated with event
+
+ClientTracker.LogEvent(eventName, schschemaVersionema, parameters, priority, listIfContext);
 ```
 **NOTE**:If you make a call of ```LogEvent``` method before Init, event will be discarded, so make sure to call ```Init``` before any event log.
 
