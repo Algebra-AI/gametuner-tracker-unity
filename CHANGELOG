@@ -1,3 +1,7 @@
+Version 0.5.5 (2022-01-12)
+--------------------------
+Changed transaction_id to event_bundle_id
+
 Version 0.5.4 (2021-12-14)
 --------------------------
 Add GetRegistration time to ClientTracker
