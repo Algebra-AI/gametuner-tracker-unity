@@ -7,8 +7,8 @@ using SnowplowTracker.Wrapper;
 
 public class TrackerManager : MonoBehaviour
 {
-    private static string _collectorUrl = "woka.data.twodesperados.com";
-    //private static string _collectorUrl = "34.145.73.5";
+    //private static string _collectorUrl = "woka.data.twodesperados.com";
+    private static string _collectorUrl = "localhost:9090";
 
     private static string _analyticsAppID = "wokawoka";
     //private static string _analyticsAppID = "violasquest";
@@ -17,7 +17,7 @@ public class TrackerManager : MonoBehaviour
     /// Adds an event listener if a Collector URL Input Field is hooked up to this MonoBehaviour
     /// </summary>
     private void Start() {
-        ClientTracker.Init(_collectorUrl, _analyticsAppID, "Editor", true, true, "user_id");
+        ClientTracker.Init(_collectorUrl, _analyticsAppID, "Editor", true, false, "user_id");
     }
 
     public static void LogEvent(string eventName, string schemaVersion, Dictionary<string, object> eventData, List<ContextName> contexts = null) { 

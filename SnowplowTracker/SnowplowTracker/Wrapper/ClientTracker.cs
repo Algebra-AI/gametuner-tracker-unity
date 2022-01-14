@@ -333,7 +333,7 @@ namespace SnowplowTracker.Wrapper
                         Dictionary<string, object> dataDict = (Dictionary<string, object>)val;
                         foreach (var dictItem in dataDict)
                         {
-                            data_temp.Add(new Dictionary<string, object>() { { "key", item.Key }, { "value", val } });
+                            data_temp.Add(new Dictionary<string, object>() { { "key", dictItem.Key }, { "value", dictItem.Value } });
                         }
                         eventParams.Add(item.Key, data_temp);
                     } else {

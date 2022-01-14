@@ -77,20 +77,23 @@ public class UIManager : MonoBehaviour
     public void TriggerTestEvent()
     { 
         Dictionary<string, object> eventAttribute = new Dictionary<string, object>();
-        eventAttribute.Add("group_id", "group111");
-        eventAttribute.Add("registration_time", "1000");
-        eventAttribute.Add("levels_passed", 10);
+        eventAttribute.Add("transaction_type", "offer");
+        eventAttribute.Add("transaction_id", "tran_id");
+        eventAttribute.Add("package_name", "gold1");
         eventAttribute.Add("gold", 20);
-        eventAttribute.Add("lives", 2);
-        eventAttribute.Add("purple_stars", 3);
-        Dictionary<string, string> curr = new Dictionary<string, string>();
-        curr.Add("booster1", "1");
-        eventAttribute.Add("currencies", curr);
-        eventAttribute.Add("unlimited_lives_active", "none");
-        eventAttribute.Add("lifetime_usd_spent", 15.4f);
-        eventAttribute.Add("lifetime_ads_watched", 35);
-        eventAttribute.Add("trigger", "Test");
+        eventAttribute.Add("paid_currency", "USD");
+        eventAttribute.Add("paid_amount", 3);
+        Dictionary<string, object> curr = new Dictionary<string, object>();
+        curr.Add("booster1", 1);
+        //eventAttribute.Add("currencies", curr);
+        eventAttribute.Add("package_contents", curr);
+        eventAttribute.Add("paid_amount_usd", 10);
+        eventAttribute.Add("screen", "home");
+        eventAttribute.Add("place_of_shop_opening", "map");
+        eventAttribute.Add("game_mode", "Test");
+        eventAttribute.Add("status", "Test");
+        eventAttribute.Add("first", true);
         
-        TrackerManager.LogEvent(EventNames.EVENT_USER_STATE, "1-0-0", eventAttribute);
+        TrackerManager.LogEvent(EventNames.EVENT_PURCHASE, "1-0-0", eventAttribute);
     }
 }

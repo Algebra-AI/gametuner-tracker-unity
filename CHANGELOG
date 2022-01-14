@@ -1,3 +1,7 @@
+Version 0.5.6 (2022-01-14)
+--------------------------
+Fix when event parameter is type of Dictionary<string, object>
+
 Version 0.5.5 (2022-01-12)
 --------------------------
 Changed transaction_id to event_bundle_id
