@@ -324,8 +324,8 @@ namespace SnowplowTracker.Wrapper
                 foreach (KeyValuePair<string, object> item in parameters)
                 {
                     object val = item.Value;
-                    if (val == null) { 
-                        val = string.Empty;
+                    if (val == null) {
+                        continue;
                     }
 
                     if (val.GetType() == typeof(Dictionary<string, object>)) { 

@@ -1,3 +1,7 @@
+Version 0.5.7 (2022-01-26)
+--------------------------
+Event parameters with null value is excluded from POST request.
+
 Version 0.5.6 (2022-01-14)
 --------------------------
 Fix when event parameter is type of Dictionary<string, object>
