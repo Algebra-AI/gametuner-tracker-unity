@@ -30,8 +30,6 @@ namespace SnowplowTracker.Enums
 
 		public static DevicePlatforms Web              { get { return new DevicePlatforms("web"); }}
 		public static DevicePlatforms Mobile           { get { return new DevicePlatforms("mob"); }}
-		public static DevicePlatforms Android          { get { return new DevicePlatforms("android"); }}
-		public static DevicePlatforms IOS			   { get { return new DevicePlatforms("ios"); }}
 		public static DevicePlatforms Desktop          { get { return new DevicePlatforms("pc"); }}
 		public static DevicePlatforms ServerSideApp    { get { return new DevicePlatforms("srv"); }}
 		public static DevicePlatforms General          { get { return new DevicePlatforms("app"); }}
