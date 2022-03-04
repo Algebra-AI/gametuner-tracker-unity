@@ -1,5 +1,6 @@
 using System;
 using System.Collections.Generic;
+using System.Linq;
 using SnowplowTracker.Emitters;
 using SnowplowTracker.Enums;
 using SnowplowTracker.Events;
@@ -23,6 +24,20 @@ namespace SnowplowTracker.Wrapper
         private static string storeName;
         private static bool sandboxMode;
         private static string appID;
+        private static event Action _onSessionStartEvent;
+        public static event Action onSessionStartEvent {
+            add {
+                if (_onSessionStartEvent == null || !_onSessionStartEvent.GetInvocationList ().Contains(value)) {
+                    _onSessionStartEvent += value;
+                }
+            }
+        
+            remove {
+                if (_onSessionStartEvent != null || _onSessionStartEvent.GetInvocationList ().Contains(value)) {
+                    _onSessionStartEvent -= value;
+                }
+            }
+        }
 
         // PUBLIC METHODS
 
@@ -55,8 +70,8 @@ namespace SnowplowTracker.Wrapper
             //TODO: zameniti sekunde sa dogovorenim vrednostima
             Session session = new Session("snowplow_session_data.dict", 72000, 300, 15);
             //Session session = new Session("sessionPath", 120, 30, 15);
-            session.onSessionStart = OnSessionStartEvent;
-            session.onSessionEnd = OnSessionEndEvent;
+            session.onSessionStart += OnSessionStartEvent;
+            session.onSessionEnd += OnSessionEndEvent;
 
             Subject subject = new Subject();
             string tempUserID = GetUserIDFromCache(extendedStore);
@@ -93,6 +108,10 @@ namespace SnowplowTracker.Wrapper
             Log.Debug("Tracker initialized");            
         }        
 
+        /// <summary>
+        /// Setup user ID
+        /// </summary>
+        /// <param name="userId">User ID</param>
         public static void SetUserId(string userId) {
             if (!isInitialized) { 
                 Log.Debug("Tracker is not initialized");
@@ -101,6 +120,19 @@ namespace SnowplowTracker.Wrapper
 
             UpdateUserIDInCache(userId, (ExtendedEventStore)(tracker.GetEmitter().GetEventStore()));
             tracker.GetSubject().SetUserId(userId);
+        }
+
+        /// <summary>
+        /// Gets user ID. IF user ID is not set, returns null
+        /// </summary>
+        /// <returns>User ID</returns>
+        public static string GetUserID() { 
+            if (!isInitialized) { 
+                Log.Debug("Tracker is not initialized");
+                return null;
+            }
+
+            return tracker.GetSubject().GetUserID();
         }
 
         /// <summary>
@@ -150,7 +182,16 @@ namespace SnowplowTracker.Wrapper
         }
 
         ///  PRIVATE METHODS
-        
+
+        /// <summary>
+        /// Subscribe to session start event for Unity thread.
+        /// </summary>
+        private static void OnSessionStartUnityThread() {
+            if (_onSessionStartEvent != null) { 
+                UnityMainThreadDispatcher.Instance.Enqueue(() => _onSessionStartEvent.Invoke());
+            }
+        }
+
         /// <summary>
         /// Create IContext list of ContextName
         /// </summary>
@@ -188,6 +229,8 @@ namespace SnowplowTracker.Wrapper
             eventParams.Add("store", storeName);   
             eventParams.Add("previous_session_id", tracker.GetSession().GetPreviousSession()); 
             LogEvent(EventNames.EVENT_LOGIN, "1-0-0", eventParams, new List<IContext> { deviceContext });
+
+            OnSessionStartUnityThread();
         }
 
         /// <summary>

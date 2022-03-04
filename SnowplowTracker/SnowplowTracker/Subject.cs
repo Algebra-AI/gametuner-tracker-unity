@@ -19,6 +19,7 @@
  */
 
 using System;
+using System.Collections.Generic;
 using SnowplowTracker.Payloads;
 
 namespace SnowplowTracker {
@@ -40,6 +41,24 @@ namespace SnowplowTracker {
 		public void SetUserId(String userId) {
 			this.standardDict.Add (Constants.UID, userId);
 		}
+
+		/// <summary>
+		/// Gets the user ID. If ID is not found, returns null.
+		/// </summary>
+		/// <returns>UserID</returns>
+		public string GetUserID() {
+            if (this.standardDict.GetDictionary() == null) {
+                return null;
+            }
+            if (this.standardDict.GetDictionary().ContainsKey(Constants.UID))
+			{
+				if(!string.IsNullOrEmpty(this.standardDict.GetDictionary()[Constants.UID].ToString())) {
+					return this.standardDict.GetDictionary()[Constants.UID].ToString();
+				}
+			}
+
+            return null;
+        }
 
 		/// <summary>
 		/// Sets the screen resolution.

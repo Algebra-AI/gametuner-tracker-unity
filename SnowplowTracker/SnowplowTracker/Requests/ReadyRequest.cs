@@ -31,7 +31,7 @@ namespace SnowplowTracker.Requests
     {
         private static readonly HttpClient client = new HttpClient
         {
-            Timeout = TimeSpan.FromSeconds(10)
+            Timeout = TimeSpan.FromSeconds(30)
         };
 
         private readonly HttpRequest request;

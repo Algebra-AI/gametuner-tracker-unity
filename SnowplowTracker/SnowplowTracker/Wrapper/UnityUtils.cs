@@ -52,10 +52,10 @@ namespace SnowplowTracker.Wrapper
             switch (Application.platform)
             {
                 case RuntimePlatform.Android:
-                    platform = DevicePlatforms.Mobile;
+                    platform = DevicePlatforms.Android;
                     break;
                 case RuntimePlatform.IPhonePlayer:
-                    platform = DevicePlatforms.Mobile;
+                    platform = DevicePlatforms.IOS;
                     break;
                 case RuntimePlatform.WebGLPlayer:
                     platform = DevicePlatforms.Web;
