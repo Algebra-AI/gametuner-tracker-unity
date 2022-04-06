@@ -236,7 +236,11 @@ namespace SnowplowTracker
 
             if (!Utils.IsTimeInRange(backgroundAccessed, checkTime, backgroundTimeout))
             {
+                UpdateSession();
+                UpdateAccessedLast();
+                UpdateSessionDict();
                 DelegateSessionStart();
+                Utils.WriteDictionaryToFile(SessionPath, sessionContext.GetData());
             }
         }
 

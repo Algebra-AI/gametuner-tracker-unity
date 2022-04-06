@@ -24,20 +24,8 @@ namespace SnowplowTracker.Wrapper
         private static string storeName;
         private static bool sandboxMode;
         private static string appID;
-        private static event Action _onSessionStartEvent;
-        public static event Action onSessionStartEvent {
-            add {
-                if (_onSessionStartEvent == null || !_onSessionStartEvent.GetInvocationList ().Contains(value)) {
-                    _onSessionStartEvent += value;
-                }
-            }
-        
-            remove {
-                if (_onSessionStartEvent != null || _onSessionStartEvent.GetInvocationList ().Contains(value)) {
-                    _onSessionStartEvent -= value;
-                }
-            }
-        }
+        public delegate void OnSessionStarted(string sessionId, int sessionIndex, string previousSessionId);
+        public static OnSessionStarted onSessionStartEvent;  
 
         // PUBLIC METHODS
 
@@ -186,9 +174,9 @@ namespace SnowplowTracker.Wrapper
         /// <summary>
         /// Subscribe to session start event for Unity thread.
         /// </summary>
-        private static void OnSessionStartUnityThread() {
-            if (_onSessionStartEvent != null) { 
-                UnityMainThreadDispatcher.Instance.Enqueue(() => _onSessionStartEvent.Invoke());
+        private static void OnSessionStartUnityThread(string sessionId, int sessionIndex, string previousSessionId) {
+            if (onSessionStartEvent != null) { 
+                UnityMainThreadDispatcher.Instance.Enqueue(() => onSessionStartEvent.Invoke(sessionId, sessionIndex, previousSessionId));
             }
         }
 
@@ -230,7 +218,7 @@ namespace SnowplowTracker.Wrapper
             eventParams.Add("previous_session_id", tracker.GetSession().GetPreviousSession()); 
             LogEvent(EventNames.EVENT_LOGIN, "1-0-0", eventParams, new List<IContext> { deviceContext });
 
-            OnSessionStartUnityThread();
+            OnSessionStartUnityThread(tracker.GetSession().GetSessionID(), tracker.GetSession().GetSessionIndex(), tracker.GetSession().GetPreviousSession());
         }
 
         /// <summary>
