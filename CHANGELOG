@@ -1,3 +1,12 @@
+Version 0.5.10 (2022-04-05)
+--------------------------
+Change priority for login, logout and registration events
+Fix for double login events with same sessionID
+
+Version 0.5.9 (2022-03-04)
+--------------------------
+Revert change for device platform
+
 Version 0.5.8 (2022-03-04)
 --------------------------
 Timeout for request increased from 10 to 30
