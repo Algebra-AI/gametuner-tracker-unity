@@ -216,7 +216,7 @@ namespace SnowplowTracker.Wrapper
             Dictionary<string, object> eventParams = new Dictionary<string, object>();
             eventParams.Add("store", storeName);   
             eventParams.Add("previous_session_id", tracker.GetSession().GetPreviousSession()); 
-            LogEvent(EventNames.EVENT_LOGIN, "1-0-0", eventParams, new List<IContext> { deviceContext });
+            LogEvent(EventNames.EVENT_LOGIN, "1-0-0", eventParams, new List<IContext> { deviceContext }, 1000);
 
             OnSessionStartUnityThread(tracker.GetSession().GetSessionID(), tracker.GetSession().GetSessionIndex(), tracker.GetSession().GetPreviousSession());
         }
@@ -259,7 +259,7 @@ namespace SnowplowTracker.Wrapper
             Dictionary<string, object> eventParams = new Dictionary<string, object>();
             eventParams.Add("last_event_time", tracker.GetLastTrackEventTime());   
             eventParams.Add("timeout", isTimeout); 
-            LogEvent(EventNames.EVENT_LOGOUT, "1-0-0", eventParams);
+            LogEvent(EventNames.EVENT_LOGOUT, "1-0-0", eventParams, 100);
         }
 
         /// <summary>
@@ -274,7 +274,7 @@ namespace SnowplowTracker.Wrapper
 
             Dictionary<string, object> eventParams = new Dictionary<string, object>();
             eventParams.Add("store", storeName);  
-            LogEvent(EventNames.EVENT_REGISTRATION, "1-0-0", eventParams, new List<IContext> { deviceContext } );
+            LogEvent(EventNames.EVENT_REGISTRATION, "1-0-0", eventParams, new List<IContext> { deviceContext }, 100);
         }    
 
         /// <summary>
