@@ -24,6 +24,7 @@ namespace SnowplowTracker.Wrapper
         private static string storeName;
         private static bool sandboxMode;
         private static string appID;
+        private static string runtimePlatform;
         public delegate void OnSessionStarted(string sessionId, int sessionIndex, string previousSessionId);
         public static OnSessionStarted onSessionStartEvent;  
 
@@ -43,6 +44,7 @@ namespace SnowplowTracker.Wrapper
                 return;
             }
 
+            runtimePlatform = UnityUtils.GetRuntimePlatform();
             appID = analyticsAppID;
             storeName = store;
             sandboxMode = isSandboxEnabled;
@@ -216,7 +218,8 @@ namespace SnowplowTracker.Wrapper
             Dictionary<string, object> eventParams = new Dictionary<string, object>();
             eventParams.Add("store", storeName);   
             eventParams.Add("previous_session_id", tracker.GetSession().GetPreviousSession()); 
-            LogEvent(EventNames.EVENT_LOGIN, "1-0-0", eventParams, new List<IContext> { deviceContext }, 1000);
+            eventParams.Add("device_platform", runtimePlatform);
+            LogEvent(EventNames.EVENT_LOGIN, "1-0-1", eventParams, new List<IContext> { deviceContext }, 1000);
 
             OnSessionStartUnityThread(tracker.GetSession().GetSessionID(), tracker.GetSession().GetSessionIndex(), tracker.GetSession().GetPreviousSession());
         }
@@ -273,8 +276,9 @@ namespace SnowplowTracker.Wrapper
             }
 
             Dictionary<string, object> eventParams = new Dictionary<string, object>();
-            eventParams.Add("store", storeName);  
-            LogEvent(EventNames.EVENT_REGISTRATION, "1-0-0", eventParams, new List<IContext> { deviceContext }, 100);
+            eventParams.Add("store", storeName);
+            eventParams.Add("device_platform", runtimePlatform);  
+            LogEvent(EventNames.EVENT_REGISTRATION, "1-0-1", eventParams, new List<IContext> { deviceContext }, 100);
         }    
 
         /// <summary>

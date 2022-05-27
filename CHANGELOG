@@ -1,3 +1,7 @@
+Version 0.5.11 (2022-05-27)
+--------------------------
+Add device_platform property to login and registration events
+
 Version 0.5.10 (2022-04-05)
 --------------------------
 Change priority for login, logout and registration events

@@ -68,6 +68,24 @@ namespace SnowplowTracker.Wrapper
         }
 
         /// <summary>
+        /// Gets device platform
+        /// </summary>
+        /// <returns>Device platform</returns>
+        public static string GetRuntimePlatform() { 
+            switch (Application.platform)
+            {
+                case RuntimePlatform.Android:
+                    return "android";
+                case RuntimePlatform.IPhonePlayer:
+                    return "ios";
+                case RuntimePlatform.WebGLPlayer:
+                    return "webgl";
+                default:
+                    return "desktop";
+            }
+        }
+
+        /// <summary>
         /// Gets network type
         /// </summary>
         /// <returns>Network type</returns>
