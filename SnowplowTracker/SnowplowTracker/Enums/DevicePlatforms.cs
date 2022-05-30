@@ -36,5 +36,7 @@ namespace SnowplowTracker.Enums
 		public static DevicePlatforms ConnectedTV      { get { return new DevicePlatforms("tv"); }}
 		public static DevicePlatforms GameConsole      { get { return new DevicePlatforms("cnsl"); }}
 		public static DevicePlatforms InternetOfThings { get { return new DevicePlatforms("iot"); }}
+		public static DevicePlatforms Android		   { get { return new DevicePlatforms("android"); }}
+		public static DevicePlatforms IOS			   { get { return new DevicePlatforms("ios"); }}
 	}
 }
