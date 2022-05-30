@@ -383,7 +383,15 @@ namespace SnowplowTracker.Emitters
                             if (contextItem["schema"].ToString() == Constants.SCHEMA_EVENT_CONTEXT) { 
                                 Newtonsoft.Json.Linq.JObject event_ContextData = (Newtonsoft.Json.Linq.JObject)contextItem["data"];
                                 event_ContextData[Constants.EVENT_TRANSACTION_ID] = transactionId;
-                                if (event_ContextData.ContainsKey(Constants.EVENT_IS_ONLINE)) { 
+                                bool containsKey = false;
+                                foreach (var item in event_ContextData)
+                                {
+                                    if(item.Key == Constants.EVENT_IS_ONLINE){
+                                        containsKey = true;
+                                        break;
+                                    }
+                                }
+                                if (containsKey) { 
                                     event_ContextData[Constants.EVENT_IS_ONLINE] = false;
                                 } else { 
                                     event_ContextData.Add(Constants.EVENT_IS_ONLINE, true);
