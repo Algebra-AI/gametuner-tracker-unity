@@ -171,6 +171,14 @@ namespace SnowplowTracker.Wrapper
             tracker.StopEventTracking();
         }
 
+        internal static void StartEventTracking() {
+            if (!isInitialized) { 
+                Log.Error("Tracker isn't initialized");
+                return;
+            }
+            tracker.StartEventTracking();
+        }
+
         ///  PRIVATE METHODS
 
         /// <summary>
@@ -234,7 +242,9 @@ namespace SnowplowTracker.Wrapper
                 Log.Error("Tracker isn't initialized");
                 return;
             }
+           
             OnSessionEndEvent(false);
+            StopEventTracking();
         }
 
         /// <summary>
@@ -413,7 +423,13 @@ namespace SnowplowTracker.Wrapper
                 return;
             }
             
-            tracker.GetSession().SetBackground(!focus);
+            if (focus && runtimePlatform == "ios") {
+                StartEventTracking();
+            } else { 
+                StopEventTracking();
+            }
+
+            tracker.GetSession().SetBackground(!focus);            
         }
 
         /// <summary>
