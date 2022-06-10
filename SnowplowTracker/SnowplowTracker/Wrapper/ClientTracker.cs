@@ -423,11 +423,13 @@ namespace SnowplowTracker.Wrapper
                 return;
             }
             
-            if (focus && runtimePlatform == "ios") {
-                StartEventTracking();
-            } else { 
-                StopEventTracking();
-            }
+            if (runtimePlatform == "ios") {
+                if(focus) {
+                    StartEventTracking();
+                } else {  
+                    StopEventTracking();
+                }
+            } 
 
             tracker.GetSession().SetBackground(!focus);            
         }
