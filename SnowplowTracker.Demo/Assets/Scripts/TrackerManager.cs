@@ -17,6 +17,8 @@ public class TrackerManager : MonoBehaviour
     /// Adds an event listener if a Collector URL Input Field is hooked up to this MonoBehaviour
     /// </summary>
     private void Start() {
+        SnowplowTracker.Log.SetLogLevel(3);
+        SnowplowTracker.Log.On();
         ClientTracker.Init(_collectorUrl, _analyticsAppID, "Editor", true, false, "user_id");
     }
 

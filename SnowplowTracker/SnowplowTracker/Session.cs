@@ -49,7 +49,7 @@ namespace SnowplowTracker
         private string SessionPath;
         private readonly StorageMechanism sessionStorage = StorageMechanism.Litedb;
         public delegate void OnSessionStart();
-        public delegate void OnSessionEnd();
+        public delegate void OnSessionEnd(long timestamp);
         public OnSessionStart onSessionStart;        
         public OnSessionEnd onSessionEnd;
 
@@ -114,11 +114,11 @@ namespace SnowplowTracker
         /// <summary>
         /// Invokes the session end.
         /// </summary>
-        private void DelegateSessionEnd()
+        private void DelegateSessionEnd(long sessionEndTimestamp)
         {
             if (onSessionEnd != null)
             {
-                onSessionEnd();
+                onSessionEnd(sessionEndTimestamp);
             }
         }
 
@@ -236,11 +236,25 @@ namespace SnowplowTracker
 
             if (!Utils.IsTimeInRange(backgroundAccessed, checkTime, backgroundTimeout))
             {
+                DelegateSessionEnd(GetSessionEndTimestamp(true));   
                 UpdateSession();
                 UpdateAccessedLast();
                 UpdateSessionDict();
                 DelegateSessionStart();
                 Utils.WriteDictionaryToFile(SessionPath, sessionContext.GetData());
+            }
+        }
+
+        /// <summary>
+        /// Returns the session end timestamp.
+        /// </summary>
+        /// <returns>Timestamp of session end</returns>
+        private long GetSessionEndTimestamp(bool returnFromBackground)
+        {
+            if (returnFromBackground) {                 
+                return this.backgroundAccessed + this.backgroundTimeout;
+            } else {
+                return Utils.GetTimestamp();
             }
         }
 
@@ -307,37 +321,34 @@ namespace SnowplowTracker
         // --- Private
 
         /// <summary>
-        /// Checks the session.
+        /// Checks the session in foreground.
         /// </summary>
         private void CheckSession(object state)
         {
+            if (background) {
+                return;
+            }
+
             Log.Verbose("Session: Checking session...");
 
             long checkTime = Utils.GetTimestamp();
-            long range = background ? backgroundTimeout : foregroundTimeout;
-            long accessedTime = background ? backgroundAccessed : accessedLast;
 
-            if (!Utils.IsTimeInRange(accessedTime, checkTime, range))
+            if (!Utils.IsTimeInRange(accessedLast, checkTime, foregroundTimeout))
             {
                 Log.Debug("Session: Session expired; resetting session.");
                 try
                 {
-                    DelegateSessionEnd();                
+                    DelegateSessionEnd(GetSessionEndTimestamp(false));                
                     UpdateSession();
                     UpdateAccessedLast();
                     UpdateSessionDict();                
-                    Utils.WriteDictionaryToFile(SessionPath, sessionContext.GetData());
-                    if (background) {
-                        StopChecker();
-                        return;
-                    }                     
+                    Utils.WriteDictionaryToFile(SessionPath, sessionContext.GetData());                    
                     DelegateSessionStart();
                 }
                 catch (Exception e)
                 {
                     Log.Error(e.Message);
                 }
-                
             }
 
             sessionCheckTimer.Change(checkInterval * 1000, Timeout.Infinite);
@@ -351,7 +362,7 @@ namespace SnowplowTracker
             previousSessionId = currentSessionId;
             currentSessionId = Utils.GetGUID();
             sessionIndex++;
-            firstEventId = null;
+            firstEventId = null; 
         }
 
         /// <summary>

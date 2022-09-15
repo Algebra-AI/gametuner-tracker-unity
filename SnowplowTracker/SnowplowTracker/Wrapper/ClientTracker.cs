@@ -59,7 +59,7 @@ namespace SnowplowTracker.Wrapper
             
             //TODO: zameniti sekunde sa dogovorenim vrednostima
             Session session = new Session("snowplow_session_data.dict", 72000, 300, 15);
-            //Session session = new Session("sessionPath", 120, 30, 15);
+            //Session session = new Session("sessionPath", 72000, 10, 2);
             session.onSessionStart += OnSessionStartEvent;
             session.onSessionEnd += OnSessionEndEvent;
 
@@ -250,20 +250,20 @@ namespace SnowplowTracker.Wrapper
         /// <summary>
         /// Method subscribed to sesson end event.
         /// </summary>
-        private static void OnSessionEndEvent() { 
+        private static void OnSessionEndEvent(long eventTimestamp) { 
             if (!isInitialized)
             {
                 Log.Error("Tracker isn't initialized");
                 return;
             }
-            OnSessionEndEvent(true);
+            OnSessionEndEvent(true, eventTimestamp);
         }
 
         /// <summary>       
         /// Call on session end.
         /// </summary>
         /// <param name="isTimeout">Is session timeouted</param>
-        private static void OnSessionEndEvent(bool isTimeout) { 
+        private static void OnSessionEndEvent(bool isTimeout, long eventTimestamp = 0) { 
             if (!isInitialized) {
                 Log.Error("Tracker isn't initialized");
                 return;
@@ -272,7 +272,7 @@ namespace SnowplowTracker.Wrapper
             Dictionary<string, object> eventParams = new Dictionary<string, object>();
             eventParams.Add("last_event_time", tracker.GetLastTrackEventTime());   
             eventParams.Add("timeout", isTimeout); 
-            LogEvent(EventNames.EVENT_LOGOUT, "1-0-0", eventParams, 100);
+            LogEvent(EventNames.EVENT_LOGOUT, "1-0-0", eventParams, GetContexts(null), 100, eventTime: eventTimestamp);
         }
 
         /// <summary>
@@ -351,7 +351,8 @@ namespace SnowplowTracker.Wrapper
                 string schemaVersion, 
                 Dictionary<string, object> parameters, 
                 List<IContext> context, 
-                int priority = 0) { 
+                int priority,
+                long eventTime = 0) { 
             if (!isInitialized) {
                 Log.Error("Tracker isn't initialized");
                 return;
@@ -400,12 +401,14 @@ namespace SnowplowTracker.Wrapper
                     }
                 }
             }
+
+            long eventTimestamp = eventTime == 0 ? Utils.GetTimestamp() : eventTime;
               // Track your event with your custom event data
             Unstructured  newEvent = 
                 new Unstructured()
                 .SetEventData(eventData)
                 .SetCustomContext(contextList)
-                .SetTimestamp(Utils.GetTimestamp())
+                .SetTimestamp(eventTimestamp)
                 .SetEventId(Utils.GetGUID())
                 .SetEventPriority(priority)
                 .Build();           
@@ -423,13 +426,11 @@ namespace SnowplowTracker.Wrapper
                 return;
             }
             
-            if (runtimePlatform == "ios") {
-                if(focus) {
-                    StartEventTracking();
-                } else {  
-                    StopEventTracking();
-                }
-            } 
+            if(focus) {
+                StartEventTracking();
+            } else {  
+                StopEventTracking();
+            }
 
             tracker.GetSession().SetBackground(!focus);            
         }
