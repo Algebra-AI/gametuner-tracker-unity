@@ -44,58 +44,66 @@ namespace SnowplowTracker.Wrapper
                 return;
             }
 
-            runtimePlatform = UnityUtils.GetRuntimePlatform();
-            appID = analyticsAppID;
-            storeName = store;
-            sandboxMode = isSandboxEnabled;
+            try
+            {         
+                runtimePlatform = UnityUtils.GetRuntimePlatform();
+                appID = analyticsAppID;
+                storeName = store;
+                sandboxMode = isSandboxEnabled;
 
-            UnityMainThreadDispatcher.Instance.Init();
-            SnowplowEditorFix.Init();
+                UnityMainThreadDispatcher.Instance.Init();
+                SnowplowEditorFix.Init();
 
-            // Create Emitter and Tracker
-            ExtendedEventStore extendedStore = new ExtendedEventStore();
-            HttpProtocol protocol = useHttps ? HttpProtocol.HTTPS : HttpProtocol.HTTP;
-            IEmitter emitter = new AsyncEmitter(endpointUrl, protocol, HttpMethod.POST, sendLimit: 100, 52000, 52000, extendedStore);
-            
-            //TODO: zameniti sekunde sa dogovorenim vrednostima
-            Session session = new Session("snowplow_session_data.dict", 72000, 300, 15);
-            //Session session = new Session("sessionPath", 72000, 10, 2);
-            session.onSessionStart += OnSessionStartEvent;
-            session.onSessionEnd += OnSessionEndEvent;
+                // Create Emitter and Tracker
+                ExtendedEventStore extendedStore = new ExtendedEventStore();
+                HttpProtocol protocol = useHttps ? HttpProtocol.HTTPS : HttpProtocol.HTTP;
+                IEmitter emitter = new AsyncEmitter(endpointUrl, protocol, HttpMethod.POST, sendLimit: 100, 52000, 52000, extendedStore);
+                
+                //TODO: zameniti sekunde sa dogovorenim vrednostima
+                Session session = new Session("snowplow_session_data.dict", 72000, 300, 15);
+                //Session session = new Session("sessionPath", 72000, 10, 2);
+                session.onSessionStart += OnSessionStartEvent;
+                session.onSessionEnd += OnSessionEndEvent;
 
-            Subject subject = new Subject();
-            string tempUserID = GetUserIDFromCache(extendedStore);
-            if (userID != null)
+                Subject subject = new Subject();
+                string tempUserID = GetUserIDFromCache(extendedStore);
+                if (userID != null)
+                {
+                    tempUserID = userID;
+                    UpdateUserIDInCache(userID, extendedStore);
+                }
+                subject.SetUserId(tempUserID);
+
+                deviceContext = GetDeviceContext();
+
+                tracker = new Tracker(
+                            emitter, 
+                            trackerNamespace, 
+                            UnityUtils.GetAppID(), 
+                            subject, 
+                            session, 
+                            UnityUtils.GetDevicePlatform(), 
+                            true);
+
+                tracker.StartEventTracking();
+                
+                isInitialized = true;
+
+                if(session.GetSessionIndex() == 1) {
+                    TriggerRegistration();
+                    SaveRegistrationTime(extendedStore);
+                }
+                
+                OnSessionStartEvent();
+                UnityEngine.Application.focusChanged += SetFocus;
+                UnityMainThreadDispatcher.Instance.onQuit += OnSessionEndOnQuit;
+                Log.Debug("Tracker initialized");           
+            }
+            catch (System.Exception e)
             {
-                tempUserID = userID;
-                UpdateUserIDInCache(userID, extendedStore);
-            }
-            subject.SetUserId(tempUserID);
-
-            deviceContext = GetDeviceContext();
-
-            tracker = new Tracker(
-                        emitter, 
-                        trackerNamespace, 
-                        UnityUtils.GetAppID(), 
-                        subject, 
-                        session, 
-                        UnityUtils.GetDevicePlatform(), 
-                        true);
-
-            tracker.StartEventTracking();
-            
-            isInitialized = true;
-
-            if(session.GetSessionIndex() == 1) {
-                TriggerRegistration();
-                SaveRegistrationTime(extendedStore);
-            }
-            
-            OnSessionStartEvent();
-            UnityEngine.Application.focusChanged += SetFocus;
-            UnityMainThreadDispatcher.Instance.onQuit += OnSessionEndOnQuit;
-            Log.Debug("Tracker initialized");            
+                Log.Error("Tracker: Not initialized: " + e.Message);
+                isInitialized = false;
+            } 
         }        
 
         /// <summary>
