@@ -351,7 +351,9 @@ namespace SnowplowTracker
                 }
             }
 
-            sessionCheckTimer.Change(checkInterval * 1000, Timeout.Infinite);
+            if(sessionCheckTimer != null) {
+                sessionCheckTimer.Change(checkInterval * 1000, Timeout.Infinite);
+            }
         }
 
         /// <summary>
