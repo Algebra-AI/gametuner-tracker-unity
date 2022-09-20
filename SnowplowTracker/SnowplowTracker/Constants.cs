@@ -34,7 +34,7 @@ namespace SnowplowTracker {
 		public readonly static string SCHEMA_MOBILE         = "iglu:com.snowplowanalytics.snowplow/mobile_context/jsonschema/1-0-1";
 		public readonly static string SCHEMA_GEO_LOCATION   = "iglu:com.snowplowanalytics.snowplow/geolocation_context/jsonschema/1-1-0";
 		public readonly static string SCHEMA_DEVICE_CONTEXT = "iglu:com.twodesperados/device_context/jsonschema/1-0-0";
-		public readonly static string SCHEMA_EVENT_CONTEXT  = "iglu:com.twodesperados/event_context/jsonschema/1-0-0";
+		public readonly static string SCHEMA_EVENT_CONTEXT  = "iglu:com.twodesperados/event_context/jsonschema/1-0-1";
 
 		// Event Types
 		public readonly static string EVENT_PAGE_VIEW       = "pv";
@@ -105,6 +105,7 @@ namespace SnowplowTracker {
 		public readonly static string EVENT_SENDBOX_MODE    = "sandbox_mode";
         public readonly static string EVENT_TRANSACTION_ID  = "event_bundle_id";
 		public readonly static string EVENT_IS_ONLINE  		= "is_online";
+		public readonly static string EVENT_SESSION_TIME  	= "session_time";
 
         // Geo-Location Context
         public readonly static string GEO_LAT               = "latitude";
@@ -127,10 +128,12 @@ namespace SnowplowTracker {
 		public readonly static string APP_ID                = "aid";
 		public readonly static string NAMESPACE             = "tna";
 		public readonly static string UID                   = "uid";
+		public readonly static string INSTALLATION_ID       = "iid";
 		public readonly static string CONTEXT               = "co";
 		public readonly static string CONTEXT_ENCODED       = "cx";
 		public readonly static string UNSTRUCTURED          = "ue_pr";
 		public readonly static string UNSTRUCTURED_ENCODED  = "ue_px";
+		public readonly static string API_KEY               = "ak";
 		
 		// Subject Keys
 		public readonly static string PLATFORM              = "p";

@@ -87,15 +87,23 @@ namespace SnowplowTracker.Payloads.Contexts
 			this.DoAdd(Constants.EVENT_TRANSACTION_ID, transactionID);
 			return this;
 		}        
+
+        /// <summary>
+        /// Sets session time passed
+        /// </summary>
+        /// <param name="sessionTimePassed">session time in seconds</param>
+        /// <returns>this EventContext object</returns>
+        internal EventContext SetSessionTimePassed(float sessionTimePassed)
+        {
+            this.DoAdd(Constants.EVENT_SESSION_TIME, sessionTimePassed);
+			return this;
+        }
 		
 		public override EventContext Build() {
-			//Utils.CheckArgument (this.data.ContainsKey(Constants.PLAT_OS_TYPE), "MobileContext requires 'osType'.");
-			//Utils.CheckArgument (this.data.ContainsKey(Constants.PLAT_OS_VERSION), "MobileContext requires 'osVersion'.");
-			//Utils.CheckArgument (this.data.ContainsKey(Constants.PLAT_DEVICE_MANU), "MobileContext requires 'deviceManufacturer'.");
-			//Utils.CheckArgument (this.data.ContainsKey(Constants.PLAT_DEVICE_MODEL), "MobileContext requires 'deviceModel'.");
 			this.schema = Constants.SCHEMA_EVENT_CONTEXT;
 			this.context = new SelfDescribingJson (this.schema, this.data);
 			return this;
 		}
-	}
+
+    }
 }

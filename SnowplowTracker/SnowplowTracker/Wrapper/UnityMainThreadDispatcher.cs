@@ -14,6 +14,8 @@ namespace SnowplowTracker.Wrapper
     {
 
         private static readonly Queue<Action> _executionQueue = new Queue<Action>();
+        private static volatile float timeSinceInit = 0f;
+        private static bool dispatcherInitialized = false;
         public delegate void OnQuit();
         public OnQuit onQuit;
 
@@ -26,6 +28,18 @@ namespace SnowplowTracker.Wrapper
                     _executionQueue.Dequeue().Invoke();
                 }
             }
+
+            if (dispatcherInitialized) {
+                timeSinceInit = Time.realtimeSinceStartup;
+            }
+        }
+
+        /// <summary>
+        /// Gets the time since the dispatcher was initialized
+        /// </summary>
+        /// <returns>Time since Init</returns>
+        public float GetTimeSinceInit() {
+            return timeSinceInit;
         }
 
         /// <summary>
@@ -87,7 +101,7 @@ namespace SnowplowTracker.Wrapper
 
         public void Init()
         {
-            return;
+            dispatcherInitialized = true;
         }
 
         #region SINGLETONE    

@@ -38,18 +38,21 @@ namespace SnowplowTracker
         private long backgroundTimeout;
         private long checkInterval;
         private long accessedLast;
-        private long backgroundAccessed;
+        private long backgroundAccessedTimestamp;
+        private float backgroundAccessedTimeFromStart;
         private bool background;
         private string firstEventId;
         private string userId;
         private string currentSessionId;
         private string previousSessionId;
         private int sessionIndex;
+        private float startAppTick;
+        private float lastActivityTick;
         private Timer sessionCheckTimer;
         private string SessionPath;
         private readonly StorageMechanism sessionStorage = StorageMechanism.Litedb;
         public delegate void OnSessionStart();
-        public delegate void OnSessionEnd(long timestamp);
+        public delegate void OnSessionEnd(EventData eventData);
         public OnSessionStart onSessionStart;        
         public OnSessionEnd onSessionEnd;
 
@@ -64,6 +67,7 @@ namespace SnowplowTracker
             this.foregroundTimeout = foregroundTimeout * 1000;
             this.backgroundTimeout = backgroundTimeout * 1000;
             this.checkInterval = checkInterval;
+            UpdateTimeFromStart(Wrapper.UnityUtils.GetTimeSinceStartup());
 
             SessionPath = $"{Application.persistentDataPath }/{sessionPath ?? SESSION_DEFAULT_PATH}";
 
@@ -93,11 +97,8 @@ namespace SnowplowTracker
                 }
             }
 
-            UpdateSession();
-            UpdateAccessedLast();
-            UpdateSessionDict();
-            DelegateSessionStart();
-            Utils.WriteDictionaryToFile(SessionPath, sessionContext.GetData());
+            StartNewSession();
+            DelegateSessionStart();            
         }
 
         /// <summary>
@@ -114,11 +115,11 @@ namespace SnowplowTracker
         /// <summary>
         /// Invokes the session end.
         /// </summary>
-        private void DelegateSessionEnd(long sessionEndTimestamp)
+        private void DelegateSessionEnd(EventData eventData)
         {
             if (onSessionEnd != null)
             {
-                onSessionEnd(sessionEndTimestamp);
+                onSessionEnd(eventData);
             }
         }
 
@@ -212,7 +213,8 @@ namespace SnowplowTracker
         /// </summary>
         private void GoToBackground()
         {
-            backgroundAccessed = Utils.GetTimestamp();
+            backgroundAccessedTimestamp = Utils.GetTimestamp();
+            backgroundAccessedTimeFromStart = Wrapper.UnityUtils.GetTimeSinceStartup();
         }  
 
         /// <summary>
@@ -228,34 +230,36 @@ namespace SnowplowTracker
         /// Checks is new session is triggered.
         /// </summary>
         private void CheckNewSession() {
-            if (backgroundAccessed == 0) {
+            if (backgroundAccessedTimestamp == 0) {
                 return;
             }
 
             long checkTime = Utils.GetTimestamp();
 
-            if (!Utils.IsTimeInRange(backgroundAccessed, checkTime, backgroundTimeout))
+            if (!Utils.IsTimeInRange(backgroundAccessedTimestamp, checkTime, backgroundTimeout))
             {
-                DelegateSessionEnd(GetSessionEndTimestamp(true));   
-                UpdateSession();
-                UpdateAccessedLast();
-                UpdateSessionDict();
+                DelegateSessionEnd(GetSessionEndEventData(true));
+                StartNewSession();
                 DelegateSessionStart();
-                Utils.WriteDictionaryToFile(SessionPath, sessionContext.GetData());
             }
         }
 
         /// <summary>
         /// Returns the session end timestamp.
         /// </summary>
-        /// <returns>Timestamp of session end</returns>
-        private long GetSessionEndTimestamp(bool returnFromBackground)
+        /// <returns>Event data of session end</returns>
+        private EventData GetSessionEndEventData(bool returnFromBackground)
         {
-            if (returnFromBackground) {                 
-                return this.backgroundAccessed + this.backgroundTimeout;
-            } else {
-                return Utils.GetTimestamp();
-            }
+            EventData eventData = new EventData();
+            eventData.EventTimestamp = 0;            
+            eventData.EventSessionTime = 0;
+
+            if (returnFromBackground) {       
+                eventData.EventTimestamp = this.backgroundAccessedTimestamp + this.backgroundTimeout;
+                eventData.EventSessionTime = this.backgroundAccessedTimeFromStart + (this.backgroundTimeout / 1000) - this.startAppTick;                
+            } 
+
+            return eventData;
         }
 
         /// <summary>
@@ -318,6 +322,22 @@ namespace SnowplowTracker
             return currentSessionId;
         }
 
+        /// <summary>
+        /// Gets session time from Init.
+        /// </summary>
+        /// <returns>Session time in seconds</returns>
+        public float GetSessionTime() { 
+            return lastActivityTick - startAppTick;
+        }
+
+        /// <summary>
+        /// Sets last activity tick.
+        /// </summary>
+        /// <param name="timeSinceStart">Time since app start</param>
+        public void SetLastActivityTick(float timeSinceStart){
+            this.lastActivityTick = timeSinceStart;
+        }
+
         // --- Private
 
         /// <summary>
@@ -338,11 +358,8 @@ namespace SnowplowTracker
                 Log.Debug("Session: Session expired; resetting session.");
                 try
                 {
-                    DelegateSessionEnd(GetSessionEndTimestamp(false));                
-                    UpdateSession();
-                    UpdateAccessedLast();
-                    UpdateSessionDict();                
-                    Utils.WriteDictionaryToFile(SessionPath, sessionContext.GetData());                    
+                    DelegateSessionEnd(GetSessionEndEventData(false));                
+                    StartNewSession();             
                     DelegateSessionStart();
                 }
                 catch (Exception e)
@@ -354,6 +371,18 @@ namespace SnowplowTracker
             if(sessionCheckTimer != null) {
                 sessionCheckTimer.Change(checkInterval * 1000, Timeout.Infinite);
             }
+        }
+
+
+        /// <summary>
+        /// Set data for new session.
+        /// </summary>
+        private void StartNewSession() { 
+            UpdateSession();
+            UpdateAccessedLast();
+            UpdateSessionDict();
+            UpdateTimeFromStart(Wrapper.UnityUtils.GetTimeSinceStartup());
+            Utils.WriteDictionaryToFile(SessionPath, sessionContext.GetData());
         }
 
         /// <summary>
@@ -389,5 +418,15 @@ namespace SnowplowTracker
                     .Build();
             sessionContext = newSessionContext;
         }
+
+        /// <summary>
+        /// Sets time from start.
+        /// </summary>
+        /// <param name="timeSinceStart"></param>
+        private void UpdateTimeFromStart(float timeSinceStart){
+            this.startAppTick = this.lastActivityTick = timeSinceStart;
+        }
+
+        
     }
 }

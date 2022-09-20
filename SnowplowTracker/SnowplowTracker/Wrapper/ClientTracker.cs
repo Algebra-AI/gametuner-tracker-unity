@@ -37,7 +37,7 @@ namespace SnowplowTracker.Wrapper
         /// <param name="analyticsAppID">Analytics app id, you will get it from data team.</param>
         /// <param name="store">Store name. Eg. GooglePlay, ITunes, Amazon...</param>
         /// <param name="userID">Unique user id</param>
-        public static void Init(string endpointUrl, string analyticsAppID, string store, bool isSandboxEnabled, bool useHttps = true, string userID = null) { 
+        public static void Init(string endpointUrl, string analyticsAppID, string store, bool isSandboxEnabled, bool useHttps = true, string userID = null, string apiKey = "") { 
             
             if (isInitialized) {
                 Log.Debug("Tracker is already initialized");
@@ -46,7 +46,7 @@ namespace SnowplowTracker.Wrapper
 
             try
             {         
-                runtimePlatform = UnityUtils.GetRuntimePlatform();
+                runtimePlatform = UnityUtils.GetRuntimePlatform();                
                 appID = analyticsAppID;
                 storeName = store;
                 sandboxMode = isSandboxEnabled;
@@ -61,7 +61,7 @@ namespace SnowplowTracker.Wrapper
                 
                 //TODO: zameniti sekunde sa dogovorenim vrednostima
                 Session session = new Session("snowplow_session_data.dict", 72000, 300, 15);
-                //Session session = new Session("sessionPath", 72000, 10, 2);
+                //Session session = new Session("sessionPath", 30, 10, 2);
                 session.onSessionStart += OnSessionStartEvent;
                 session.onSessionEnd += OnSessionEndEvent;
 
@@ -72,7 +72,17 @@ namespace SnowplowTracker.Wrapper
                     tempUserID = userID;
                     UpdateUserIDInCache(userID, extendedStore);
                 }
+
+                string installationId = GetInstallationIDFromCache(extendedStore);
+                if (string.IsNullOrEmpty(installationId))
+                {
+                    installationId = Utils.GetGUID();
+                    UpdateInstallationIDInCache(installationId, extendedStore);
+                }
+
                 subject.SetUserId(tempUserID);
+                subject.SetInstallationId(installationId);
+                subject.SetApiKey(apiKey);
 
                 deviceContext = GetDeviceContext();
 
@@ -258,20 +268,20 @@ namespace SnowplowTracker.Wrapper
         /// <summary>
         /// Method subscribed to sesson end event.
         /// </summary>
-        private static void OnSessionEndEvent(long eventTimestamp) { 
+        private static void OnSessionEndEvent(EventData eventData) { 
             if (!isInitialized)
             {
                 Log.Error("Tracker isn't initialized");
                 return;
             }
-            OnSessionEndEvent(true, eventTimestamp);
+            OnSessionEndEvent(true, eventData.EventTimestamp, eventData.EventSessionTime);
         }
 
         /// <summary>       
         /// Call on session end.
         /// </summary>
         /// <param name="isTimeout">Is session timeouted</param>
-        private static void OnSessionEndEvent(bool isTimeout, long eventTimestamp = 0) { 
+        private static void OnSessionEndEvent(bool isTimeout, long eventTimestamp = 0, float sessionTime = 0) { 
             if (!isInitialized) {
                 Log.Error("Tracker isn't initialized");
                 return;
@@ -280,7 +290,7 @@ namespace SnowplowTracker.Wrapper
             Dictionary<string, object> eventParams = new Dictionary<string, object>();
             eventParams.Add("last_event_time", tracker.GetLastTrackEventTime());   
             eventParams.Add("timeout", isTimeout); 
-            LogEvent(EventNames.EVENT_LOGOUT, "1-0-0", eventParams, GetContexts(null), 100, eventTime: eventTimestamp);
+            LogEvent(EventNames.EVENT_LOGOUT, "1-0-0", eventParams, GetContexts(null), 100, eventTime: eventTimestamp, sessionTime);
         }
 
         /// <summary>
@@ -340,12 +350,32 @@ namespace SnowplowTracker.Wrapper
         }
 
         /// <summary>
+        /// Gets Installation id from cache.
+        /// </summary>
+        /// <param name="store">Event store</param>
+        /// <returns>Installation ID</returns>
+        private static string GetInstallationIDFromCache(ExtendedEventStore store) { 
+            return store.GetInstallationId();
+        }
+
+        /// <summary>
         /// Updates userID in cache.
         /// </summary>
         /// <param name="userID"></param>
         private static void UpdateUserIDInCache(string userID, ExtendedEventStore store) { 
             store.UpdateUserId(userID);
         }
+
+        /// <summary>
+        /// Updates installation in cache.
+        /// </summary>
+        /// <param name="installationId">Installation ID</param>
+        /// <param name="store">Event store</param>
+        private static void UpdateInstallationIDInCache(string installationId, ExtendedEventStore store) { 
+            store.UpdateInstallationId(installationId);
+        }
+
+        
 
         /// <summary>
         /// Log analytics event.
@@ -360,11 +390,13 @@ namespace SnowplowTracker.Wrapper
                 Dictionary<string, object> parameters, 
                 List<IContext> context, 
                 int priority,
-                long eventTime = 0) { 
+                long eventTime = 0,
+                float sessionTime = 0) { 
             if (!isInitialized) {
                 Log.Error("Tracker isn't initialized");
                 return;
             }
+            
             
             // Create your event data
             string schema = string.Format(schemaTemplate, appID, eventName, schemaVersion);
@@ -398,8 +430,11 @@ namespace SnowplowTracker.Wrapper
                 eventData = new SelfDescribingJson(schema, eventParams);
             }
 
-            List<IContext> contextList = new List<IContext>();              
-            contextList.Add(GetEventContext(tracker.GetSession(), GetLastEventName(eventName), GetEventIndex()));
+            List<IContext> contextList = new List<IContext>();
+            tracker.GetSession().SetLastActivityTick(UnityUtils.GetTimeSinceStartup());
+
+            float eventSessionTime = sessionTime == 0 ? tracker.GetSession().GetSessionTime() : sessionTime;
+            contextList.Add(GetEventContext(tracker.GetSession(), GetLastEventName(eventName), GetEventIndex(), eventSessionTime));
             
             if (context != null) { 
                 foreach (IContext item in context)
@@ -478,7 +513,12 @@ namespace SnowplowTracker.Wrapper
         /// <param name="lastEventName">Name of last triggered event</param>
         /// <param name="eventIndex">Index of event</param>
         /// <returns>Event context data</returns>
-        private static EventContext GetEventContext(Session sessionData, string lastEventName, int eventIndex) {
+        private static EventContext GetEventContext(Session sessionData, string lastEventName, int eventIndex, float sessionTime) {
+
+            float eventSessionTime = 0;
+            if(sessionTime == 0) { 
+                eventSessionTime = sessionData.GetSessionTime();
+            }
 
             return new EventContext ()
                 .SetEventIndex(eventIndex)
@@ -486,6 +526,7 @@ namespace SnowplowTracker.Wrapper
                 .SetPreviousEventName(lastEventName)
                 .SetSendboxMode(sandboxMode)
                 .SetSessionID(sessionData.GetSessionID())
+                .SetSessionTimePassed(eventSessionTime)
                 .Build ();
         }
     }

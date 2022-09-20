@@ -355,5 +355,13 @@ namespace SnowplowTracker.Wrapper
         public static int GetScreenHeight() {
             return Screen.height;
         }
+
+        /// <summary>
+        /// Gets time since init in seconds.
+        /// </summary>
+        /// <returns>Time since init</returns>
+        public static float GetTimeSinceStartup() {
+            return UnityMainThreadDispatcher.Instance.GetTimeSinceInit();
+        }
     }
 }

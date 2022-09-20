@@ -43,6 +43,24 @@ namespace SnowplowTracker {
 		}
 
 		/// <summary>
+		/// Sets the installation id.
+		/// </summary>
+		/// <param name="pseudoId">User pseudo id.</param>
+		public void SetInstallationId(String installationId) {
+			//TODO: uncomment when we update enricher
+			//this.standardDict.Add (Constants.INSTALLATION_ID, installationId);
+		}	
+
+		// <summary>
+		/// Sets api key.
+		/// </summary>
+		/// <param name="apiKey">Api key.</param>
+		public void SetApiKey(String apiKey) {
+			//TODO: uncomment when we update enricher
+			//this.standardDict.Add (Constants.API_KEY, apiKey);
+		}		
+
+		/// <summary>
 		/// Gets the user ID. If ID is not found, returns null.
 		/// </summary>
 		/// <returns>UserID</returns>

@@ -19,6 +19,7 @@ namespace SnowplowTracker.Storage
         private const string COLLECTION_METADATA_LAST_TRANSACTION_ID    = "lastTransactionId";
         private const string COLLECTION_METADATA_EVENT_INDEX            = "eventIndex";
         private const string COLLECTION_METADATA_USER_ID                = "userId";
+        private const string COLLECTION_METADATA_INSTALLATION_ID        = "installationId";
         private const string COLLECTION_METADATA_REGISTRATION_TIME      = "registrationTime";
 
         public ExtendedEventStore() : base() { 
@@ -270,6 +271,36 @@ namespace SnowplowTracker.Storage
         }
 
         /// <summary>
+        /// Gets installation id from cache.
+        /// </summary>
+        /// <returns>Cached installation id</returns>
+        public string GetInstallationId() { 
+            try
+            {
+                _dbLock.EnterReadLock();
+                // Get event collection
+                var colData = _db.GetCollection<EventsMetaData>(COLLECTION_METADATA);
+
+                var result = colData.FindOne(x => x.Id == COLLECTION_METADATA_INSTALLATION_ID);
+                if (result == null) {
+                    return string.Empty;
+                }
+
+                return result.ValueString;
+            }
+            catch (Exception e)
+            {
+                Log.Error($"EventStore: Get installation id failed");
+                Log.Error(e.ToString());
+                return string.Empty;
+            }
+            finally
+            {
+                _dbLock.ExitReadLock();
+            }
+        }        
+
+        /// <summary>
         /// Update user id.
         /// </summary>
         /// <returns>Is user id updated</returns>
@@ -303,6 +334,41 @@ namespace SnowplowTracker.Storage
                 _dbLock.ExitWriteLock();
             }
         }
+
+        /// <summary>
+        /// Update installation id.
+        /// </summary>
+        /// <returns>Is installation id updated</returns>
+        public bool UpdateInstallationId(string installationId)
+        {
+            try
+            {
+                _dbLock.EnterWriteLock();
+                // Get event collection
+                var colData = _db.GetCollection<EventsMetaData>(COLLECTION_METADATA);
+
+                var result = colData.FindOne(x => x.Id == COLLECTION_METADATA_INSTALLATION_ID);
+                EventsMetaData metadata = new EventsMetaData { Id = COLLECTION_METADATA_INSTALLATION_ID, ValueString = installationId };
+
+                if (result == null) { 
+                    colData.Insert(metadata);
+                } else {
+                    colData.Update(metadata);
+                }
+               
+                return true;
+            }
+            catch (Exception e)
+            {
+                Log.Error("EventStore: Installation id failed to save");
+                Log.Error(e.ToString());
+                return false;
+            }
+            finally
+            {
+                _dbLock.ExitWriteLock();
+            }
+        }        
 
         public bool UpdateEvent(EventRow eventRow)
         {
