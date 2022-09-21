@@ -1,3 +1,11 @@
+Version 0.5.15 (2022-09-21)
+--------------------------
+Fix - Skiped session id after triggering new session
+Remove background thread logic, logout is triggered after going to foreground
+Add installation id and api key fields to http request
+Wrap init in try/catch block
+Add session time to event context
+
 Version 0.5.14 (2022-06-10)
 --------------------------
 Fix - Stop/Start tracker on focus change
