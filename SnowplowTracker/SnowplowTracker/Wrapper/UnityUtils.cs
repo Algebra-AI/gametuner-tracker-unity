@@ -361,7 +361,14 @@ namespace SnowplowTracker.Wrapper
         /// </summary>
         /// <returns>Time since init</returns>
         public static float GetTimeSinceStartup() {
-            return UnityMainThreadDispatcher.Instance.GetTimeSinceInit();
+            try
+            {
+                return UnityMainThreadDispatcher.Instance.GetTimeSinceInit();
+            }
+            catch
+            {
+                return 0;
+            }            
         }
     }
 }

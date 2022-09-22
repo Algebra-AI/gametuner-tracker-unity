@@ -515,8 +515,8 @@ namespace SnowplowTracker.Wrapper
         /// <returns>Event context data</returns>
         private static EventContext GetEventContext(Session sessionData, string lastEventName, int eventIndex, float sessionTime) {
 
-            float eventSessionTime = 0;
-            if(sessionTime == 0) { 
+            float eventSessionTime = sessionTime;
+            if(eventSessionTime == 0) { 
                 eventSessionTime = sessionData.GetSessionTime();
             }
 
