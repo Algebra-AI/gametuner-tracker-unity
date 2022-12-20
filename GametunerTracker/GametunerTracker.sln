@@ -1,7 +1,7 @@
 
 Microsoft Visual Studio Solution File, Format Version 12.00
 # Visual Studio 15
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "SnowplowTracker", "SnowplowTracker\SnowplowTracker.csproj", "{5C0FF511-8A64-4059-A9A9-611ADAA9D36F}"
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "GametunerTracker", "GametunerTracker\GametunerTracker.csproj", "{5C0FF511-8A64-4059-A9A9-611ADAA9D36F}"
 EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
