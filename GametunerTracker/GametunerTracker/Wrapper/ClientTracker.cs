@@ -28,7 +28,6 @@ namespace GametunerTracker
         private static string storeName;
         private static bool sandboxMode;
         private static string appID;
-        private static string runtimePlatform;
         public delegate void OnSessionStarted(string sessionId, int sessionIndex, string previousSessionId);
         public static OnSessionStarted onSessionStartEvent;  
 
@@ -37,10 +36,11 @@ namespace GametunerTracker
         /// <summary>
         /// Initialize the tracker
         /// </summary>
-        /// <param name="endpointUrl">Collector server URL in form {name}.twodesperados.com:{port}</param>
+        /// <param name="analyticsAppID">AppID in form "game_name"</param>
         /// <param name="apiKey">API key. You can find it on Gametuner platform (or contact AlgebraAI team)</param>
-        /// <param name="store">Store name. Eg. GooglePlay, ITunes, Amazon...</param>
+        /// <param name="isSandboxEnabled">If true, events will be sent to sandbox environment</param>
         /// <param name="userID">Unique user id</param>
+        /// <param name="store">Store name. Eg. GooglePlay, ITunes, Amazon...</param>
         public static void Init(string analyticsAppID, string apiKey, bool isSandboxEnabled, string userID = null, string store = "Unknown") { 
             
             if (isInitialized) {
@@ -48,9 +48,13 @@ namespace GametunerTracker
                 return;
             }
 
+            if(apiKey == null || apiKey == "")  {
+                Log.Error("API key is not set");
+                return;
+            }
+
             try
-            {         
-                runtimePlatform = UnityUtils.GetRuntimePlatform();                
+            {                        
                 appID = analyticsAppID;
                 storeName = store;
                 sandboxMode = isSandboxEnabled;
@@ -108,7 +112,7 @@ namespace GametunerTracker
                     SaveRegistrationTime(extendedStore);
                 }
                 
-                OnSessionStartEvent();
+                OnSessionStartEvent(true);
                 UnityEngine.Application.focusChanged += SetFocus;
                 UnityMainThreadDispatcher.Instance.onQuit += OnSessionEndOnQuit;
                 Log.Debug("Tracker initialized");           
@@ -261,17 +265,16 @@ namespace GametunerTracker
         /// <summary>
         /// Method subscribed to sesson start event.
         /// </summary>
-        private static void OnSessionStartEvent() { 
+        private static void OnSessionStartEvent(bool onAppLaunch) { 
             if (!isInitialized) {
                 Log.Error("Tracker isn't initialized");
                 return;
             }
 
             Dictionary<string, object> eventParams = new Dictionary<string, object>();
-            eventParams.Add("store", storeName);   
             eventParams.Add("previous_session_id", tracker.GetSession().GetPreviousSession()); 
-            eventParams.Add("device_platform", runtimePlatform);
-            LogEvent(EventNames.EVENT_LOGIN, "1-0-1", eventParams, GetContexts(null), 1000);
+            eventParams.Add("app_launch", onAppLaunch);
+            LogEvent(EventNames.EVENT_LOGIN, "1-0-0", eventParams, GetContexts(null), 1000);
 
             OnSessionStartUnityThread(tracker.GetSession().GetSessionID(), tracker.GetSession().GetSessionIndex(), tracker.GetSession().GetPreviousSession());
         }
@@ -327,12 +330,8 @@ namespace GametunerTracker
             if (!isInitialized) {
                 Log.Error("Tracker isn't initialized");
                 return;
-            }
-
-            Dictionary<string, object> eventParams = new Dictionary<string, object>();
-            eventParams.Add("store", storeName);
-            eventParams.Add("device_platform", runtimePlatform);  
-            LogEvent(EventNames.EVENT_REGISTRATION, "1-0-1", eventParams, GetContexts(null), 100);
+            } 
+            LogEvent(EventNames.EVENT_NEW_USER, "1-0-0", null, GetContexts(null), 100);
         }    
 
         /// <summary>
@@ -422,10 +421,24 @@ namespace GametunerTracker
                 Log.Error("Tracker isn't initialized");
                 return;
             }
+
+            string schema = string.Empty;
+
+            switch (eventName) {
+                case EventNames.EVENT_LOGIN:
+                    schema = Constants.EVENT_LOGIN_SCHEMA;
+                    break;
+                case EventNames.EVENT_NEW_USER:
+                    schema = Constants.EVENT_NEW_USER_SCHEMA;
+                    break;
+                case EventNames.EVENT_LOGOUT:
+                    schema = Constants.EVENT_LOGOUT_SCHEMA;
+                    break;
+                default:
+                    schema = string.Format(schemaTemplate, appID, eventName, schemaVersion);
+                    break;
+            } 
             
-            
-            // Create your event data
-            string schema = string.Format(schemaTemplate, appID, eventName, schemaVersion);
             System.Object obj = null;
             SelfDescribingJson eventData = new SelfDescribingJson(schema, obj);
               

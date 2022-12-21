@@ -24,12 +24,15 @@ namespace SnowplowTracker {
 	internal class Constants {
 
 		// Schemas
-		public readonly static string SCHEMA_PAYLOAD_DATA    = "iglu:com.algebraai.gametuner.common/payload_data/jsonschema/1-0-0";
-		public readonly static string SCHEMA_CONTEXTS        = "iglu:com.snowplowanalytics.snowplow/contexts/jsonschema/1-0-1";
-		public readonly static string SCHEMA_UNSTRUCT_EVENT  = "iglu:com.snowplowanalytics.snowplow/unstruct_event/jsonschema/1-0-0";
-		public readonly static string SCHEMA_DEVICE_CONTEXT  = "iglu:com.algebraai.gametuner.embedded_context/device_context/jsonschema/1-0-0";
-		public readonly static string SCHEMA_SESSION_CONTEXT = "iglu:com.algebraai.gametuner.embedded_context/session_context/jsonschema/1-0-0";
-		public readonly static string SCHEMA_EVENT_CONTEXT   = "iglu:com.algebraai.gametuner.context/event_context/jsonschema/1-0-0";
+		public readonly static string SCHEMA_PAYLOAD_DATA    	= "iglu:com.algebraai.gametuner.common/payload_data/jsonschema/1-0-0";
+		public readonly static string SCHEMA_CONTEXTS        	= "iglu:com.snowplowanalytics.snowplow/contexts/jsonschema/1-0-1";
+		public readonly static string SCHEMA_UNSTRUCT_EVENT  	= "iglu:com.snowplowanalytics.snowplow/unstruct_event/jsonschema/1-0-0";
+		public readonly static string SCHEMA_DEVICE_CONTEXT  	= "iglu:com.algebraai.gametuner.embedded_context/device_context/jsonschema/1-0-0";
+		public readonly static string SCHEMA_SESSION_CONTEXT 	= "iglu:com.algebraai.gametuner.embedded_context/session_context/jsonschema/1-0-0";
+		public readonly static string SCHEMA_EVENT_CONTEXT   	= "iglu:com.algebraai.gametuner.context/event_context/jsonschema/1-0-0";
+        public readonly static string EVENT_LOGIN_SCHEMA 	 	= "iglu:com.algebraai.gametuner.event/login/jsonschema/1-0-0";
+		public readonly static string EVENT_NEW_USER_SCHEMA 	= "iglu:com.algebraai.gametuner.event/new_user/jsonschema/1-0-0";
+		public readonly static string EVENT_LOGOUT_SCHEMA 		= "iglu:com.algebraai.gametuner.event/logout/jsonschema/1-0-0";
 
 		// Event Types
 		public readonly static string EVENT_UNSTRUCTURED    = "ue";
@@ -101,5 +104,6 @@ namespace SnowplowTracker {
 		public readonly static string USERAGENT             = "ua";
 		public readonly static string DOMAIN_UID            = "duid";
 		public readonly static string NETWORK_UID           = "tnuid";
-	}
+
+    }
 }

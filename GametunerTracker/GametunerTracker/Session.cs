@@ -52,7 +52,7 @@ namespace SnowplowTracker
         private Timer sessionCheckTimer;
         private string SessionPath;
         private readonly StorageMechanism sessionStorage = StorageMechanism.Litedb;
-        public delegate void OnSessionStart();
+        public delegate void OnSessionStart(bool onAppLaunch);
         public delegate void OnSessionEnd(EventData eventData);
         public OnSessionStart onSessionStart;        
         public OnSessionEnd onSessionEnd;
@@ -91,17 +91,17 @@ namespace SnowplowTracker
             }
 
             StartNewSession();
-            DelegateSessionStart();            
+            DelegateSessionStart(true);            
         }
 
         /// <summary>
         /// Invokes the session start.
         /// </summary>
-        private void DelegateSessionStart()
+        private void DelegateSessionStart(bool onAppLaunch)
         {
             if (onSessionStart != null)
             {
-                onSessionStart();
+                onSessionStart(onAppLaunch);
             }
         }
 
@@ -226,7 +226,7 @@ namespace SnowplowTracker
             {
                 DelegateSessionEnd(GetSessionEndEventData(true));
                 StartNewSession();
-                DelegateSessionStart();
+                DelegateSessionStart(false);
             }
         }
 
@@ -346,7 +346,7 @@ namespace SnowplowTracker
                 {
                     DelegateSessionEnd(GetSessionEndEventData(false));                
                     StartNewSession();             
-                    DelegateSessionStart();
+                    DelegateSessionStart(false);
                 }
                 catch (Exception e)
                 {
