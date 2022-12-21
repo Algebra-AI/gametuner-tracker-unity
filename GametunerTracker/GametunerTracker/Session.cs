@@ -23,6 +23,8 @@ using System.Collections.Generic;
 using System.Threading;
 using SnowplowTracker.Enums;
 using SnowplowTracker.Payloads.Contexts;
+using SnowplowTracker.Logging;
+using GametunerTracker;
 using UnityEngine;
 
 namespace SnowplowTracker
@@ -67,7 +69,7 @@ namespace SnowplowTracker
             this.foregroundTimeout = foregroundTimeout * 1000;
             this.backgroundTimeout = backgroundTimeout * 1000;
             this.checkInterval = checkInterval;
-            UpdateTimeFromStart(Wrapper.UnityUtils.GetTimeSinceStartup());
+            UpdateTimeFromStart(UnityUtils.GetTimeSinceStartup());
 
             SessionPath = $"{Application.persistentDataPath }/{sessionPath ?? SESSION_DEFAULT_PATH}";
 
@@ -214,7 +216,7 @@ namespace SnowplowTracker
         private void GoToBackground()
         {
             backgroundAccessedTimestamp = Utils.GetTimestamp();
-            backgroundAccessedTimeFromStart = Wrapper.UnityUtils.GetTimeSinceStartup();
+            backgroundAccessedTimeFromStart = UnityUtils.GetTimeSinceStartup();
         }  
 
         /// <summary>
@@ -381,7 +383,7 @@ namespace SnowplowTracker
             UpdateSession();
             UpdateAccessedLast();
             UpdateSessionDict();
-            UpdateTimeFromStart(Wrapper.UnityUtils.GetTimeSinceStartup());
+            UpdateTimeFromStart(UnityUtils.GetTimeSinceStartup());
             Utils.WriteDictionaryToFile(SessionPath, sessionContext.GetData());
         }
 

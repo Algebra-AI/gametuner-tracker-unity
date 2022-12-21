@@ -2,7 +2,7 @@ using System;
 using UnityEngine;
 using UnityEngine.iOS;
 
-namespace SnowplowTracker.Wrapper
+namespace GametunerTracker
 {
     internal static class IOSNative
     {

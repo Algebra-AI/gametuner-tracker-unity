@@ -21,8 +21,8 @@
 using System;
 using UnityEngine;
 
-namespace SnowplowTracker {
-	public class Log : MonoBehaviour {
+namespace SnowplowTracker.Logging {
+	internal class Log : MonoBehaviour {
 
 		private static int level = 2;
 		private static bool logging = true;

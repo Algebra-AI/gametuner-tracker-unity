@@ -4,7 +4,7 @@ using System.Collections.Generic;
 using System;
 using System.Threading.Tasks;
 
-namespace SnowplowTracker.Wrapper
+namespace GametunerTracker
 {
     /// <summary>
     /// A thread-safe class which holds a queue with actions to execute on the next Update() method. It can be used to make calls to the main thread for

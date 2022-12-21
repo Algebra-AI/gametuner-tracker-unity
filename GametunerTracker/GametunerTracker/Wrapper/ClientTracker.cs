@@ -7,8 +7,10 @@ using SnowplowTracker.Events;
 using SnowplowTracker.Payloads;
 using SnowplowTracker.Payloads.Contexts;
 using SnowplowTracker.Storage;
+using SnowplowTracker.Logging;
+using SnowplowTracker;
 
-namespace SnowplowTracker.Wrapper
+namespace GametunerTracker
 {
     /// <summary>
     /// Wrapper around Snowplow tracker
@@ -20,7 +22,9 @@ namespace SnowplowTracker.Wrapper
         private static DeviceContext deviceContext;
         private static bool isInitialized;
         private const string trackerNamespace = "Snowplow.Unity";
-        private const string schemaTemplate = "iglu:com.twodesperados.{0}/{1}/jsonschema/{2}";
+        private const string schemaTemplate = "com.algebraai.gametuner.gamespecific.{0}/{1}/jsonschema/{2}";
+
+        private const string endpointUrl = "api.gametuner.ai";
         private static string storeName;
         private static bool sandboxMode;
         private static string appID;
@@ -34,10 +38,10 @@ namespace SnowplowTracker.Wrapper
         /// Initialize the tracker
         /// </summary>
         /// <param name="endpointUrl">Collector server URL in form {name}.twodesperados.com:{port}</param>
-        /// <param name="analyticsAppID">Analytics app id, you will get it from data team.</param>
+        /// <param name="apiKey">API key. You can find it on Gametuner platform (or contact AlgebraAI team)</param>
         /// <param name="store">Store name. Eg. GooglePlay, ITunes, Amazon...</param>
         /// <param name="userID">Unique user id</param>
-        public static void Init(string endpointUrl, string analyticsAppID, string store, bool isSandboxEnabled, bool useHttps = true, string userID = null, string apiKey = "") { 
+        public static void Init(string analyticsAppID, string apiKey, bool isSandboxEnabled, string userID = null, string store = "Unknown") { 
             
             if (isInitialized) {
                 Log.Debug("Tracker is already initialized");
@@ -55,12 +59,12 @@ namespace SnowplowTracker.Wrapper
                 SnowplowEditorFix.Init();
 
                 // Create Emitter and Tracker
-                ExtendedEventStore extendedStore = new ExtendedEventStore();
-                HttpProtocol protocol = useHttps ? HttpProtocol.HTTPS : HttpProtocol.HTTP;
+                ExtendedEventStore extendedStore = new ExtendedEventStore(filename: "gametuner_events_lite.db");
+                HttpProtocol protocol = HttpProtocol.HTTPS;
                 IEmitter emitter = new AsyncEmitter(endpointUrl, protocol, HttpMethod.POST, sendLimit: 100, 52000, 52000, extendedStore);
                 
                 //TODO: zameniti sekunde sa dogovorenim vrednostima
-                Session session = new Session("snowplow_session_data.dict", 72000, 300, 15);
+                Session session = new Session("gametuner_session_data.dict", 72000, 300, 15);
                 //Session session = new Session("sessionPath", 30, 10, 2);
                 session.onSessionStart += OnSessionStartEvent;
                 session.onSessionEnd += OnSessionEndEvent;
