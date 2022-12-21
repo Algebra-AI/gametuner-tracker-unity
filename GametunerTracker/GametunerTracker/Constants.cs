@@ -50,12 +50,9 @@ namespace SnowplowTracker {
 		public readonly static string POST_CONTENT_TYPE     = "application/json";
 
 		// Session
-		public readonly static string SESSION_USER_ID       = "userId";
-		public readonly static string SESSION_ID            = "sessionId";
-		public readonly static string SESSION_PREVIOUS_ID   = "previousSessionId";
-		public readonly static string SESSION_INDEX         = "sessionIndex";
-		public readonly static string SESSION_STORAGE       = "storageMechanism";
-		public readonly static string SESSION_FIRST_ID      = "firstEventId";
+		public readonly static string SESSION_ID            = "session_id";
+		public readonly static string SESSION_INDEX         = "session_index";
+		public readonly static string SESSION_TIME      	= "session_time";
 
 		// Platform Generic
 		public readonly static string PLAT_OS_TYPE          = "osType";
@@ -99,14 +96,11 @@ namespace SnowplowTracker {
 		public readonly static string DEVICE_IS_HACKED	    = "is_hacked";
 
 		//Event Context
-		public readonly static string EVENT_SESSION_ID	    = "session_id"; 
 		public readonly static string EVENT_INDEX	 	    = "event_index"; 
-		public readonly static string EVENT_SESSION_INDEX   = "event_session_index"; 
 		public readonly static string EVENT_PREVIOUS_EVENT  = "previous_event"; 
 		public readonly static string EVENT_SENDBOX_MODE    = "sandbox_mode";
         public readonly static string EVENT_TRANSACTION_ID  = "event_bundle_id";
 		public readonly static string EVENT_IS_ONLINE  		= "is_online";
-		public readonly static string EVENT_SESSION_TIME  	= "session_time";
 
         // Geo-Location Context
         public readonly static string GEO_LAT               = "latitude";

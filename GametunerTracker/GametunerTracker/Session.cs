@@ -43,7 +43,6 @@ namespace SnowplowTracker
         private long backgroundAccessedTimestamp;
         private float backgroundAccessedTimeFromStart;
         private bool background;
-        private string firstEventId;
         private string userId;
         private string currentSessionId;
         private string previousSessionId;
@@ -81,17 +80,9 @@ namespace SnowplowTracker
             }
             else
             {
-                if (maybeSessionDict.TryGetValue(Constants.SESSION_USER_ID, out var userId))
-                {
-                    this.userId = (string)userId;
-                }
                 if (maybeSessionDict.TryGetValue(Constants.SESSION_ID, out var sessionId))
                 {
                     this.currentSessionId = (string)sessionId;
-                }
-                if (maybeSessionDict.TryGetValue(Constants.SESSION_PREVIOUS_ID, out var previousId))
-                {
-                    this.previousSessionId = (string)previousId;
                 }
                 if (maybeSessionDict.TryGetValue(Constants.SESSION_INDEX, out var sessionIndex))
                 {
@@ -131,16 +122,9 @@ namespace SnowplowTracker
         /// Gets the session context.
         /// </summary>
         /// <returns>The session context.</returns>
-        /// <param name="eventId">Event identifier.</param>
-        public SessionContext GetSessionContext(string eventId)
+        public SessionContext GetSessionContext()
         {
             UpdateAccessedLast();
-            if (firstEventId == null)
-            {
-                firstEventId = eventId;
-                sessionContext.SetFirstEventId(eventId);
-                sessionContext.Build();
-            }
             Log.Verbose("Session: data: " + Utils.DictToJSONString(sessionContext.GetData()));
             return sessionContext;
         }
@@ -395,7 +379,6 @@ namespace SnowplowTracker
             previousSessionId = currentSessionId;
             currentSessionId = Utils.GetGUID();
             sessionIndex++;
-            firstEventId = null; 
         }
 
         /// <summary>
@@ -412,11 +395,9 @@ namespace SnowplowTracker
         private void UpdateSessionDict()
         {
             SessionContext newSessionContext = new SessionContext()
-                    .SetUserId(userId)
                     .SetSessionId(currentSessionId)
-                    .SetPreviousSessionId(previousSessionId)
                     .SetSessionIndex(sessionIndex)
-                    .SetStorageMechanism(sessionStorage)
+                    .SetSessionTime(GetSessionTime())
                     .Build();
             sessionContext = newSessionContext;
         }

@@ -183,6 +183,28 @@ namespace GametunerTracker
         }
 
         /// <summary>
+        /// Enables logging.
+        /// </summary>
+        public static void EnableLogging(){
+            Log.On();
+        }
+
+        /// <summary>
+        /// Disables logging.
+        /// </summary>
+        public static void DisableLogging(){
+            Log.Off();
+        }
+
+        /// <summary>
+        /// Sets logging level.
+        /// </summary>
+        /// <param name="level">Logging level</param>
+        public static void SetLoggingLevel(LoggingLevel level){
+            Log.SetLogLevel(level);
+        }
+
+        /// <summary>
         /// Stops tracker.
         /// </summary>
         internal static void StopEventTracking() {
@@ -249,7 +271,7 @@ namespace GametunerTracker
             eventParams.Add("store", storeName);   
             eventParams.Add("previous_session_id", tracker.GetSession().GetPreviousSession()); 
             eventParams.Add("device_platform", runtimePlatform);
-            LogEvent(EventNames.EVENT_LOGIN, "1-0-1", eventParams, new List<IContext> { deviceContext }, 1000);
+            LogEvent(EventNames.EVENT_LOGIN, "1-0-1", eventParams, GetContexts(null), 1000);
 
             OnSessionStartUnityThread(tracker.GetSession().GetSessionID(), tracker.GetSession().GetSessionIndex(), tracker.GetSession().GetPreviousSession());
         }
@@ -310,7 +332,7 @@ namespace GametunerTracker
             Dictionary<string, object> eventParams = new Dictionary<string, object>();
             eventParams.Add("store", storeName);
             eventParams.Add("device_platform", runtimePlatform);  
-            LogEvent(EventNames.EVENT_REGISTRATION, "1-0-1", eventParams, new List<IContext> { deviceContext }, 100);
+            LogEvent(EventNames.EVENT_REGISTRATION, "1-0-1", eventParams, GetContexts(null), 100);
         }    
 
         /// <summary>
@@ -438,8 +460,16 @@ namespace GametunerTracker
             tracker.GetSession().SetLastActivityTick(UnityUtils.GetTimeSinceStartup());
 
             float eventSessionTime = sessionTime == 0 ? tracker.GetSession().GetSessionTime() : sessionTime;
-            contextList.Add(GetEventContext(tracker.GetSession(), GetLastEventName(eventName), GetEventIndex(), eventSessionTime));
             
+            SessionContext sessionContext = tracker.GetSession().GetSessionContext();
+            sessionContext.SetSessionTime(eventSessionTime);
+
+            EventContext eventContext = GetEventContext(GetLastEventName(eventName), GetEventIndex());
+
+            contextList.Add(eventContext);
+            contextList.Add(sessionContext);
+            contextList.Add(deviceContext);
+
             if (context != null) { 
                 foreach (IContext item in context)
                 {
@@ -513,24 +543,15 @@ namespace GametunerTracker
         /// <summary>
         /// Generate event context data. It's thread safe, it don't need to be called from main thread.
         /// </summary>
-        /// <param name="sessionData">Session object data</param>
         /// <param name="lastEventName">Name of last triggered event</param>
         /// <param name="eventIndex">Index of event</param>
         /// <returns>Event context data</returns>
-        private static EventContext GetEventContext(Session sessionData, string lastEventName, int eventIndex, float sessionTime) {
-
-            float eventSessionTime = sessionTime;
-            if(eventSessionTime == 0) { 
-                eventSessionTime = sessionData.GetSessionTime();
-            }
+        private static EventContext GetEventContext(string lastEventName, int eventIndex) {
 
             return new EventContext ()
                 .SetEventIndex(eventIndex)
-                .SetEventSessionIndex(sessionData.GetSessionIndex())
                 .SetPreviousEventName(lastEventName)
                 .SetSendboxMode(sandboxMode)
-                .SetSessionID(sessionData.GetSessionID())
-                .SetSessionTimePassed(eventSessionTime)
                 .Build ();
         }
     }

@@ -25,16 +25,6 @@ namespace SnowplowTracker.Payloads.Contexts
     internal class SessionContext : AbstractContext<SessionContext> {
 
 		/// <summary>
-		/// Sets the user identifier.
-		/// </summary>
-		/// <returns>The user identifier.</returns>
-		/// <param name="userId">User identifier.</param>
-		public SessionContext SetUserId(string userId) {
-			this.DoAdd (Constants.SESSION_USER_ID, userId);
-			return this;
-		}
-
-		/// <summary>
 		/// Sets the session identifier.
 		/// </summary>
 		/// <returns>The session identifier.</returns>
@@ -55,41 +45,19 @@ namespace SnowplowTracker.Payloads.Contexts
 		}
 
 		/// <summary>
-		/// Sets the previous session identifier.
+		/// Sets the time of the session.
 		/// </summary>
-		/// <returns>The previous session identifier.</returns>
-		/// <param name="previousSessionId">Previous session identifier.</param>
-		public SessionContext SetPreviousSessionId(string previousSessionId) {
-			this.DoAdd (Constants.SESSION_PREVIOUS_ID, previousSessionId, true);
-			return this;
-		}
-
-		/// <summary>
-		/// Sets the storage mechanism.
-		/// </summary>
-		/// <returns>The storage mechanism.</returns>
-		/// <param name="storageMechanism">Storage mechanism.</param>
-		public SessionContext SetStorageMechanism(StorageMechanism storageMechanism) {
-			this.DoAdd (Constants.SESSION_STORAGE, storageMechanism.Value);
-			return this;
-		}
-
-		/// <summary>
-		/// Sets the first event identifier.
-		/// </summary>
-		/// <returns>The first event identifier.</returns>
-		/// <param name="firstEventId">First event identifier.</param>
-		public SessionContext SetFirstEventId(string firstEventId) {
-			this.DoAdd (Constants.SESSION_FIRST_ID, firstEventId);
+		/// <returns>The session time.</returns>
+		/// <param name="sessionTime">Session time.</param>
+		public SessionContext SetSessionTime(float sessionTime) {
+			this.DoAdd (Constants.SESSION_TIME, sessionTime);
 			return this;
 		}
 		
 		public override SessionContext Build() {
-			Utils.CheckArgument (this.data.ContainsKey(Constants.SESSION_USER_ID), "Session Context requires 'userId'.");
-			Utils.CheckArgument (this.data.ContainsKey(Constants.SESSION_ID), "Session Context requires 'sessionId'.");
-			Utils.CheckArgument (this.data.ContainsKey(Constants.SESSION_INDEX), "Session Context requires 'sessionIndex'.");
-			Utils.CheckArgument (this.data.ContainsKey(Constants.SESSION_PREVIOUS_ID), "Session Context requires 'previousSessionId'.");
-			Utils.CheckArgument (this.data.ContainsKey(Constants.SESSION_STORAGE), "Session Context requires 'storageMechanism'.");
+			Utils.CheckArgument (this.data.ContainsKey(Constants.SESSION_ID), "Session Context requires 'session_id'.");
+			Utils.CheckArgument (this.data.ContainsKey(Constants.SESSION_INDEX), "Session Context requires 'session_index'.");
+			Utils.CheckArgument (this.data.ContainsKey(Constants.SESSION_TIME), "Session Context requires 'session_time'.");
 			this.schema = Constants.SCHEMA_SESSION;
 			this.context = new SelfDescribingJson (this.schema, this.data);
 			return this;
