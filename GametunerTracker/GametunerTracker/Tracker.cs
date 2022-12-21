@@ -152,36 +152,11 @@ namespace SnowplowTracker
             Type eType = newEvent.GetType();
             int eventPriority = newEvent.GetEventPriority();
 
-            if (eType == typeof(PageView) || eType == typeof(Structured))
-            {
-                AddTrackerPayload((TrackerPayload)newEvent.GetPayload(), contexts, eventId, eventPriority);
-            }
-            else if (eType == typeof(EcommerceTransaction))
-            {
-                AddTrackerPayload((TrackerPayload)newEvent.GetPayload(), contexts, eventId, eventPriority);
-                EcommerceTransaction ecommerceTransaction = (EcommerceTransaction)newEvent;
-                foreach (EcommerceTransactionItem item in ecommerceTransaction.GetItems())
-                {
-                    item.SetItemId(ecommerceTransaction.GetOrderId());
-                    item.SetCurrency(ecommerceTransaction.GetCurrency());
-                    item.SetTimestamp(ecommerceTransaction.GetTimestamp());
-                    AddTrackerPayload((TrackerPayload)item.GetPayload(), item.GetContexts(), item.GetEventId(), eventPriority);
-                }
-            }
-            else if (eType == typeof(Unstructured))
+            if (eType == typeof(Unstructured))
             {
                 Unstructured unstruct = (Unstructured)newEvent;
                 unstruct.SetBase64Encode(this.base64Encoded);
                 AddTrackerPayload((TrackerPayload)unstruct.GetPayload(), contexts, eventId, eventPriority);
-            }
-            else if (eType == typeof(Timing) || eType == typeof(ScreenView))
-            {
-                this.ProcessEvent(new Unstructured()
-                           .SetEventData((SelfDescribingJson)newEvent.GetPayload())
-                           .SetCustomContext(newEvent.GetContexts())
-                           .SetTimestamp(newEvent.GetTimestamp())
-                           .SetEventId(newEvent.GetEventId())
-                           .Build());
             }
         }
 
@@ -205,15 +180,6 @@ namespace SnowplowTracker
             {
                 payload.AddDict(subject.GetPayload().GetDictionary());
             }
-
-            // Add the session context if available
-            // Session context is disabled. We added session context to the payload for some events.
-            /*
-            if (session != null)
-            {
-                contexts.Add(session.GetSessionContext(eventId));
-            }
-            */
 
             // Build the final context and add it to the payload
             if (contexts != null && contexts.Count > 0)
