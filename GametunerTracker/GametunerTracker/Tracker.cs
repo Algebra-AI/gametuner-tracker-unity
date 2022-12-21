@@ -26,6 +26,7 @@ using SnowplowTracker.Payloads;
 using SnowplowTracker.Payloads.Contexts;
 using SnowplowTracker.Events;
 using SnowplowTracker.Enums;
+using SnowplowTracker.Logging;
 
 namespace SnowplowTracker
 {

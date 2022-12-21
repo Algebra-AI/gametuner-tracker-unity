@@ -1,7 +1,7 @@
 using System;
 using UnityEngine;
 
-namespace SnowplowTracker.Wrapper
+namespace GametunerTracker
 {
     /// <summary>
     /// Script that creates GameObject and adds the SnowplowEditorFix component to it.

@@ -3,7 +3,7 @@ using System.Globalization;
 using SnowplowTracker.Enums;
 using UnityEngine;
 
-namespace SnowplowTracker.Wrapper
+namespace GametunerTracker
 {
     /// <summary>
     /// Colect device data using Unity API.

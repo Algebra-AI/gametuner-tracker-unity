@@ -24,6 +24,7 @@ using System.Collections;
 using System.Collections.Generic;
 using System.Runtime.Serialization.Formatters.Binary;
 using System.Web;
+using SnowplowTracker.Logging;
 using Newtonsoft.Json;
 
 namespace SnowplowTracker

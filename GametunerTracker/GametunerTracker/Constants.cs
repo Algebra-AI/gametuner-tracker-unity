@@ -24,17 +24,18 @@ namespace SnowplowTracker {
 	internal class Constants {
 
 		// Schemas
-		public readonly static string SCHEMA_PAYLOAD_DATA   = "iglu:com.snowplowanalytics.snowplow/payload_data/jsonschema/1-0-3";
-		public readonly static string SCHEMA_CONTEXTS       = "iglu:com.snowplowanalytics.snowplow/contexts/jsonschema/1-0-1";
-		public readonly static string SCHEMA_UNSTRUCT_EVENT = "iglu:com.snowplowanalytics.snowplow/unstruct_event/jsonschema/1-0-0";
-		public readonly static string SCHEMA_SCREEN_VIEW    = "iglu:com.snowplowanalytics.snowplow/screen_view/jsonschema/1-0-0";
-		public readonly static string SCHEMA_USER_TIMINGS   = "iglu:com.snowplowanalytics.snowplow/timing/jsonschema/1-0-0";
-		public readonly static string SCHEMA_SESSION        = "iglu:com.snowplowanalytics.snowplow/client_session/jsonschema/1-0-1";
-		public readonly static string SCHEMA_DESKTOP        = "iglu:com.snowplowanalytics.snowplow/desktop_context/jsonschema/1-0-0";
-		public readonly static string SCHEMA_MOBILE         = "iglu:com.snowplowanalytics.snowplow/mobile_context/jsonschema/1-0-1";
-		public readonly static string SCHEMA_GEO_LOCATION   = "iglu:com.snowplowanalytics.snowplow/geolocation_context/jsonschema/1-1-0";
-		public readonly static string SCHEMA_DEVICE_CONTEXT = "iglu:com.twodesperados/device_context/jsonschema/1-0-0";
-		public readonly static string SCHEMA_EVENT_CONTEXT  = "iglu:com.twodesperados/event_context/jsonschema/1-0-1";
+		public readonly static string SCHEMA_PAYLOAD_DATA    = "iglu:com.algebraai.gametuner.common/payload_data/jsonschema/1-0-0";
+		public readonly static string SCHEMA_CONTEXTS        = "iglu:com.snowplowanalytics.snowplow/contexts/jsonschema/1-0-1";
+		public readonly static string SCHEMA_UNSTRUCT_EVENT  = "iglu:com.snowplowanalytics.snowplow/unstruct_event/jsonschema/1-0-0";
+		public readonly static string SCHEMA_SCREEN_VIEW     = "iglu:com.snowplowanalytics.snowplow/screen_view/jsonschema/1-0-0";
+		public readonly static string SCHEMA_USER_TIMINGS    = "iglu:com.snowplowanalytics.snowplow/timing/jsonschema/1-0-0";
+		public readonly static string SCHEMA_SESSION         = "iglu:com.snowplowanalytics.snowplow/client_session/jsonschema/1-0-1";
+		public readonly static string SCHEMA_DESKTOP         = "iglu:com.snowplowanalytics.snowplow/desktop_context/jsonschema/1-0-0";
+		public readonly static string SCHEMA_MOBILE          = "iglu:com.snowplowanalytics.snowplow/mobile_context/jsonschema/1-0-1";
+		public readonly static string SCHEMA_GEO_LOCATION    = "iglu:com.snowplowanalytics.snowplow/geolocation_context/jsonschema/1-1-0";
+		public readonly static string SCHEMA_DEVICE_CONTEXT  = "iglu:com.algebraai.gametuner.embedded_context/device_context/jsonschema/1-0-0";
+		public readonly static string SCHEMA_SESSION_CONTEXT = "iglu:com.algebraai.gametuner.embedded_context/session_context/jsonschema/1-0-0";
+		public readonly static string SCHEMA_EVENT_CONTEXT   = "iglu:com.algebraai.gametuner.context/event_context/jsonschema/1-0-0";
 
 		// Event Types
 		public readonly static string EVENT_PAGE_VIEW       = "pv";
@@ -49,12 +50,9 @@ namespace SnowplowTracker {
 		public readonly static string POST_CONTENT_TYPE     = "application/json";
 
 		// Session
-		public readonly static string SESSION_USER_ID       = "userId";
-		public readonly static string SESSION_ID            = "sessionId";
-		public readonly static string SESSION_PREVIOUS_ID   = "previousSessionId";
-		public readonly static string SESSION_INDEX         = "sessionIndex";
-		public readonly static string SESSION_STORAGE       = "storageMechanism";
-		public readonly static string SESSION_FIRST_ID      = "firstEventId";
+		public readonly static string SESSION_ID            = "session_id";
+		public readonly static string SESSION_INDEX         = "session_index";
+		public readonly static string SESSION_TIME      	= "session_time";
 
 		// Platform Generic
 		public readonly static string PLAT_OS_TYPE          = "osType";
@@ -98,14 +96,11 @@ namespace SnowplowTracker {
 		public readonly static string DEVICE_IS_HACKED	    = "is_hacked";
 
 		//Event Context
-		public readonly static string EVENT_SESSION_ID	    = "session_id"; 
 		public readonly static string EVENT_INDEX	 	    = "event_index"; 
-		public readonly static string EVENT_SESSION_INDEX   = "event_session_index"; 
 		public readonly static string EVENT_PREVIOUS_EVENT  = "previous_event"; 
 		public readonly static string EVENT_SENDBOX_MODE    = "sandbox_mode";
         public readonly static string EVENT_TRANSACTION_ID  = "event_bundle_id";
 		public readonly static string EVENT_IS_ONLINE  		= "is_online";
-		public readonly static string EVENT_SESSION_TIME  	= "session_time";
 
         // Geo-Location Context
         public readonly static string GEO_LAT               = "latitude";

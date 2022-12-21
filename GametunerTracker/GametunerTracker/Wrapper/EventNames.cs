@@ -20,7 +20,7 @@
 
 using System;
 
-namespace SnowplowTracker {
+namespace GametunerTracker {
 	public class EventNames {
 
 		// Events

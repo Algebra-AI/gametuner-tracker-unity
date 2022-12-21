@@ -1,4 +1,5 @@
 using System;
+using SnowplowTracker.Logging;
 
 namespace SnowplowTracker.Storage
 {
@@ -22,7 +23,7 @@ namespace SnowplowTracker.Storage
         private const string COLLECTION_METADATA_INSTALLATION_ID        = "installationId";
         private const string COLLECTION_METADATA_REGISTRATION_TIME      = "registrationTime";
 
-        public ExtendedEventStore() : base() { 
+        public ExtendedEventStore(string filename = "snowplow_events_lite.db") : base(filename) { 
             try
             {
                 _dbLock.EnterWriteLock();

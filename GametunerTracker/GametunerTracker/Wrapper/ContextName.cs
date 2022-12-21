@@ -1,7 +1,7 @@
 using System;
 using UnityEngine;
 
-namespace SnowplowTracker.Wrapper
+namespace GametunerTracker
 {
     public enum ContextName
     {

@@ -29,32 +29,12 @@ namespace SnowplowTracker.Payloads.Contexts
     internal class EventContext : AbstractContext<EventContext> {
 
         /// <summary>
-        /// Sets session ID.
-        /// </summary>
-        /// <param name="sessionID">Session ID in GUID format</param>
-        /// <returns>EventContext</returns>
-		public EventContext SetSessionID(string sessionID) {
-			this.DoAdd(Constants.EVENT_SESSION_ID, sessionID);
-			return this;
-		}
-
-        /// <summary>
         /// Sets event index
         /// </summary>
         /// <param name="eventIndex">Event index</param>
         /// <returns>EventContext</returns>
         public EventContext SetEventIndex(int eventIndex) {
 			this.DoAdd(Constants.EVENT_INDEX, eventIndex);
-			return this;
-		}
-
-        /// <summary>
-        /// Sets session index
-        /// </summary>
-        /// <param name="eventSessionIndex">Session index</param>
-        /// <returns>EventContext</returns>
-        public EventContext SetEventSessionIndex(int eventSessionIndex) {
-			this.DoAdd(Constants.EVENT_SESSION_INDEX, eventSessionIndex);
 			return this;
 		}
 
@@ -86,18 +66,7 @@ namespace SnowplowTracker.Payloads.Contexts
         public EventContext SetTransactionID(string transactionID) {
 			this.DoAdd(Constants.EVENT_TRANSACTION_ID, transactionID);
 			return this;
-		}        
-
-        /// <summary>
-        /// Sets session time passed
-        /// </summary>
-        /// <param name="sessionTimePassed">session time in seconds</param>
-        /// <returns>this EventContext object</returns>
-        internal EventContext SetSessionTimePassed(float sessionTimePassed)
-        {
-            this.DoAdd(Constants.EVENT_SESSION_TIME, sessionTimePassed);
-			return this;
-        }
+		}    
 		
 		public override EventContext Build() {
 			this.schema = Constants.SCHEMA_EVENT_CONTEXT;

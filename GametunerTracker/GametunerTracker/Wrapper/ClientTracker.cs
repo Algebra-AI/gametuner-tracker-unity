@@ -7,8 +7,10 @@ using SnowplowTracker.Events;
 using SnowplowTracker.Payloads;
 using SnowplowTracker.Payloads.Contexts;
 using SnowplowTracker.Storage;
+using SnowplowTracker.Logging;
+using SnowplowTracker;
 
-namespace SnowplowTracker.Wrapper
+namespace GametunerTracker
 {
     /// <summary>
     /// Wrapper around Snowplow tracker
@@ -20,7 +22,9 @@ namespace SnowplowTracker.Wrapper
         private static DeviceContext deviceContext;
         private static bool isInitialized;
         private const string trackerNamespace = "Snowplow.Unity";
-        private const string schemaTemplate = "iglu:com.twodesperados.{0}/{1}/jsonschema/{2}";
+        private const string schemaTemplate = "com.algebraai.gametuner.gamespecific.{0}/{1}/jsonschema/{2}";
+
+        private const string endpointUrl = "api.gametuner.ai";
         private static string storeName;
         private static bool sandboxMode;
         private static string appID;
@@ -34,10 +38,10 @@ namespace SnowplowTracker.Wrapper
         /// Initialize the tracker
         /// </summary>
         /// <param name="endpointUrl">Collector server URL in form {name}.twodesperados.com:{port}</param>
-        /// <param name="analyticsAppID">Analytics app id, you will get it from data team.</param>
+        /// <param name="apiKey">API key. You can find it on Gametuner platform (or contact AlgebraAI team)</param>
         /// <param name="store">Store name. Eg. GooglePlay, ITunes, Amazon...</param>
         /// <param name="userID">Unique user id</param>
-        public static void Init(string endpointUrl, string analyticsAppID, string store, bool isSandboxEnabled, bool useHttps = true, string userID = null, string apiKey = "") { 
+        public static void Init(string analyticsAppID, string apiKey, bool isSandboxEnabled, string userID = null, string store = "Unknown") { 
             
             if (isInitialized) {
                 Log.Debug("Tracker is already initialized");
@@ -55,12 +59,12 @@ namespace SnowplowTracker.Wrapper
                 SnowplowEditorFix.Init();
 
                 // Create Emitter and Tracker
-                ExtendedEventStore extendedStore = new ExtendedEventStore();
-                HttpProtocol protocol = useHttps ? HttpProtocol.HTTPS : HttpProtocol.HTTP;
+                ExtendedEventStore extendedStore = new ExtendedEventStore(filename: "gametuner_events_lite.db");
+                HttpProtocol protocol = HttpProtocol.HTTPS;
                 IEmitter emitter = new AsyncEmitter(endpointUrl, protocol, HttpMethod.POST, sendLimit: 100, 52000, 52000, extendedStore);
                 
                 //TODO: zameniti sekunde sa dogovorenim vrednostima
-                Session session = new Session("snowplow_session_data.dict", 72000, 300, 15);
+                Session session = new Session("gametuner_session_data.dict", 72000, 300, 15);
                 //Session session = new Session("sessionPath", 30, 10, 2);
                 session.onSessionStart += OnSessionStartEvent;
                 session.onSessionEnd += OnSessionEndEvent;
@@ -179,6 +183,28 @@ namespace SnowplowTracker.Wrapper
         }
 
         /// <summary>
+        /// Enables logging.
+        /// </summary>
+        public static void EnableLogging(){
+            Log.On();
+        }
+
+        /// <summary>
+        /// Disables logging.
+        /// </summary>
+        public static void DisableLogging(){
+            Log.Off();
+        }
+
+        /// <summary>
+        /// Sets logging level.
+        /// </summary>
+        /// <param name="level">Logging level</param>
+        public static void SetLoggingLevel(LoggingLevel level){
+            Log.SetLogLevel(level);
+        }
+
+        /// <summary>
         /// Stops tracker.
         /// </summary>
         internal static void StopEventTracking() {
@@ -245,7 +271,7 @@ namespace SnowplowTracker.Wrapper
             eventParams.Add("store", storeName);   
             eventParams.Add("previous_session_id", tracker.GetSession().GetPreviousSession()); 
             eventParams.Add("device_platform", runtimePlatform);
-            LogEvent(EventNames.EVENT_LOGIN, "1-0-1", eventParams, new List<IContext> { deviceContext }, 1000);
+            LogEvent(EventNames.EVENT_LOGIN, "1-0-1", eventParams, GetContexts(null), 1000);
 
             OnSessionStartUnityThread(tracker.GetSession().GetSessionID(), tracker.GetSession().GetSessionIndex(), tracker.GetSession().GetPreviousSession());
         }
@@ -306,7 +332,7 @@ namespace SnowplowTracker.Wrapper
             Dictionary<string, object> eventParams = new Dictionary<string, object>();
             eventParams.Add("store", storeName);
             eventParams.Add("device_platform", runtimePlatform);  
-            LogEvent(EventNames.EVENT_REGISTRATION, "1-0-1", eventParams, new List<IContext> { deviceContext }, 100);
+            LogEvent(EventNames.EVENT_REGISTRATION, "1-0-1", eventParams, GetContexts(null), 100);
         }    
 
         /// <summary>
@@ -434,8 +460,16 @@ namespace SnowplowTracker.Wrapper
             tracker.GetSession().SetLastActivityTick(UnityUtils.GetTimeSinceStartup());
 
             float eventSessionTime = sessionTime == 0 ? tracker.GetSession().GetSessionTime() : sessionTime;
-            contextList.Add(GetEventContext(tracker.GetSession(), GetLastEventName(eventName), GetEventIndex(), eventSessionTime));
             
+            SessionContext sessionContext = tracker.GetSession().GetSessionContext();
+            sessionContext.SetSessionTime(eventSessionTime);
+
+            EventContext eventContext = GetEventContext(GetLastEventName(eventName), GetEventIndex());
+
+            contextList.Add(eventContext);
+            contextList.Add(sessionContext);
+            contextList.Add(deviceContext);
+
             if (context != null) { 
                 foreach (IContext item in context)
                 {
@@ -509,24 +543,15 @@ namespace SnowplowTracker.Wrapper
         /// <summary>
         /// Generate event context data. It's thread safe, it don't need to be called from main thread.
         /// </summary>
-        /// <param name="sessionData">Session object data</param>
         /// <param name="lastEventName">Name of last triggered event</param>
         /// <param name="eventIndex">Index of event</param>
         /// <returns>Event context data</returns>
-        private static EventContext GetEventContext(Session sessionData, string lastEventName, int eventIndex, float sessionTime) {
-
-            float eventSessionTime = sessionTime;
-            if(eventSessionTime == 0) { 
-                eventSessionTime = sessionData.GetSessionTime();
-            }
+        private static EventContext GetEventContext(string lastEventName, int eventIndex) {
 
             return new EventContext ()
                 .SetEventIndex(eventIndex)
-                .SetEventSessionIndex(sessionData.GetSessionIndex())
                 .SetPreviousEventName(lastEventName)
                 .SetSendboxMode(sandboxMode)
-                .SetSessionID(sessionData.GetSessionID())
-                .SetSessionTimePassed(eventSessionTime)
                 .Build ();
         }
     }

@@ -7,12 +7,7 @@ if [ ! -z "$1" ]
 then
     release_mode=$1
 fi
-unity_project_plugin_path="/home/djol/Projects/wokawoka/Assets/Plugins/SnowplowTracker/SnowplowTracker.dll"
-if [ ! -z "$2" ]
-then
-    unity_project_plugin_path=$2
-fi
-dotnet build SnowplowTracker.csproj --configuration $release_mode --framework netstandard2.0
-cp bin/$release_mode/netstandard2.0/SnowplowTracker.dll ../../SnowplowTracker.Demo/Assets/Plugins/SnowplowTracker/SnowplowTracker.dll
-cp bin/$release_mode/netstandard2.0/SnowplowTracker.dll ../../SnowplowTracker.Tests/Assets/Plugins/SnowplowTracker/SnowplowTracker.dll
-cp bin/$release_mode/netstandard2.0/SnowplowTracker.dll $unity_project_plugin_path
+
+dotnet build GametunerTracker.csproj --configuration $release_mode --framework netstandard2.0
+cp bin/$release_mode/netstandard2.0/GametunerTracker.dll ../../SnowplowTracker.Demo/Assets/Plugins/GametunerTracker/GametunerTracker.dll
+cp bin/$release_mode/netstandard2.0/GametunerTracker.dll ../../SnowplowTracker.Tests/Assets/Plugins/GametunerTracker/GametunerTracker.dll

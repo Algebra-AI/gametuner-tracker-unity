@@ -25,6 +25,7 @@ using SnowplowTracker.Enums;
 using SnowplowTracker.Storage;
 using SnowplowTracker.Collections;
 using SnowplowTracker.Requests;
+using SnowplowTracker.Logging;
 using System.Net.Http;
 using System.Text;
 

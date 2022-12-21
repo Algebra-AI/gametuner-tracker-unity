@@ -1,7 +1,8 @@
 using System;
 using UnityEngine;
+using SnowplowTracker.Logging;
 
-namespace SnowplowTracker.Wrapper
+namespace GametunerTracker
 {
     internal static class AndroidNative
     {

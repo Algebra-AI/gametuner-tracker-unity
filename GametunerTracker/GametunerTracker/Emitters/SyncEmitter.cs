@@ -23,6 +23,7 @@ using SnowplowTracker.Payloads;
 using SnowplowTracker.Enums;
 using SnowplowTracker.Requests;
 using SnowplowTracker.Storage;
+using SnowplowTracker.Logging;
 using System;
 
 namespace SnowplowTracker.Emitters

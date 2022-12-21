@@ -19,12 +19,13 @@
  */
 
 using System;
+using GametunerTracker;
 using UnityEngine;
 
-namespace SnowplowTracker {
-	public class Log : MonoBehaviour {
+namespace SnowplowTracker.Logging {
+	internal class Log : MonoBehaviour {
 
-		private static int level = 2;
+		private static LoggingLevel level = LoggingLevel.Debug;
 		private static bool logging = true;
 
 		/// <summary>
@@ -32,8 +33,8 @@ namespace SnowplowTracker {
 		/// </summary>
 		/// <param name="message">Message to be logged.</param>
 		public static void Error(string message) {
-			if (logging && level >= 1) {
-				UnityEngine.Debug.LogError("SNOWPLOW: " + message);
+			if (logging && (int)level >= 1) {
+				UnityEngine.Debug.LogError("GAMETUNER: " + message);
 			}
 		}
 
@@ -42,8 +43,8 @@ namespace SnowplowTracker {
 		/// </summary>
 		/// <param name="message">Message to be logged.</param>
 		public static void Debug(string message) {
-			if (logging && level >= 2) {
-				UnityEngine.Debug.Log("SNOWPLOW: " + message);
+			if (logging && (int)level >= 2) {
+				UnityEngine.Debug.Log("GAMETUNER: " + message);
 			}
 		}
 
@@ -52,8 +53,8 @@ namespace SnowplowTracker {
 		/// </summary>
 		/// <param name="message">Message to be logged.</param>
 		public static void Verbose(string message) {
-			if (logging && level >= 3) {
-				UnityEngine.Debug.Log("SNOWPLOW: " + message);
+			if (logging && (int)level >= 3) {
+				UnityEngine.Debug.Log("GAMETUNER: " + message);
 			}
 		}
 
@@ -75,7 +76,7 @@ namespace SnowplowTracker {
 		/// Sets the log level.
 		/// </summary>
 		/// <param name="newLevel">New level.</param>
-		public static void SetLogLevel(int newLevel) {
+		public static void SetLogLevel(LoggingLevel newLevel) {
 			level = newLevel;
 		}
     }

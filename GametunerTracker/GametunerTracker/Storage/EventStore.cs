@@ -23,6 +23,7 @@ using System.Linq;
 using System.Collections.Generic;
 using System.Threading;
 using SnowplowTracker.Payloads;
+using SnowplowTracker.Logging;
 using UnityEngine;
 using LiteDB;
 
