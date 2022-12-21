@@ -58,7 +58,7 @@ namespace SnowplowTracker.Payloads.Contexts
 			Utils.CheckArgument (this.data.ContainsKey(Constants.SESSION_ID), "Session Context requires 'session_id'.");
 			Utils.CheckArgument (this.data.ContainsKey(Constants.SESSION_INDEX), "Session Context requires 'session_index'.");
 			Utils.CheckArgument (this.data.ContainsKey(Constants.SESSION_TIME), "Session Context requires 'session_time'.");
-			this.schema = Constants.SCHEMA_SESSION;
+			this.schema = Constants.SCHEMA_SESSION_CONTEXT;
 			this.context = new SelfDescribingJson (this.schema, this.data);
 			return this;
 		}

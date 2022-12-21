@@ -221,10 +221,6 @@ namespace SnowplowTracker.Payloads.Contexts
 		}
 		
 		public override DeviceContext Build() {
-			//Utils.CheckArgument (this.data.ContainsKey(Constants.PLAT_OS_TYPE), "MobileContext requires 'osType'.");
-			//Utils.CheckArgument (this.data.ContainsKey(Constants.PLAT_OS_VERSION), "MobileContext requires 'osVersion'.");
-			//Utils.CheckArgument (this.data.ContainsKey(Constants.PLAT_DEVICE_MANU), "MobileContext requires 'deviceManufacturer'.");
-			//Utils.CheckArgument (this.data.ContainsKey(Constants.PLAT_DEVICE_MODEL), "MobileContext requires 'deviceModel'.");
 			this.schema = Constants.SCHEMA_DEVICE_CONTEXT;
 			this.context = new SelfDescribingJson (this.schema, this.data);
 			return this;
