@@ -161,7 +161,8 @@ namespace SnowplowTracker.Emitters
 
 				if (emitLock != null) {
 				    lock (emitLock) {
-					    events = GetValidatedEvents(eventStore.GetEvents(sendLimit));
+					    // events = GetValidatedEvents(eventStore.GetEvents(sendLimit));
+						events = eventStore.GetEvents(sendLimit);
 					    Monitor.Pulse(emitLock);
 				    }
 				}
@@ -197,7 +198,7 @@ namespace SnowplowTracker.Emitters
 					Log.Debug(" + Failure: " + failure);
 					
 					if (failure > 0 && success == 0) {
-						Log.Error("Emitter: All events failed to send; pausing emitter for ten seconds...");
+						Log.Error(string.Format("Emitter: All events failed to send to address {0}. Pausing emitter for ten seconds...", collectorUri));
 						Thread.Sleep(FAIL_INTERVAL);
 					} else {
 						Log.Debug("Emitter: All events sent successfully; waiting for more...");

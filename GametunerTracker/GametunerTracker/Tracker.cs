@@ -90,10 +90,6 @@ namespace SnowplowTracker
         {
             dataCollection = true;
             emitter.Start();
-            if (session != null)
-            {
-                session.StartChecker();
-            }
         }
 
         /// <summary>
@@ -107,10 +103,6 @@ namespace SnowplowTracker
         {
             dataCollection = false;
             emitter.Stop();
-            if (session != null)
-            {
-                session.StopChecker();
-            }
         }
 
         // --- Event Tracking
@@ -158,6 +150,8 @@ namespace SnowplowTracker
                 unstruct.SetBase64Encode(this.base64Encoded);
                 AddTrackerPayload((TrackerPayload)unstruct.GetPayload(), contexts, eventId, eventPriority);
             }
+
+            session.CheckNewSession(false);
         }
 
         /// <summary>
@@ -251,10 +245,6 @@ namespace SnowplowTracker
         /// <param name="session">Session.</param>
         public void SetSession(Session session)
         {
-            if (this.session != null)
-            {
-                this.session.StopChecker();
-            }
             this.session = session;
         }
 
