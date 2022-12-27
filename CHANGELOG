@@ -1,3 +1,13 @@
+Version 0.06.01 (2022-12-27)
+--------------------------
+Cahnge version format
+Change project name to GameTunerTracker
+Separate event context to session and event contexts
+Send device and session context with every event
+Fix session_time
+Remove session checker
+User_id is optional field for sending events
+
 Version 0.5.15 (2022-09-21)
 --------------------------
 Fix - Skiped session id after triggering new session
