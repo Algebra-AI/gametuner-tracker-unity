@@ -25,7 +25,7 @@ using UnityEngine;
 namespace SnowplowTracker.Logging {
 	internal class Log : MonoBehaviour {
 
-		private static LoggingLevel level = LoggingLevel.Debug;
+		private static LoggingLevel level = LoggingLevel.Verbose;
 		private static bool logging = true;
 
 		/// <summary>
