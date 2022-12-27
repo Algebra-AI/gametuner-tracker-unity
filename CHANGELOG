@@ -1,3 +1,9 @@
+Version 0.5.16 (2022-12-27)
+--------------------------
+Fix - Session time counter didn't reset after new session trigger
+Remove session checker
+Check new session after every event trigger (for foregorund)
+
 Version 0.5.15 (2022-09-21)
 --------------------------
 Fix - Skiped session id after triggering new session
