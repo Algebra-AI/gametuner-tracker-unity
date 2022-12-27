@@ -89,10 +89,6 @@ namespace SnowplowTracker
         {
             dataCollection = true;
             emitter.Start();
-            if (session != null)
-            {
-                session.StartChecker();
-            }
         }
 
         /// <summary>
@@ -106,10 +102,6 @@ namespace SnowplowTracker
         {
             dataCollection = false;
             emitter.Stop();
-            if (session != null)
-            {
-                session.StopChecker();
-            }
         }
 
         // --- Event Tracking
@@ -182,6 +174,8 @@ namespace SnowplowTracker
                            .SetEventId(newEvent.GetEventId())
                            .Build());
             }
+
+            session.CheckNewSession(false);
         }
 
         /// <summary>
@@ -204,15 +198,6 @@ namespace SnowplowTracker
             {
                 payload.AddDict(subject.GetPayload().GetDictionary());
             }
-
-            // Add the session context if available
-            // Session context is disabled. We added session context to the payload for some events.
-            /*
-            if (session != null)
-            {
-                contexts.Add(session.GetSessionContext(eventId));
-            }
-            */
 
             // Build the final context and add it to the payload
             if (contexts != null && contexts.Count > 0)
@@ -284,10 +269,6 @@ namespace SnowplowTracker
         /// <param name="session">Session.</param>
         public void SetSession(Session session)
         {
-            if (this.session != null)
-            {
-                this.session.StopChecker();
-            }
             this.session = session;
         }
 

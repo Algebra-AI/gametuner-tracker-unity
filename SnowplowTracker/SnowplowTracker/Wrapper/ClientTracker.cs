@@ -60,8 +60,8 @@ namespace SnowplowTracker.Wrapper
                 IEmitter emitter = new AsyncEmitter(endpointUrl, protocol, HttpMethod.POST, sendLimit: 100, 52000, 52000, extendedStore);
                 
                 //TODO: zameniti sekunde sa dogovorenim vrednostima
-                Session session = new Session("snowplow_session_data.dict", 72000, 300, 15);
-                //Session session = new Session("sessionPath", 30, 10, 2);
+                Session session = new Session("snowplow_session_data.dict", 72000, 300);
+                //Session session = new Session("sessionPath", 10, 5);
                 session.onSessionStart += OnSessionStartEvent;
                 session.onSessionEnd += OnSessionEndEvent;
 
@@ -111,7 +111,7 @@ namespace SnowplowTracker.Wrapper
             }
             catch (System.Exception e)
             {
-                Log.Error("Tracker: Not initialized: " + e.Message);
+                Log.Error("Tracker: Not initialized: " + e.Message + e.StackTrace);
                 isInitialized = false;
             } 
         }        
