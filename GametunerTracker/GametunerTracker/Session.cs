@@ -49,7 +49,7 @@ namespace SnowplowTracker
         private float lastActivityTick;
         private string SessionPath;
         private readonly StorageMechanism sessionStorage = StorageMechanism.Litedb;
-        public delegate void OnSessionStart(bool onAppLaunch);
+        public delegate void OnSessionStart(string launchMode);
         public delegate void OnSessionEnd(EventData eventData);
         public OnSessionStart onSessionStart;        
         public OnSessionEnd onSessionEnd;
@@ -64,7 +64,6 @@ namespace SnowplowTracker
         {
             this.foregroundTimeout = foregroundTimeout * 1000;
             this.backgroundTimeout = backgroundTimeout * 1000;
-            //UpdateTimeFromStart(UnityUtils.GetTimeSinceStartup());
 
             SessionPath = $"{Application.persistentDataPath }/{sessionPath ?? SESSION_DEFAULT_PATH}";
 
@@ -91,11 +90,11 @@ namespace SnowplowTracker
         /// <summary>
         /// Invokes the session start.
         /// </summary>
-        private void DelegateSessionStart(bool onAppLaunch)
+        private void DelegateSessionStart(string launchMode)
         {
             if (onSessionStart != null)
             {
-                onSessionStart(onAppLaunch);
+                onSessionStart(launchMode);
             }
         }
 
@@ -118,7 +117,7 @@ namespace SnowplowTracker
         /// <returns>The session context.</returns>
         public SessionContext GetSessionContext()
         {
-            UpdateAccessedLast();
+            //UpdateAccessedLast();
             Log.Verbose("Session: data: " + Utils.DictToJSONString(sessionContext.GetData()));
             return sessionContext;
         }
@@ -169,23 +168,24 @@ namespace SnowplowTracker
         /// </summary>
         private void GoToForeground()
         {
-            CheckNewSession();
+            CheckNewSession(true);
         }
 
         /// <summary>
         /// Checks is new session is triggered.
         /// </summary>
-        public void CheckNewSession(bool backgroundCheck = true) {
+        public void CheckNewSession(bool backgroundCheck) {
             long checkTime = Utils.GetTimestamp();
             long startTime = background ? backgroundAccessedTimestamp : accessedLast;
             long timeout = background ? backgroundTimeout : foregroundTimeout;
+            string launchMode = background ? Constants.LOGIN_LAUNCH_MODE_FROM_BACKGROUND : Constants.LOGIN_LAUNCH_MODE_SESSION_TIMEOUT;
 
             if (!Utils.IsTimeInRange(startTime, checkTime, timeout))
             {
                 UpdateAccessedLast();
                 DelegateSessionEnd(GetSessionEndEventData(backgroundCheck));
                 StartNewSession();
-                DelegateSessionStart(false);
+                DelegateSessionStart(launchMode);
             }
 
             UpdateAccessedLast();

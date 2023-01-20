@@ -24,15 +24,20 @@ namespace SnowplowTracker {
 	internal class Constants {
 
 		// Schemas
-		public readonly static string SCHEMA_PAYLOAD_DATA    	= "iglu:com.algebraai.gametuner.common/payload_data/jsonschema/1-0-0";
-		public readonly static string SCHEMA_CONTEXTS        	= "iglu:com.snowplowanalytics.snowplow/contexts/jsonschema/1-0-1";
-		public readonly static string SCHEMA_UNSTRUCT_EVENT  	= "iglu:com.snowplowanalytics.snowplow/unstruct_event/jsonschema/1-0-0";
-		public readonly static string SCHEMA_DEVICE_CONTEXT  	= "iglu:com.algebraai.gametuner.embedded_context/device_context/jsonschema/1-0-0";
-		public readonly static string SCHEMA_SESSION_CONTEXT 	= "iglu:com.algebraai.gametuner.embedded_context/session_context/jsonschema/1-0-0";
-		public readonly static string SCHEMA_EVENT_CONTEXT   	= "iglu:com.algebraai.gametuner.context/event_context/jsonschema/1-0-0";
-        public readonly static string EVENT_LOGIN_SCHEMA 	 	= "iglu:com.algebraai.gametuner.event/login/jsonschema/1-0-0";
-		public readonly static string EVENT_NEW_USER_SCHEMA 	= "iglu:com.algebraai.gametuner.event/new_user/jsonschema/1-0-0";
-		public readonly static string EVENT_LOGOUT_SCHEMA 		= "iglu:com.algebraai.gametuner.event/logout/jsonschema/1-0-0";
+		public readonly static string SCHEMA_PAYLOAD_DATA    		= "iglu:com.algebraai.gametuner.common/payload_data/jsonschema/1-0-0";
+		public readonly static string SCHEMA_CONTEXTS       	 	= "iglu:com.snowplowanalytics.snowplow/contexts/jsonschema/1-0-1";
+		public readonly static string SCHEMA_UNSTRUCT_EVENT  		= "iglu:com.snowplowanalytics.snowplow/unstruct_event/jsonschema/1-0-0";
+		public readonly static string SCHEMA_DEVICE_CONTEXT  		= "iglu:com.algebraai.gametuner.embedded_context/device_context/jsonschema/1-0-0";
+		public readonly static string SCHEMA_SESSION_CONTEXT 		= "iglu:com.algebraai.gametuner.embedded_context/session_context/jsonschema/1-0-0";
+		public readonly static string SCHEMA_EVENT_CONTEXT   		= "iglu:com.algebraai.gametuner.context/event_context/jsonschema/1-0-0";
+        public readonly static string EVENT_LOGIN_SCHEMA 	 		= "iglu:com.algebraai.gametuner.event/login/jsonschema/1-0-0";
+		public readonly static string EVENT_FIRST_OPEN_SCHEMA 		= "iglu:com.algebraai.gametuner.event/first_open/jsonschema/1-0-0";
+		public readonly static string EVENT_LOGOUT_SCHEMA 			= "iglu:com.algebraai.gametuner.event/logout/jsonschema/1-0-0";
+		public readonly static string EVENT_PURCHASE_SCHEMA 		= "iglu:com.algebraai.gametuner.event/purchase/jsonschema/1-0-0";
+		public readonly static string EVENT_AD_STARTED_SCHEMA 		= "iglu:com.algebraai.gametuner.event/ad_started/jsonschema/1-0-0";
+		public readonly static string EVENT_AD_WATCHED_SCHEMA 		= "iglu:com.algebraai.gametuner.event/ad_watched/jsonschema/1-0-0";
+		public readonly static string EVENT_CURRENCY_CHANGE_SCHEMA 	= "iglu:com.algebraai.gametuner.event/currency_change/jsonschema/1-0-0";
+		public readonly static string EVENT_PURCHASE_INITIATED_SCHEMA 	= "iglu:com.algebraai.gametuner.event/purchase_initiated/jsonschema/1-0-0";
 
 		// Event Types
 		public readonly static string EVENT_UNSTRUCTURED    = "ue";
@@ -67,6 +72,7 @@ namespace SnowplowTracker {
 		public readonly static string DEVICE_IDFA		    = "idfa";
 		public readonly static string DEVICE_IDFV		    = "idfv";
 		public readonly static string DEVICE_IS_HACKED	    = "is_hacked";
+		public readonly static string DEVICE_STORE			= "store";
 
 		//Event Context
 		public readonly static string EVENT_INDEX	 	    = "event_index"; 
@@ -104,6 +110,14 @@ namespace SnowplowTracker {
 		public readonly static string USERAGENT             = "ua";
 		public readonly static string DOMAIN_UID            = "duid";
 		public readonly static string NETWORK_UID           = "tnuid";
+
+		// Login launch modes
+
+		public readonly static string LOGIN_LAUNCH_MODE_FROM_BACKGROUND     = "FromBackground";
+		public readonly static string LOGIN_LAUNCH_MODE_COLD_START     		= "ColdStart";
+		public readonly static string LOGIN_LAUNCH_MODE_SESSION_TIMEOUT     = "SessionTimeout";
+		public readonly static string LOGIN_LAUNCH_MODE_RECONNECT     		= "Reconnect";
+		public readonly static string LOGIN_LAUNCH_MODE_PUSH_NOTIFICATION   = "PushNotification";
 
     }
 }

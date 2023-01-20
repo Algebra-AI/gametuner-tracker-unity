@@ -219,6 +219,11 @@ namespace SnowplowTracker.Payloads.Contexts
 			this.DoAdd (Constants.DEVICE_IS_HACKED, isHacked);
 			return this;
 		}
+
+		public DeviceContext SetStore(string store) {
+			this.DoAdd (Constants.DEVICE_STORE, store);
+			return this;
+		}
 		
 		public override DeviceContext Build() {
 			this.schema = Constants.SCHEMA_DEVICE_CONTEXT;

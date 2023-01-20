@@ -24,19 +24,21 @@ namespace GametunerTracker {
 	public class EventNames {
 
 		// Events
-		public const string EVENT_NEW_USER    	  = "registration";
-		public const string EVENT_LOGIN           = "login";
-		public const string EVENT_LOGOUT          = "logout";
-		public const string EVENT_CURRENCY_CHANGE = "currency_change";
-		public const string EVENT_PURCHASE        = "purchase";
-		public const string EVENT_AD_WATCHED      = "ad_watched";
-		public const string EVENT_LEVEL_STARTED   = "level_started";
-		public const string EVENT_LEVEL_PLAYED    = "level_played";
-		public const string EVENT_USER_STATE      = "user_state";
-		public const string EVENT_EVENT_STARTED   = "event_started";
-		public const string EVENT_EVENT_ENDED     = "event_ended";
-		public const string EVENT_ERROR           = "error";
-		public const string EVENT_SHOW_POPUP      = "show_popup";
-		public const string EVENT_NOTIFICATION    = "notification";
+		public const string EVENT_FIRST_OPEN   			= "first_open";
+		public const string EVENT_LOGIN         		= "login";
+		public const string EVENT_LOGOUT         		= "logout";
+		public const string EVENT_CURRENCY_CHANGE 		= "currency_change";
+		public const string EVENT_PURCHASE        		= "purchase";
+		public const string EVENT_PURCHASE_INITIATED    = "purchase_initiated";
+		public const string EVENT_AD_WATCHED      		= "ad_watched";
+		public const string EVENT_AD_STARTED     		= "ad_started";
+		public const string EVENT_LEVEL_STARTED   		= "level_started";
+		public const string EVENT_LEVEL_PLAYED    		= "level_played";
+		public const string EVENT_USER_STATE      		= "user_state";
+		public const string EVENT_EVENT_STARTED   		= "event_started";
+		public const string EVENT_EVENT_ENDED     		= "event_ended";
+		public const string EVENT_ERROR           		= "error";
+		public const string EVENT_SHOW_POPUP      		= "show_popup";
+		public const string EVENT_NOTIFICATION    		= "notification";
 	}
 }

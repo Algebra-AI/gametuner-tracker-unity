@@ -405,7 +405,7 @@ namespace SnowplowTracker.Storage
         /// Gets registration time.
         /// </summary>
         /// <returns>Registration time</returns>
-        public long GetRegistrationTime() { 
+        public long GetFirstOpenTime() { 
             try
             {
                 _dbLock.EnterReadLock();
@@ -421,7 +421,7 @@ namespace SnowplowTracker.Storage
             }
             catch (Exception e)
             {
-                Log.Error($"EventStore: Get user id failed");
+                Log.Error($"EventStore: Get first open time failed");
                 Log.Error(e.ToString());
                 return 0L;
             }
@@ -435,7 +435,7 @@ namespace SnowplowTracker.Storage
         /// Sets registration time.
         /// </summary>
         /// <returns>Is registration time updated</returns>
-        public bool SetRegistrationTime(long registrationTime)
+        public bool SetFirstOpenTime(long firstOpenTime)
         {
             try
             {
@@ -444,7 +444,7 @@ namespace SnowplowTracker.Storage
                 var colData = _db.GetCollection<EventsMetaData>(COLLECTION_METADATA);
 
                 var result = colData.FindOne(x => x.Id == COLLECTION_METADATA_REGISTRATION_TIME);
-                EventsMetaData metadata = new EventsMetaData { Id = COLLECTION_METADATA_REGISTRATION_TIME, ValueString = registrationTime.ToString() };
+                EventsMetaData metadata = new EventsMetaData { Id = COLLECTION_METADATA_REGISTRATION_TIME, ValueString = firstOpenTime.ToString() };
 
                 if (result == null) { 
                     colData.Insert(metadata);
@@ -456,7 +456,7 @@ namespace SnowplowTracker.Storage
             }
             catch (Exception e)
             {
-                Log.Error("EventStore: UserID failed to save");
+                Log.Error("EventStore: FirstOpenTime failed to save");
                 Log.Error(e.ToString());
                 return false;
             }

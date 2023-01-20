@@ -16,15 +16,16 @@ namespace GametunerTracker
     /// Wrapper around Snowplow tracker
     /// TODO: dodati mogucnost da se ponisti konfiguracija i ponovo incijalizuje tracker. Case moze da bude kada se user loguje preko FB-a.
     /// </summary>
-    public static class ClientTracker
+    public static partial class GametunerUnityTracker
     {
         private static Tracker tracker;
         private static DeviceContext deviceContext;
         private static bool isInitialized;
-        private const string trackerNamespace = "Snowplow.Unity";
+        private const string trackerNamespace = "GameTuner.Unity";
         private const string schemaTemplate = "com.algebraai.gametuner.gamespecific.{0}/{1}/jsonschema/{2}";
 
-        private const string endpointUrl = "api.gametuner.ai";
+        // private const string endpointUrl = "api.gametuner.ai";
+        private const string endpointUrl = "34.111.95.109";
         private static string storeName;
         private static bool sandboxMode;
         private static string appID;
@@ -64,12 +65,12 @@ namespace GametunerTracker
 
                 // Create Emitter and Tracker
                 ExtendedEventStore extendedStore = new ExtendedEventStore(filename: "gametuner_events_lite.db");
-                HttpProtocol protocol = HttpProtocol.HTTPS;
+                HttpProtocol protocol = HttpProtocol.HTTP;
                 IEmitter emitter = new AsyncEmitter(endpointUrl, protocol, HttpMethod.POST, sendLimit: 100, 52000, 52000, extendedStore);
                 
                 //TODO: zameniti sekunde sa dogovorenim vrednostima
-                Session session = new Session("gametuner_session_data.dict", 72000, 300, 15);
-                //Session session = new Session("sessionPath", 30, 10, 2);
+                //Session session = new Session("gametuner_session_data.dict", 72000, 300, 15);
+                Session session = new Session("gametuner_session_data.dict", 120, 10, 2);
                 session.onSessionStart += OnSessionStartEvent;
                 session.onSessionEnd += OnSessionEndEvent;
 
@@ -97,7 +98,7 @@ namespace GametunerTracker
                 tracker = new Tracker(
                             emitter, 
                             trackerNamespace, 
-                            UnityUtils.GetAppID(), 
+                            appID, 
                             subject, 
                             session, 
                             UnityUtils.GetDevicePlatform(), 
@@ -108,11 +109,11 @@ namespace GametunerTracker
                 isInitialized = true;
 
                 if(session.GetSessionIndex() == 1) {
-                    TriggerRegistration();
-                    SaveRegistrationTime(extendedStore);
+                    TriggerFirstOpen();
+                    SaveFirstOpenTime(extendedStore);
                 }
                 
-                OnSessionStartEvent(true);
+                OnSessionStartEvent(Constants.LOGIN_LAUNCH_MODE_COLD_START);
                 UnityEngine.Application.focusChanged += SetFocus;
                 UnityMainThreadDispatcher.Instance.onQuit += OnSessionEndOnQuit;
                 Log.Debug("Tracker initialized");           
@@ -170,20 +171,22 @@ namespace GametunerTracker
                 return;
             }
 
-            LogEvent(eventName, schemaVersion, parameters, GetContexts(contexts), priority); 
+            string schema = string.Format(schemaTemplate, appID, eventName, schemaVersion);
+
+            LogEvent(eventName, schema, parameters, GetContexts(contexts), priority); 
         }
 
         /// <summary>
         /// Gets registration time from cache.
         /// </summary>
         /// <returns>Unix timestamp of registration time</returns>
-        public static long GetRegistrationTime() { 
+        public static long GetFirstOpenTime() { 
             if (!isInitialized) {
                 Log.Error("Tracker isn't initialized");
                 return 0;
             }
 
-            return ((ExtendedEventStore)tracker.GetEmitter().GetEventStore()).GetRegistrationTime();
+            return ((ExtendedEventStore)tracker.GetEmitter().GetEventStore()).GetFirstOpenTime();
         }
 
         /// <summary>
@@ -265,7 +268,7 @@ namespace GametunerTracker
         /// <summary>
         /// Method subscribed to sesson start event.
         /// </summary>
-        private static void OnSessionStartEvent(bool onAppLaunch) { 
+        private static void OnSessionStartEvent(string launchMode) { 
             if (!isInitialized) {
                 Log.Error("Tracker isn't initialized");
                 return;
@@ -273,8 +276,8 @@ namespace GametunerTracker
 
             Dictionary<string, object> eventParams = new Dictionary<string, object>();
             eventParams.Add("previous_session_id", tracker.GetSession().GetPreviousSession()); 
-            eventParams.Add("app_launch", onAppLaunch);
-            LogEvent(EventNames.EVENT_LOGIN, "1-0-0", eventParams, GetContexts(null), 1000);
+            eventParams.Add("launch_mode", launchMode);
+            LogEvent(EventNames.EVENT_LOGIN, Constants.EVENT_LOGIN_SCHEMA, eventParams, GetContexts(null), 1000);
 
             OnSessionStartUnityThread(tracker.GetSession().GetSessionID(), tracker.GetSession().GetSessionIndex(), tracker.GetSession().GetPreviousSession());
         }
@@ -319,28 +322,28 @@ namespace GametunerTracker
             Dictionary<string, object> eventParams = new Dictionary<string, object>();
             eventParams.Add("last_event_time", tracker.GetLastTrackEventTime());   
             eventParams.Add("timeout", isTimeout); 
-            LogEvent(EventNames.EVENT_LOGOUT, "1-0-0", eventParams, GetContexts(null), 100, eventTime: eventTimestamp, sessionTime);
+            LogEvent(EventNames.EVENT_LOGOUT, Constants.EVENT_LOGOUT_SCHEMA, eventParams, GetContexts(null), 100, eventTime: eventTimestamp, sessionTime);
         }
 
         /// <summary>
         /// Log registration event
         /// </summary>
-        private static void TriggerRegistration()
+        private static void TriggerFirstOpen()
         {
             if (!isInitialized) {
                 Log.Error("Tracker isn't initialized");
                 return;
             } 
-            LogEvent(EventNames.EVENT_NEW_USER, "1-0-0", null, GetContexts(null), 100);
+            LogEvent(EventNames.EVENT_FIRST_OPEN, Constants.EVENT_FIRST_OPEN_SCHEMA, null, GetContexts(null), 100);
         }    
 
         /// <summary>
-        /// Save registration time
+        /// Save first open time
         /// </summary>
         /// <param name="extendedStore">Store object</param>
-        private static void SaveRegistrationTime(ExtendedEventStore extendedStore)
+        private static void SaveFirstOpenTime(ExtendedEventStore extendedStore)
         {
-            extendedStore.SetRegistrationTime(Utils.GetTimestamp());
+            extendedStore.SetFirstOpenTime(Utils.GetTimestamp());
         }    
 
         /// <summary>
@@ -400,8 +403,6 @@ namespace GametunerTracker
             store.UpdateInstallationId(installationId);
         }
 
-        
-
         /// <summary>
         /// Log analytics event.
         /// </summary>
@@ -411,7 +412,7 @@ namespace GametunerTracker
         /// <param name="priority">Priority of event. 0 is default. Bigger the number is, priority is higher</param>
         private static void LogEvent(
                 string eventName, 
-                string schemaVersion, 
+                string schema, 
                 Dictionary<string, object> parameters, 
                 List<IContext> context, 
                 int priority,
@@ -421,23 +422,6 @@ namespace GametunerTracker
                 Log.Error("Tracker isn't initialized");
                 return;
             }
-
-            string schema = string.Empty;
-
-            switch (eventName) {
-                case EventNames.EVENT_LOGIN:
-                    schema = Constants.EVENT_LOGIN_SCHEMA;
-                    break;
-                case EventNames.EVENT_NEW_USER:
-                    schema = Constants.EVENT_NEW_USER_SCHEMA;
-                    break;
-                case EventNames.EVENT_LOGOUT:
-                    schema = Constants.EVENT_LOGOUT_SCHEMA;
-                    break;
-                default:
-                    schema = string.Format(schemaTemplate, appID, eventName, schemaVersion);
-                    break;
-            } 
             
             System.Object obj = null;
             SelfDescribingJson eventData = new SelfDescribingJson(schema, obj);
@@ -454,13 +438,16 @@ namespace GametunerTracker
                     }
 
                     if (val.GetType() == typeof(Dictionary<string, object>)) { 
-                        List<Dictionary<string, object>> data_temp = new List<Dictionary<string, object>>();
-                        Dictionary<string, object> dataDict = (Dictionary<string, object>)val;
-                        foreach (var dictItem in dataDict)
-                        {
-                            data_temp.Add(new Dictionary<string, object>() { { "key", dictItem.Key }, { "value", dictItem.Value } });
-                        }
-                        eventParams.Add(item.Key, data_temp);
+                        // TODO: Support dictionary fields. For now is disabled
+                        // List<Dictionary<string, object>> data_temp = new List<Dictionary<string, object>>();
+                        // Dictionary<string, object> dataDict = (Dictionary<string, object>)val;
+                        // foreach (var dictItem in dataDict)
+                        // {
+                        //     data_temp.Add(new Dictionary<string, object>() { { "key", dictItem.Key }, { "value", dictItem.Value } });
+                        // }
+
+                        string data = Newtonsoft.Json.JsonConvert.SerializeObject(val);
+                        eventParams.Add(item.Key, data);
                     } else {
                         eventParams.Add(item.Key, val);
                     }
@@ -531,25 +518,26 @@ namespace GametunerTracker
         /// <returns>Device context data</returns>
         private static DeviceContext GetDeviceContext() {
             return new DeviceContext()
-                .SetAdvertisingID(AndroidNative.GetAdvertisingID())
+                //.SetAdvertisingID(AndroidNative.GetAdvertisingID())
                 .SetBuildVersion(UnityUtils.GetBuildVersion())
                 .SetCampaign(string.Empty)
-                .SetCpuType(UnityUtils.GetCpuType())
-                .SetDeviceCategory(UnityUtils.GetDeviceCategory())
-                .SetDeviceId(UnityUtils.GetDevideID())
-                .SetDeviceLanguage(UnityUtils.GetDeviceLanguage())
-                .SetDeviceManufacturer(UnityUtils.GetDeviceManufacturer())
-                .SetDeviceModel(UnityUtils.GetDeviceModel())
-                .SetDeviceTimezone(UnityUtils.GetDeviceTimeZone())
-                .SetGpu(UnityUtils.GetGpu())
-                .SetIDFA(IOSNative.GetIDFA())
-                .SetIDFV(IOSNative.GetIDFV())
+                // .SetCpuType(UnityUtils.GetCpuType())
+                // .SetDeviceCategory(UnityUtils.GetDeviceCategory())
+                // .SetDeviceId(UnityUtils.GetDevideID())
+                // .SetDeviceLanguage(UnityUtils.GetDeviceLanguage())
+                // .SetDeviceManufacturer(UnityUtils.GetDeviceManufacturer())
+                // .SetDeviceModel(UnityUtils.GetDeviceModel())
+                // .SetDeviceTimezone(UnityUtils.GetDeviceTimeZone())
+                // .SetGpu(UnityUtils.GetGpu())
+                // .SetIDFA(IOSNative.GetIDFA())
+                // .SetIDFV(IOSNative.GetIDFV())
                 .SetIsHacked(UnityUtils.GetRootStatus())
                 .SetMedium(string.Empty)
                 .SetOsVersion(UnityUtils.GetOSVersion())
                 .SetRamSize(UnityUtils.GetRamSize())
                 .SetScreenResolution(UnityUtils.GetScreenWidth(), UnityUtils.GetScreenHeight())
                 .SetSource(string.Empty)
+                .SetStore(storeName)
                 .Build();
         }
 

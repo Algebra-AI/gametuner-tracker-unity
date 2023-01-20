@@ -24,7 +24,7 @@ namespace GametunerTracker
         }
 
         private void OnDisable() {
-            ClientTracker.StopEventTracking();
+            GametunerUnityTracker.StopEventTracking();
         }
     }
 }
