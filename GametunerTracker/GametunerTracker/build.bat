@@ -1,0 +1,1 @@
+dotnet build GametunerTracker.csproj --configuration "Release" --framework netstandard2.0
