@@ -162,8 +162,7 @@ namespace GametunerTracker
                 string eventName, 
                 string schemaVersion, 
                 Dictionary<string, object> parameters, 
-                int priority = 0,
-                List<ContextName> contexts = null) { 
+                int priority = 0) { 
             if (!isInitialized) {
                 Log.Error("Tracker isn't initialized");
                 return;
@@ -177,7 +176,7 @@ namespace GametunerTracker
                 schema = string.Format(schemaTemplate, appID, eventName, schemaVersion);
             }
 
-            LogEvent(eventName, schema, parameters, GetContexts(contexts), priority); 
+            LogEvent(eventName, schema, parameters, GetContexts(null), priority); 
         }
 
         /// <summary>

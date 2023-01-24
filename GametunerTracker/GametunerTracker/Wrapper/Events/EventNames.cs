@@ -23,7 +23,7 @@ using System.Collections.Generic;
 using SnowplowTracker;
 
 namespace GametunerTracker {
-	public class EventNames {
+	internal class EventNames {
 
         public static List<StandardEvent> standardEvents = new List<StandardEvent>() { 
 			new StandardEvent(EVENT_FIRST_OPEN, Constants.EVENT_FIRST_OPEN_SCHEMA),
