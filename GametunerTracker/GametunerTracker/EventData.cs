@@ -1,6 +1,6 @@
 namespace SnowplowTracker
 {
-    public class EventData
+    internal class EventData
     {
         private long eventTimestamp;
         private float eventSessionTime;

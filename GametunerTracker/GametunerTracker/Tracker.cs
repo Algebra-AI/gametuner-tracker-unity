@@ -150,8 +150,6 @@ namespace SnowplowTracker
                 unstruct.SetBase64Encode(this.base64Encoded);
                 AddTrackerPayload((TrackerPayload)unstruct.GetPayload(), contexts, eventId, eventPriority);
             }
-
-            session.CheckNewSession(false);
         }
 
         /// <summary>

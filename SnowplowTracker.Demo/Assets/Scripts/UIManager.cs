@@ -77,22 +77,10 @@ public class UIManager : MonoBehaviour
     public void TriggerTestEvent()
     { 
         Dictionary<string, object> eventAttribute = new Dictionary<string, object>();
-        eventAttribute.Add("transaction_type", "offer");
-        eventAttribute.Add("transaction_id", "tran_id");
-        eventAttribute.Add("package_name", "gold1");
-        eventAttribute.Add("gold", 20);
-        eventAttribute.Add("paid_currency", "USD");
-        eventAttribute.Add("paid_amount", 3);
-        Dictionary<string, object> curr = new Dictionary<string, object>();
-        curr.Add("booster1", 1);
-        //eventAttribute.Add("currencies", curr);
-        eventAttribute.Add("package_contents", curr);
-        eventAttribute.Add("paid_amount_usd", 10);
-        eventAttribute.Add("screen", "home");
-        eventAttribute.Add("place_of_shop_opening", "map");
-        eventAttribute.Add("game_mode", "Test");
-        eventAttribute.Add("status", "Test");
-        eventAttribute.Add("first", true);
+        eventAttribute.Add("price", 500);
+        eventAttribute.Add("price_currency", "RSD");
+        eventAttribute.Add("paid_amount", 5000);
+        eventAttribute.Add("paid_currency", "RSD");
         
         TrackerManager.LogEvent(EventNames.EVENT_PURCHASE, "1-0-0", eventAttribute);
     }

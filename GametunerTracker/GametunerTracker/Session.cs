@@ -41,7 +41,6 @@ namespace SnowplowTracker
         private long accessedLast;
         private long backgroundAccessedTimestamp;
         private float backgroundAccessedTimeFromStart;
-        private bool background;
         private string currentSessionId;
         private string previousSessionId;
         private int sessionIndex;
@@ -118,7 +117,6 @@ namespace SnowplowTracker
         public SessionContext GetSessionContext()
         {
             //UpdateAccessedLast();
-            Log.Verbose("Session: data: " + Utils.DictToJSONString(sessionContext.GetData()));
             return sessionContext;
         }
 
@@ -146,7 +144,6 @@ namespace SnowplowTracker
         /// <param name="truth">If set to <c>true</c> truth.</param>
         public void SetBackground(bool truth)
         {
-            this.background = truth;
             if (truth) {
                 GoToBackground();
             } else {
@@ -176,9 +173,9 @@ namespace SnowplowTracker
         /// </summary>
         public void CheckNewSession(bool backgroundCheck) {
             long checkTime = Utils.GetTimestamp();
-            long startTime = background ? backgroundAccessedTimestamp : accessedLast;
-            long timeout = background ? backgroundTimeout : foregroundTimeout;
-            string launchMode = background ? Constants.LOGIN_LAUNCH_MODE_FROM_BACKGROUND : Constants.LOGIN_LAUNCH_MODE_SESSION_TIMEOUT;
+            long startTime = backgroundCheck ? backgroundAccessedTimestamp : accessedLast;
+            long timeout = backgroundCheck ? backgroundTimeout : foregroundTimeout;
+            string launchMode = backgroundCheck ? Constants.LOGIN_LAUNCH_MODE_FROM_BACKGROUND : Constants.LOGIN_LAUNCH_MODE_SESSION_TIMEOUT;
 
             if (!Utils.IsTimeInRange(startTime, checkTime, timeout))
             {
@@ -225,15 +222,6 @@ namespace SnowplowTracker
         public long GetBackgroundTimeout()
         {
             return this.backgroundTimeout / 1000;
-        }
-
-        /// <summary>
-        /// Gets the background state.
-        /// </summary>
-        /// <returns><c>true</c>, if background was gotten, <c>false</c> otherwise.</returns>
-        public bool GetBackground()
-        {
-            return this.background;
         }
 
         /// <summary>
