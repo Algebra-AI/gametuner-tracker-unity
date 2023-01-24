@@ -1,3 +1,11 @@
+Version 0.06.01 (2023-01-24)
+--------------------------
+Add standard schemas
+Change new_user to first_open
+Add launch mode
+Add store parameter to device context
+Change ClientTracker -> GametunerUnityTracker
+
 Version 0.06.01 (2022-12-27)
 --------------------------
 Cahnge version format
