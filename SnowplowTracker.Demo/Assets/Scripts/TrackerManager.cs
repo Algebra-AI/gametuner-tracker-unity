@@ -22,12 +22,12 @@ public class TrackerManager : MonoBehaviour
         //SnowplowTracker.Log.SetLogLevel(3);
         //SnowplowTracker.Log.On();
         //SnowplowTracker.Wrapper.ClientTracker.Init(_collectorUrl, _analyticsAppID, "Editor", true, false, "user_id");
-        GametunerTracker.ClientTracker.EnableLogging();
-        GametunerTracker.ClientTracker.Init(_analyticsAppID, _apiKey, false);
+        GametunerUnityTracker.EnableLogging();
+        GametunerUnityTracker.Init(_analyticsAppID, _apiKey, false);
     }
 
     public static void LogEvent(string eventName, string schemaVersion, Dictionary<string, object> eventData, List<SnowplowTracker.Wrapper.ContextName> contexts = null) { 
         //SnowplowTracker.Wrapper.ClientTracker.LogEvent(eventName, schemaVersion, eventData, 0, contexts);
-        GametunerTracker.ClientTracker.LogEvent(eventName, schemaVersion, eventData, 0);
+        GametunerUnityTracker.LogEvent(eventName, schemaVersion, eventData, 0);
     }
 }
