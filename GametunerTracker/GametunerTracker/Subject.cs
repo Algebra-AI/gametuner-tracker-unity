@@ -77,6 +77,22 @@ namespace SnowplowTracker {
         }
 
 		/// <summary>
+		/// Gets installation ID.
+		/// </summary>
+		/// <returns>Installation ID</returns>
+		public string GetInstallationID() {
+            if (this.standardDict.GetDictionary() == null) {
+                return null;
+            }
+            if (this.standardDict.GetDictionary().ContainsKey(Constants.INSTALLATION_ID))
+			{
+				return this.standardDict.GetDictionary()[Constants.INSTALLATION_ID].ToString();
+			}
+
+            return null;
+        }
+
+		/// <summary>
 		/// Sets the screen resolution.
 		/// </summary>
 		/// <param name="width">Width.</param>

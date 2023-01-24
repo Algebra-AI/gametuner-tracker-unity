@@ -151,6 +151,19 @@ namespace GametunerTracker
         }
 
         /// <summary>
+        /// Gets installation ID. Installation ID is generated on first launch of the app.
+        /// </summary>
+        /// <returns>Installation Id</returns>
+        public static string GetInstallationID() { 
+            if (!isInitialized) { 
+                Log.Debug("Tracker is not initialized");
+                return null;
+            }
+
+            return tracker.GetSubject().GetInstallationID();
+        }
+
+        /// <summary>
         /// Log analytics event.
         /// </summary>
         /// <param name="eventName">Name of event</param>
