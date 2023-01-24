@@ -22,7 +22,7 @@ namespace GametunerTracker
         private static DeviceContext deviceContext;
         private static bool isInitialized;
         private const string trackerNamespace = "GameTuner.Unity";
-        private const string schemaTemplate = "com.algebraai.gametuner.gamespecific.{0}/{1}/jsonschema/{2}";
+        private const string schemaTemplate = "iglu:com.algebraai.gametuner.gamespecific.{0}/{1}/jsonschema/{2}";
 
         // private const string endpointUrl = "api.gametuner.ai";
         private const string endpointUrl = "34.111.95.109";
@@ -171,7 +171,13 @@ namespace GametunerTracker
                 return;
             }
 
-            string schema = string.Format(schemaTemplate, appID, eventName, schemaVersion);
+            string schema = string.Empty;
+            
+            if (EventNames.IsInStandardEvents(eventName)) {
+                schema = EventNames.GetSchema(eventName);
+            } else {
+                schema = string.Format(schemaTemplate, appID, eventName, schemaVersion);
+            }
 
             LogEvent(eventName, schema, parameters, GetContexts(contexts), priority); 
         }

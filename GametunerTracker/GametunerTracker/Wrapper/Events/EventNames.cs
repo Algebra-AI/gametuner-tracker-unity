@@ -19,12 +19,24 @@
  */
 
 using System;
+using System.Collections.Generic;
+using SnowplowTracker;
 
 namespace GametunerTracker {
 	public class EventNames {
 
-		// Events
-		public const string EVENT_FIRST_OPEN   			= "first_open";
+        public static List<StandardEvent> standardEvents = new List<StandardEvent>() { 
+			new StandardEvent(EVENT_FIRST_OPEN, Constants.EVENT_FIRST_OPEN_SCHEMA),
+			new StandardEvent(EVENT_LOGIN, Constants.EVENT_LOGIN_SCHEMA),
+			new StandardEvent(EVENT_LOGOUT, Constants.EVENT_LOGOUT_SCHEMA),
+			new StandardEvent(EVENT_CURRENCY_CHANGE, Constants.EVENT_CURRENCY_CHANGE_SCHEMA),
+			new StandardEvent(EVENT_PURCHASE, Constants.EVENT_PURCHASE_SCHEMA),
+			new StandardEvent(EVENT_PURCHASE_INITIATED, Constants.EVENT_PURCHASE_INITIATED_SCHEMA),
+			new StandardEvent(EVENT_AD_WATCHED, Constants.EVENT_AD_WATCHED_SCHEMA),
+			new StandardEvent(EVENT_AD_STARTED, Constants.EVENT_AD_STARTED_SCHEMA),
+		};
+        // Events
+        public const string EVENT_FIRST_OPEN   			= "first_open";
 		public const string EVENT_LOGIN         		= "login";
 		public const string EVENT_LOGOUT         		= "logout";
 		public const string EVENT_CURRENCY_CHANGE 		= "currency_change";
@@ -40,5 +52,23 @@ namespace GametunerTracker {
 		public const string EVENT_ERROR           		= "error";
 		public const string EVENT_SHOW_POPUP      		= "show_popup";
 		public const string EVENT_NOTIFICATION    		= "notification";
+
+		public static bool IsInStandardEvents(string eventName) {
+			foreach (StandardEvent standardEvent in standardEvents) {
+				if (standardEvent.EventName.Equals(eventName)) {
+					return true;
+				}
+			}
+			return false;
+		}
+
+		public static string GetSchema(string eventName) {
+			foreach (StandardEvent standardEvent in standardEvents) {
+				if (standardEvent.EventName.Equals(eventName)) {
+					return standardEvent.EventSchema;
+				}
+			}
+			return null;
+		}
 	}
 }
