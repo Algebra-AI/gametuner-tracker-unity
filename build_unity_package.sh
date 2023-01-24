@@ -4,4 +4,4 @@ if [ ! -z "$1" ]
 then
     unity_editor_path=$1
 fi
-$unity_editor_path -exportPackage Assets/Plugins/SnowplowTracker ../Resources/SnowplowTracker.unitypackage -projectPath SnowplowTracker.Demo -quit -batchmode
+$unity_editor_path -exportPackage Assets/Plugins/GametunerTracker ../Resources/GametunerTracker.unitypackage -projectPath SnowplowTracker.Demo -quit -batchmode
