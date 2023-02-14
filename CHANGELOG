@@ -1,4 +1,8 @@
-Version 0.06.01 (2023-01-24)
+Version 0.06.03 (2023-02-14)
+--------------------------
+Sandbox mode moved from event context to Subject object
+
+Version 0.06.02 (2023-01-24)
 --------------------------
 Add standard schemas
 Change new_user to first_open
