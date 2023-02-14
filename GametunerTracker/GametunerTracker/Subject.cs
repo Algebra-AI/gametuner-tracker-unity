@@ -50,6 +50,14 @@ namespace SnowplowTracker {
 			this.standardDict.Add (Constants.INSTALLATION_ID, installationId);
 		}	
 
+		/// <summary>
+		/// Sets sandbox mode.
+		/// </summary>
+		/// <param name="sandboxModeEnabled">Is sandbox mode enabled</param>
+		public void SetSandboxMode(bool sandboxModeEnabled) {
+			this.standardDict.Add (Constants.SANDBOX_MODE, sandboxModeEnabled.ToString().ToLower());
+		}
+
 		// <summary>
 		/// Sets api key.
 		/// </summary>

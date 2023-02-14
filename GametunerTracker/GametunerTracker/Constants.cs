@@ -77,7 +77,6 @@ namespace SnowplowTracker {
 		//Event Context
 		public readonly static string EVENT_INDEX	 	    = "event_index"; 
 		public readonly static string EVENT_PREVIOUS_EVENT  = "previous_event"; 
-		public readonly static string EVENT_SENDBOX_MODE    = "sandbox_mode";
         public readonly static string EVENT_TRANSACTION_ID  = "event_bundle_id";
 		public readonly static string EVENT_IS_ONLINE  		= "is_online";
 
@@ -93,6 +92,7 @@ namespace SnowplowTracker {
 		public readonly static string NAMESPACE             = "tna";
 		public readonly static string UID                   = "uid";
 		public readonly static string INSTALLATION_ID       = "iid";
+		public readonly static string SANDBOX_MODE          = "sm";
 		public readonly static string CONTEXT               = "co";
 		public readonly static string CONTEXT_ENCODED       = "cx";
 		public readonly static string UNSTRUCTURED          = "ue_pr";

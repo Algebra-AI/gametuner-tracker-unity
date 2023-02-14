@@ -25,7 +25,6 @@ namespace GametunerTracker
         private const string schemaTemplate = "iglu:com.algebraai.gametuner.gamespecific.{0}/{1}/jsonschema/{2}";
         private const string endpointUrl = "api.gametuner.ai";
         private static string storeName;
-        private static bool sandboxMode;
         private static string appID;
         public delegate void OnSessionStarted(string sessionId, int sessionIndex, string previousSessionId);
         public static OnSessionStarted onSessionStartEvent;  
@@ -56,7 +55,6 @@ namespace GametunerTracker
             {                        
                 appID = analyticsAppID;
                 storeName = store;
-                sandboxMode = isSandboxEnabled;
 
                 UnityMainThreadDispatcher.Instance.Init();
                 SnowplowEditorFix.Init();
@@ -90,6 +88,7 @@ namespace GametunerTracker
                 subject.SetUserId(tempUserID);
                 subject.SetInstallationId(installationId);
                 subject.SetApiKey(apiKey);
+                subject.SetSandboxMode(isSandboxEnabled);
 
                 deviceContext = GetDeviceContext();
 
@@ -334,7 +333,7 @@ namespace GametunerTracker
                 Log.Error("Tracker isn't initialized");
                 return;
             }
-            LogEvent(EventNames.EVENT_LOGOUT, Constants.EVENT_LOGOUT_SCHEMA, null, GetContexts(null), 100, eventTime: eventTimestamp, sessionTime);
+            //placehodler for future use    
         }
 
         /// <summary>
@@ -567,7 +566,6 @@ namespace GametunerTracker
             return new EventContext ()
                 .SetEventIndex(eventIndex)
                 .SetPreviousEventName(lastEventName)
-                .SetSendboxMode(sandboxMode)
                 .Build ();
         }
     }

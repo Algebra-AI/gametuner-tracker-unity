@@ -49,16 +49,6 @@ namespace SnowplowTracker.Payloads.Contexts
 		}
 
         /// <summary>
-        /// Sets sandbox mode
-        /// </summary>
-        /// <param name="sandboxMode">Is sandbox mode on or off</param>
-        /// <returns>EventContext</returns>
-        public EventContext SetSendboxMode(bool sandboxMode) {
-			this.DoAdd(Constants.EVENT_SENDBOX_MODE, sandboxMode);
-			return this;
-		}
-
-        /// <summary>
         /// Sets transaction ID
         /// </summary>
         /// <param name="transactionID">Transaction ID</param>

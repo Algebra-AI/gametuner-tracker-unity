@@ -57,7 +57,7 @@ GametunerUnityTracker.LogEvent(eventName, schschemaVersionema, parameters, prior
 ```
 **NOTE**:If you make a call of ```LogEvent``` method before Init, event will be discarded, so make sure to call ```Init``` before any event log.
 
-There are help methods for logging standard events. You can use them to trigger standard events or log them as regular event with latest schema version (contact GameTuner support to find out latest version).
+There are help methods for logging common events. You can use them to trigger common events or log them as regular event with latest schema version (contact GameTuner support to find out latest version).
 
 
 ```csharp
