@@ -55,7 +55,7 @@ namespace SnowplowTracker {
 		/// </summary>
 		/// <param name="sandboxModeEnabled">Is sandbox mode enabled</param>
 		public void SetSandboxMode(bool sandboxModeEnabled) {
-			this.standardDict.Add (Constants.SANDBOX_MODE, sandboxModeEnabled.ToString().ToLower());
+			this.standardDict.Add (Constants.SANDBOX_MODE, Convert.ToInt32(sandboxModeEnabled).ToString());
 		}
 
 		// <summary>
