@@ -139,16 +139,13 @@ namespace SnowplowTracker
         /// <param name="newEvent">New event.</param>
         private void ProcessEvent(IEvent newEvent)
         {
-            List<IContext> contexts = newEvent.GetContexts();
-            string eventId = newEvent.GetEventId();
             Type eType = newEvent.GetType();
-            int eventPriority = newEvent.GetEventPriority();
 
             if (eType == typeof(Unstructured))
             {
                 Unstructured unstruct = (Unstructured)newEvent;
                 unstruct.SetBase64Encode(this.base64Encoded);
-                AddTrackerPayload((TrackerPayload)unstruct.GetPayload(), contexts, eventId, eventPriority);
+                AddTrackerPayload((TrackerPayload)unstruct.GetPayload(), unstruct.GetContexts(), unstruct.GetEventId(), unstruct.GetEventPriority(), unstruct.GetEventIndex());
             }
         }
 
@@ -157,7 +154,7 @@ namespace SnowplowTracker
         /// </summary>
         /// <param name="payload">The base event payload.</param>
         /// <param name="contexts">The list of contexts from the event.</param>
-        private void AddTrackerPayload(TrackerPayload payload, List<IContext> contexts, string eventId, int eventPriority)
+        private void AddTrackerPayload(TrackerPayload payload, List<IContext> contexts, string eventId, int eventPriority, int eventIndex)
         {
 
             // Add default parameters to the payload
@@ -166,6 +163,7 @@ namespace SnowplowTracker
             payload.Add(Constants.NAMESPACE, this.trackerNamespace);
             payload.Add(Constants.TRACKER_VERSION, Version.VERSION);
             payload.SetPriority(eventPriority);
+            payload.SetEventIndex(eventIndex);
 
             // Add the subject data if available
             if (subject != null)

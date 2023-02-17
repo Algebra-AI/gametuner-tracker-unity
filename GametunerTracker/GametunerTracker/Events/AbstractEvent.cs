@@ -31,6 +31,7 @@ namespace SnowplowTracker.Events
 		protected long timestamp = Utils.GetTimestamp();
 		protected string eventId = Utils.GetGUID();
         protected int priority = 0;
+        protected int eventIndex = 0;
 
         public abstract T Self ();
 		public abstract T Build ();
@@ -81,6 +82,16 @@ namespace SnowplowTracker.Events
 			return Self ();
 		}
 
+		/// <summary>
+		/// Sets the event index.
+		/// </summary>
+		/// <returns>The event index.</returns>
+		/// <param name="eventId">Event index.</param>
+		public T SetEventIndex(int eventIndex) {
+			this.eventIndex = eventIndex;
+			return Self ();
+		}
+
 		// --- Helper Methods
 
 		/// <summary>
@@ -126,6 +137,14 @@ namespace SnowplowTracker.Events
 		/// <returns>The event priority</returns>
 		public int GetEventPriority() {
 			return priority;
+		}
+
+		/// <summary>
+		/// Gets the event index that has been set.
+		/// </summary>
+		/// <returns>The event index</returns>
+		public int GetEventIndex() {
+			return eventIndex;
 		}
 
 		/// <summary>

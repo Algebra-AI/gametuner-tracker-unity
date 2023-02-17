@@ -110,5 +110,23 @@ namespace SnowplowTracker.Payloads
         public int GetPriority() {
             return this.priority;
 		}
+
+		/// <summary>
+		/// Set index of tracker event
+		/// </summary>
+		/// <param name="index">Index of event</param>
+        public void SetEventIndex(int index)
+        {
+            this.eventIndex = index;
+        }
+
+		/// <summary>
+		/// Gets index of tracker event
+		/// </summary>
+		/// <returns>Index of event</returns>
+		public int GetEventIndex()
+		{
+			return this.eventIndex;
+		}
     }
 }

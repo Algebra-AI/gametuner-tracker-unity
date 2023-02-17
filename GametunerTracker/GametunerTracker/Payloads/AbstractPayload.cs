@@ -25,6 +25,7 @@ namespace SnowplowTracker.Payloads {
 
 		protected Dictionary<string, object> payload = new Dictionary<string, object>();
         protected int priority = 0;
+		protected int eventIndex = 0;
 
         /// <summary>
         /// Gets the dictionary within the Payload

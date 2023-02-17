@@ -345,7 +345,7 @@ namespace GametunerTracker
                 Log.Error("Tracker isn't initialized");
                 return;
             } 
-            LogEvent(EventNames.EVENT_FIRST_OPEN, Constants.EVENT_FIRST_OPEN_SCHEMA, null, GetContexts(null), 100);
+            LogEvent(EventNames.EVENT_FIRST_OPEN, Constants.EVENT_FIRST_OPEN_SCHEMA, null, GetContexts(null), 1000);
         }    
 
         /// <summary>
@@ -477,8 +477,8 @@ namespace GametunerTracker
             SessionContext sessionContext = tracker.GetSession().GetSessionContext();
             sessionContext.SetSessionTime(eventSessionTime);
 
-            int event_index = GetEventIndex();
-            EventContext eventContext = GetEventContext(GetLastEventName(eventName), event_index);
+            int eventIndex = GetEventIndex();
+            EventContext eventContext = GetEventContext(GetLastEventName(eventName), eventIndex);
 
             contextList.Add(eventContext);
             contextList.Add(sessionContext);
@@ -502,6 +502,7 @@ namespace GametunerTracker
                 .SetTimestamp(eventTimestamp)
                 .SetEventId(Utils.GetGUID())
                 .SetEventPriority(priority)
+                .SetEventIndex(eventIndex)
                 .Build();           
 
             tracker.Track(newEvent);            

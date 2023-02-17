@@ -37,6 +37,7 @@ namespace SnowplowTracker.Storage
             public DateTime CreatedAt { get; set; }
             public string Payload { get; set; }
             public int Priority  { get; set; }
+            public int EventIndex { get; set; }
         }
 
         protected const string COLLECTION_NAME = "events";
@@ -76,7 +77,7 @@ namespace SnowplowTracker.Storage
 
                 var col = _db.GetCollection<Event>(COLLECTION_NAME);
                 col.EnsureIndex("Id");
-                col.EnsureIndex("CreatedAt");
+                col.EnsureIndex("EventIndex");
 
             }
             catch (Exception e)
@@ -106,7 +107,13 @@ namespace SnowplowTracker.Storage
                 // Get event collection
                 var col = _db.GetCollection<Event>(COLLECTION_NAME);
 
-                col.Insert(new Event { Payload = payload.ToString(), Id = Guid.NewGuid(), CreatedAt = DateTime.UtcNow, Priority = payload.GetPriority()});
+                col.Insert(new Event { 
+                    Payload = payload.ToString(), 
+                    Id = Guid.NewGuid(), 
+                    CreatedAt = DateTime.UtcNow, 
+                    Priority = payload.GetPriority(),
+                    EventIndex = payload.GetEventIndex()
+                });
 
                 Log.Verbose("EventStore: Event added");
                 return true;
@@ -197,13 +204,13 @@ namespace SnowplowTracker.Storage
                 var events = _db.GetCollection<Event>(COLLECTION_NAME);
 
                 var result = events.FindAll()
-                        .OrderByDescending(y => y.Priority).ThenBy(x => x.CreatedAt)
+                        .OrderByDescending(y => y.Priority).ThenBy(x => x.EventIndex)
                         .Take(range)
                         .Select(x => new EventRow(x.Id, TrackerPayload.From(x.Payload)))
                         .ToList();
 
                 Log.Verbose($"Got events: {string.Join(",", result.Select(x => x.GetRowId()))}");
-
+                
                 return result;
             }
             catch (Exception e)

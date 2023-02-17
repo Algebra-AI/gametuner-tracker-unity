@@ -49,11 +49,5 @@ namespace SnowplowTracker.Events
 		/// </summary>
 		/// <returns>The event payload</returns>
 		IPayload GetPayload();
-
-		/// <summary>
-		/// Gets event priority.
-		/// </summary>
-		/// <returns>event priority</returns>
-        int GetEventPriority();
     }
 }
