@@ -22,6 +22,6 @@ using System;
 
 namespace SnowplowTracker {
 	internal class Version {
-		public static string VERSION = "unity-0.06.04";
+		public static string VERSION = "unity-0.06.05";
 	}
 }
