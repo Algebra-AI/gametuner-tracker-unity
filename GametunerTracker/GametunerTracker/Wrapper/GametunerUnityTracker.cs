@@ -439,6 +439,8 @@ namespace GametunerTracker
             System.Object obj = null;
             SelfDescribingJson eventData = new SelfDescribingJson(schema, obj);
               
+            //if event in schema doesn't have any parameters, parameters is sent as null
+            //if event in schema has parameters, parameters is sent as empty dictionary if we don't want to send any parameters
             if (parameters != null)
             {
                 Dictionary<string, object> eventParams = new Dictionary<string, object>();               
@@ -451,13 +453,12 @@ namespace GametunerTracker
                     }
 
                     if (val.GetType() == typeof(Dictionary<string, object>)) { 
-                        // TODO: Support dictionary fields. For now is disabled
-                        // List<Dictionary<string, object>> data_temp = new List<Dictionary<string, object>>();
-                        // Dictionary<string, object> dataDict = (Dictionary<string, object>)val;
-                        // foreach (var dictItem in dataDict)
-                        // {
-                        //     data_temp.Add(new Dictionary<string, object>() { { "key", dictItem.Key }, { "value", dictItem.Value } });
-                        // }
+                        List<Dictionary<string, object>> data_temp = new List<Dictionary<string, object>>();
+                        Dictionary<string, object> dataDict = (Dictionary<string, object>)val;
+                        foreach (var dictItem in dataDict)
+                        {
+                            data_temp.Add(new Dictionary<string, object>() { { "key", dictItem.Key }, { "value", dictItem.Value } });
+                        }
 
                         string data = Newtonsoft.Json.JsonConvert.SerializeObject(val);
                         eventParams.Add(item.Key, data);
