@@ -426,9 +426,7 @@ namespace GametunerTracker
                 string schema, 
                 Dictionary<string, object> parameters, 
                 List<IContext> context, 
-                int priority,
-                long eventTime = 0,
-                float sessionTime = 0) { 
+                int priority) { 
             if (!isInitialized) {
                 Log.Error("Tracker isn't initialized");
                 return;
@@ -436,15 +434,11 @@ namespace GametunerTracker
 
             tracker.GetSession().CheckNewSession(false);
             
-            System.Object obj = null;
-            SelfDescribingJson eventData = new SelfDescribingJson(schema, obj);
-              
-            //if event in schema doesn't have any parameters, parameters is sent as null
+            Dictionary<string, object> eventParams = new Dictionary<string, object>();       
+            //if parameters are are null, send empty dictionary
             //if event in schema has parameters, parameters is sent as empty dictionary if we don't want to send any parameters
             if (parameters != null)
-            {
-                Dictionary<string, object> eventParams = new Dictionary<string, object>();               
-            
+            {     
                 foreach (KeyValuePair<string, object> item in parameters)
                 {
                     object val = item.Value;
@@ -466,17 +460,15 @@ namespace GametunerTracker
                         eventParams.Add(item.Key, val);
                     }
                 }
-
-                eventData = new SelfDescribingJson(schema, eventParams);
             }
+
+            SelfDescribingJson eventData = new SelfDescribingJson(schema, eventParams);
 
             List<IContext> contextList = new List<IContext>();
             tracker.GetSession().SetLastActivityTick(UnityUtils.GetTimeSinceStartup());
-
-            float eventSessionTime = sessionTime == 0 ? tracker.GetSession().GetSessionTime() : sessionTime;
             
             SessionContext sessionContext = tracker.GetSession().GetSessionContext();
-            sessionContext.SetSessionTime(eventSessionTime);
+            sessionContext.SetSessionTime(tracker.GetSession().GetSessionTime());
 
             int eventIndex = GetEventIndex();
             EventContext eventContext = GetEventContext(GetLastEventName(eventName), eventIndex);
@@ -494,13 +486,12 @@ namespace GametunerTracker
                 }
             }
 
-            long eventTimestamp = eventTime == 0 ? Utils.GetTimestamp() : eventTime;
-              // Track your event with your custom event data
+            // Track your event with your custom event data
             Unstructured  newEvent = 
                 new Unstructured()
                 .SetEventData(eventData)
                 .SetCustomContext(contextList)
-                .SetTimestamp(eventTimestamp)
+                .SetTimestamp(Utils.GetTimestamp())
                 .SetEventId(Utils.GetGUID())
                 .SetEventPriority(priority)
                 .SetEventIndex(eventIndex)
