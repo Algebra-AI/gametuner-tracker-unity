@@ -31,9 +31,9 @@ namespace SnowplowTracker {
 		public readonly static string SCHEMA_SESSION_CONTEXT 		= "iglu:com.algebraai.gametuner.embedded_context/session_context/jsonschema/1-0-0";
 		public readonly static string SCHEMA_EVENT_CONTEXT   		= "iglu:com.algebraai.gametuner.context/event_context/jsonschema/1-0-0";
         public readonly static string EVENT_LOGIN_SCHEMA 	 		= "iglu:com.algebraai.gametuner.event/login/jsonschema/1-0-0";
-		public readonly static string EVENT_FIRST_OPEN_SCHEMA 		= "iglu:com.algebraai.gametuner.event/first_open/jsonschema/1-0-0";
+		public readonly static string EVENT_FIRST_OPEN_SCHEMA 		= "iglu:com.algebraai.gametuner.event/first_open/jsonschema/1-0-1";
 		public readonly static string EVENT_LOGOUT_SCHEMA 			= "iglu:com.algebraai.gametuner.event/logout/jsonschema/1-0-0";
-		public readonly static string EVENT_PURCHASE_SCHEMA 		= "iglu:com.algebraai.gametuner.event/purchase/jsonschema/1-0-0";
+		public readonly static string EVENT_PURCHASE_SCHEMA 		= "iglu:com.algebraai.gametuner.event/purchase/jsonschema/1-0-1";
 		public readonly static string EVENT_AD_STARTED_SCHEMA 		= "iglu:com.algebraai.gametuner.event/ad_started/jsonschema/1-0-0";
 		public readonly static string EVENT_AD_WATCHED_SCHEMA 		= "iglu:com.algebraai.gametuner.event/ad_watched/jsonschema/1-0-0";
 		public readonly static string EVENT_CURRENCY_CHANGE_SCHEMA 	= "iglu:com.algebraai.gametuner.event/currency_change/jsonschema/1-0-0";

@@ -97,7 +97,7 @@ namespace GametunerTracker
         }
 
         //Create method to log event Purchase with parameters
-        public static void LogEventPurchase(string transactionId, string paymentProvider, string payload, string packageName, string packageContents, int premiumCurrency, double price, string priceCurrency, double priceUsd, double paidAmount, string paidCurrency, double paidUsd, string gameMode, string shopPlacement, string screen, string transactionCountryCode, string group_id)
+        public static void LogEventPurchase(string transactionId, string paymentProvider, string payload, string packageName, string packageContents, int premiumCurrency, double price, string priceCurrency, double priceUsd, double paidAmount, string paidCurrency, double paidUsd, string gameMode, string shopPlacement, string screen, string transactionCountryCode, string group_id, Dictionary<string, int> packageItems)
         {
             if (!isInitialized) { 
                 Log.Error("Tracker is not initialized");
@@ -122,6 +122,7 @@ namespace GametunerTracker
             eventData.Add("screen", screen);
             eventData.Add("transaction_country_code", transactionCountryCode);
             eventData.Add("group_id", group_id);
+            eventData.Add("package_items", packageItems);
 
             LogEvent(EventNames.EVENT_PURCHASE, Constants.EVENT_PURCHASE_SCHEMA, eventData, null, 0);
         }

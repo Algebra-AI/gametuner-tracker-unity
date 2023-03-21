@@ -64,7 +64,7 @@ There are help methods for logging common events. You can use them to trigger co
 public static void LogEventAdStarted(string groupId, string adPlacement, string adPlacementGroup, string adProvider, string adType, int limit, int limitCounter, int durationSeconds, string crosspromo);
 public static void LogEventAdWatched(string groupId, string ad_placement, string ad_placement_group, string adProvider, string adType, bool rewardClaimed, int limit, int limitCounter, int durationSeconds, int secondsWatched, string crosspromo);
 public static void LogEventCurrencyChange(string groupId, string currency, int stashUpdated, int amountChange, int currencyLimit, int amountWasted, string reason, string gameMode, string screen);
-public static void LogEventPurchase(string transactionId, string paymentProvider, string payload, string packageName, string packageContents, int premiumCurrency, double price, string priceCurrency, double priceUsd, double paidAmount, string paidCurrency, double paidUsd, string gameMode, string shopPlacement, string screen, string transactionCountryCode, string group_id);
+public static void LogEventPurchase(string transactionId, string paymentProvider, string payload, string packageName, string packageContents, int premiumCurrency, double price, string priceCurrency, double priceUsd, double paidAmount, string paidCurrency, double paidUsd, string gameMode, string shopPlacement, string screen, string transactionCountryCode, string group_id, Dictionary<string, int> packageItems);
 public static void LogEventPurchaseInitiated(string paymentProvider, string packageName, string packageContents, int premiumCurrency, double price, string priceCurrency, float priceUSD, string shopPlacement, string gameMode, string screen, string groupId);
 ```
 
