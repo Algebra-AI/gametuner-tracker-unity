@@ -1,3 +1,7 @@
+Version 0.07.00 (2023-04-03)
+--------------------------
+Fix session time (change mechanic of app focus)
+
 Version 0.06.05 (2023-02-17)
 --------------------------
 Change order of events when pulling from store (createdAt chaged to eventIndex)
