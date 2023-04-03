@@ -16,10 +16,13 @@ namespace GametunerTracker
         private static readonly Queue<Action> _executionQueue = new Queue<Action>();
         private static volatile float timeSinceInit = 0f;
         private static bool dispatcherInitialized = false;
+        public delegate void OnFocus(bool focus);
         public delegate void OnQuit();
+        public OnFocus onFocus;
         public OnQuit onQuit;
 
-        public void Update()
+
+        public void FixedUpdate()
         {
             lock (_executionQueue)
             {
@@ -102,6 +105,22 @@ namespace GametunerTracker
         public void Init()
         {
             dispatcherInitialized = true;
+        }
+
+        /// <summary>
+        /// When the application loses focus, the dispatcher will stop updating.
+        /// </summary>
+        /// <param name="focus">Focus</param>
+        /// <returns></returns>
+        private  IEnumerator OnApplicationFocus(bool focus)
+        {
+            yield return new WaitForEndOfFrame();
+            yield return new WaitForFixedUpdate();
+
+            if (onFocus != null)
+            {
+                onFocus(focus);
+            }
         }
 
         #region SINGLETONE    

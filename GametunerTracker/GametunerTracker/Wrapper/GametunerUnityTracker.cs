@@ -111,7 +111,7 @@ namespace GametunerTracker
                 }
                 
                 OnSessionStartEvent(Constants.LOGIN_LAUNCH_MODE_COLD_START);
-                UnityEngine.Application.focusChanged += SetFocus;
+                UnityMainThreadDispatcher.Instance.onFocus += SetFocus;
                 UnityMainThreadDispatcher.Instance.onQuit += OnSessionEndOnQuit;
                 Log.Debug("Tracker initialized");           
             }
