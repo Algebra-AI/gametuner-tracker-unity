@@ -453,9 +453,7 @@ namespace GametunerTracker
                         {
                             data_temp.Add(new Dictionary<string, object>() { { "key", dictItem.Key }, { "value", dictItem.Value } });
                         }
-
-                        string data = Newtonsoft.Json.JsonConvert.SerializeObject(val);
-                        eventParams.Add(item.Key, data);
+                        eventParams.Add(item.Key, data_temp);
                     } else {
                         eventParams.Add(item.Key, val);
                     }
