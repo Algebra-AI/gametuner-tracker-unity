@@ -28,12 +28,7 @@ namespace GametunerTracker {
         public static List<StandardEvent> standardEvents = new List<StandardEvent>() { 
 			new StandardEvent(EVENT_FIRST_OPEN, Constants.EVENT_FIRST_OPEN_SCHEMA),
 			new StandardEvent(EVENT_LOGIN, Constants.EVENT_LOGIN_SCHEMA),
-			new StandardEvent(EVENT_LOGOUT, Constants.EVENT_LOGOUT_SCHEMA),
-			new StandardEvent(EVENT_CURRENCY_CHANGE, Constants.EVENT_CURRENCY_CHANGE_SCHEMA),
-			new StandardEvent(EVENT_PURCHASE, Constants.EVENT_PURCHASE_SCHEMA),
-			new StandardEvent(EVENT_PURCHASE_INITIATED, Constants.EVENT_PURCHASE_INITIATED_SCHEMA),
-			new StandardEvent(EVENT_AD_WATCHED, Constants.EVENT_AD_WATCHED_SCHEMA),
-			new StandardEvent(EVENT_AD_STARTED, Constants.EVENT_AD_STARTED_SCHEMA),
+			new StandardEvent(EVENT_LOGOUT, Constants.EVENT_LOGOUT_SCHEMA)
 		};
         // Events
         public const string EVENT_FIRST_OPEN   			= "first_open";

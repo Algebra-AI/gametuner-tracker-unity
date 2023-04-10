@@ -88,11 +88,11 @@ namespace GametunerTracker
         }
 
         public static void LogEventCurrencyChange(string currency, 
-                                                int amountChange,       
+                                                long amountChange,       
                                                 string groupId = null,
-                                                int stashUpdated = int.MinValue, 
-                                                int currencyLimit = int.MinValue, 
-                                                int amountWasted = int.MinValue, 
+                                                long stashUpdated = int.MinValue, 
+                                                long currencyLimit = int.MinValue, 
+                                                long amountWasted = int.MinValue, 
                                                 string reason = null, 
                                                 string gameMode = null, 
                                                 string screen = null)
@@ -126,7 +126,7 @@ namespace GametunerTracker
         public static void LogEventPurchaseInitiated(string packageName, 
                                                     string paymentProvider = null, 
                                                     string packageContents = null, 
-                                                    int premiumCurrency = int.MinValue,   
+                                                    long premiumCurrency = int.MinValue,   
                                                     double price = double.MinValue, 
                                                     string priceCurrency = null,                                                   
                                                     float priceUSD = float.MinValue, 
@@ -174,7 +174,7 @@ namespace GametunerTracker
                                             string paymentProvider = null, 
                                             string payload = null,  
                                             string packageContents = null, 
-                                            int premiumCurrency = int.MinValue, 
+                                            long premiumCurrency = int.MinValue, 
                                             double price = double.MinValue, 
                                             string priceCurrency = null, 
                                             double priceUsd = double.MinValue,                                            
