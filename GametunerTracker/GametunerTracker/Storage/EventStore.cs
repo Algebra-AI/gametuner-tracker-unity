@@ -107,15 +107,18 @@ namespace SnowplowTracker.Storage
                 // Get event collection
                 var col = _db.GetCollection<Event>(COLLECTION_NAME);
 
-                col.Insert(new Event { 
-                    Payload = payload.ToString(), 
-                    Id = Guid.NewGuid(), 
-                    CreatedAt = DateTime.UtcNow, 
-                    Priority = payload.GetPriority(),
-                    EventIndex = payload.GetEventIndex()
-                });
+                if(payload != null) {                
+                    col.Insert(new Event { 
+                        Payload = payload.ToString(), 
+                        Id = Guid.NewGuid(), 
+                        CreatedAt = DateTime.UtcNow, 
+                        Priority = payload.GetPriority(),
+                        EventIndex = payload.GetEventIndex()
+                    });
 
-                Log.Verbose("EventStore: Event added");
+                    Log.Verbose("EventStore: Event added");
+                }
+                
                 return true;
             }
             catch (Exception e)
