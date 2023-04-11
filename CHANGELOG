@@ -1,3 +1,8 @@
+Version 0.07.01 (2023-04-11)
+--------------------------
+Small fix for map object type
+Change list of standard events
+
 Version 0.07.00 (2023-04-03)
 --------------------------
 Fix session time (change mechanic of app focus)
