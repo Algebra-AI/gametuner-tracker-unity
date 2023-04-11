@@ -451,6 +451,9 @@ namespace GametunerTracker
                         Dictionary<string, object> dataDict = (Dictionary<string, object>)val;
                         foreach (var dictItem in dataDict)
                         {
+                            if (dictItem.Value == null) {
+                                continue;
+                            }
                             data_temp.Add(new Dictionary<string, object>() { { "key", dictItem.Key }, { "value", dictItem.Value } });
                         }
                         eventParams.Add(item.Key, data_temp);
