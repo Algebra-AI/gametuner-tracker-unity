@@ -13,12 +13,6 @@ public class Ice : MonoBehaviour
         if (other.gameObject.name == "Snowball")
             Destroy(gameObject);  
 
-        Dictionary<string, object> eventAttribute = new Dictionary<string, object>();
-        eventAttribute.Add("stash", 5);
-        eventAttribute.Add("amount", 10);
-        eventAttribute.Add("currency_id", "gold");
-        eventAttribute.Add("group_id", "group1");
-        eventAttribute.Add("reason", "gift");
-        TrackerManager.LogEvent(EventNames.EVENT_CURRENCY_CHANGE, "1-0-0", eventAttribute);
+        //TODO: add ice cube destroyed event
     }
 }

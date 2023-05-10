@@ -23,17 +23,7 @@ public class GameplayManager : MonoBehaviour
         _stopwatch = new Stopwatch();
         _stopwatch.Restart();
 
-        Dictionary<string, object> eventAttribute = new Dictionary<string, object>();
-        eventAttribute.Add("level", 5);
-        eventAttribute.Add("group_id", "group11");
-        eventAttribute.Add("is_unlimited_lives_active", false);
-        eventAttribute.Add("replay", false);
-        eventAttribute.Add("easy_mode", true);
-        eventAttribute.Add("game_mode", "normal");
-        eventAttribute.Add("level_version", "1");
-        eventAttribute.Add("settings_id", "1_1");
-
-        TrackerManager.LogEvent(EventNames.EVENT_LEVEL_STARTED, "1-0-0", eventAttribute);
+        //TODO: add level_started event
     }
 
     /// <summary>
@@ -46,26 +36,7 @@ public class GameplayManager : MonoBehaviour
         {
             _stopwatch.Stop();
 
-            Dictionary<string, object> eventAttribute = new Dictionary<string, object>();           
-            eventAttribute.Add("level", 5);
-            eventAttribute.Add("group_id", "group1");
-            eventAttribute.Add("is_unlimited_lives_active", true);
-            eventAttribute.Add("replay", false);
-            eventAttribute.Add("easy_mode", false);
-            eventAttribute.Add("game_mode", "normal");
-            eventAttribute.Add("level_version", "1_30");
-            eventAttribute.Add("settings_id", "1_1");
-            eventAttribute.Add("time_started", "11100");
-            eventAttribute.Add("time_played", 36.5f);
-            eventAttribute.Add("passed", true);
-            eventAttribute.Add("score", 10000);
-            eventAttribute.Add("rewinds_used", 5);
-            eventAttribute.Add("rewinds_used_paid", 2);
-            eventAttribute.Add("gold_spent", 50);
-            eventAttribute.Add("boosters_used", 3);
-            eventAttribute.Add("purple_stars_collected", 1);
-
-            TrackerManager.LogEvent(EventNames.EVENT_LEVEL_PLAYED, "1-0-0", eventAttribute);
+            //TODO: add level_completed event
 
             uiManager.LoadEndScene(_stopwatch.Elapsed);
         }

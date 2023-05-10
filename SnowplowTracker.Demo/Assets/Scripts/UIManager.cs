@@ -27,17 +27,7 @@ public class UIManager : MonoBehaviour
     public void LoadGameScene(bool restart)
     {           
         SceneManager.LoadSceneAsync("GameplayScene").completed += (x) => {
-            Dictionary<string, object> eventAttribute = new Dictionary<string, object>();
-            eventAttribute.Add("level", 5);
-            eventAttribute.Add("group_id", "group11");
-            eventAttribute.Add("is_unlimited_lives_active", false);
-            eventAttribute.Add("replay", false);
-            eventAttribute.Add("easy_mode", true);
-            eventAttribute.Add("game_mode", "normal");
-            eventAttribute.Add("level_version", "1");
-            eventAttribute.Add("settings_id", "1_1");
-            
-            TrackerManager.LogEvent(EventNames.EVENT_LEVEL_STARTED, "1-0-0", eventAttribute);
+            //TODO: add level_started event
         };
     }
 
@@ -51,37 +41,12 @@ public class UIManager : MonoBehaviour
         _message = $"Time to Complete: {timeToComplete.TotalSeconds.ToString("0.00")}s";
 
         SceneManager.LoadSceneAsync("EndScene").completed += (x) => {
-            Dictionary<string, object> eventAttribute = new Dictionary<string, object>();
-            eventAttribute.Add("level", 5);
-            eventAttribute.Add("group_id", "group1");
-            eventAttribute.Add("is_unlimited_lives_active", true);
-            eventAttribute.Add("replay", false);
-            eventAttribute.Add("easy_mode", false);
-            eventAttribute.Add("game_mode", "normal");
-            eventAttribute.Add("level_version", "1_30");
-            eventAttribute.Add("settings_id", "1_1");
-            eventAttribute.Add("time_started", "11100");
-            eventAttribute.Add("time_played", 36.5f);
-            eventAttribute.Add("passed", true);
-            eventAttribute.Add("score", 10000);
-            eventAttribute.Add("rewinds_used", 5);
-            eventAttribute.Add("rewinds_used_paid", 2);
-            eventAttribute.Add("gold_spent", 50);
-            eventAttribute.Add("boosters_used", 3);
-            eventAttribute.Add("purple_stars_collected", 1);
-
-            TrackerManager.LogEvent(EventNames.EVENT_LEVEL_PLAYED, "1-0-0", eventAttribute);
+            //TODO: add level_played event
         };
     }
 
     public void TriggerTestEvent()
-    { 
-        Dictionary<string, object> eventAttribute = new Dictionary<string, object>();
-        eventAttribute.Add("price", 500);
-        eventAttribute.Add("price_currency", "RSD");
-        eventAttribute.Add("paid_amount", 5000);
-        eventAttribute.Add("paid_currency", "RSD");
-        
-        TrackerManager.LogEvent(EventNames.EVENT_PURCHASE, "1-0-0", eventAttribute);
+    {
+        TrackerManager.LogCurrencyChange();
     }
 }
