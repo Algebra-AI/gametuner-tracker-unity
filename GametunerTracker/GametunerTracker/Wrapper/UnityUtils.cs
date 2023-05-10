@@ -1,6 +1,6 @@
 using System;
 using System.Globalization;
-using SnowplowTracker.Enums;
+using GametunerTracker.Enums;
 using UnityEngine;
 
 namespace GametunerTracker
@@ -364,6 +364,21 @@ namespace GametunerTracker
             try
             {
                 return UnityMainThreadDispatcher.Instance.GetTimeSinceInit();
+            }
+            catch
+            {
+                return 0;
+            }            
+        }
+
+        /// <summary>
+        /// Gets time since init in seconds.
+        /// </summary>
+        /// <returns>Time since init</returns>
+        public static long GetTimeSinceStartupInt() {
+            try
+            {
+                return Convert.ToInt64(GetTimeSinceStartup());
             }
             catch
             {

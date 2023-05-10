@@ -1,14 +1,13 @@
 using System;
 using System.Collections.Generic;
 using System.Linq;
-using SnowplowTracker.Emitters;
-using SnowplowTracker.Enums;
-using SnowplowTracker.Events;
-using SnowplowTracker.Payloads;
-using SnowplowTracker.Payloads.Contexts;
-using SnowplowTracker.Storage;
-using SnowplowTracker.Logging;
-using SnowplowTracker;
+using GametunerTracker.Emitters;
+using GametunerTracker.Enums;
+using GametunerTracker.Events;
+using GametunerTracker.Payloads;
+using GametunerTracker.Payloads.Contexts;
+using GametunerTracker.Storage;
+using GametunerTracker.Logging;
 
 namespace GametunerTracker
 {
@@ -65,8 +64,8 @@ namespace GametunerTracker
                 IEmitter emitter = new AsyncEmitter(endpointUrl, protocol, HttpMethod.POST, sendLimit: 100, 52000, 52000, extendedStore);
                 
                 //TODO: zameniti sekunde sa dogovorenim vrednostima
-                Session session = new Session("gametuner_session_data.dict", 72000, 300, 15);
-                // Session session = new Session("gametuner_session_data.dict", 60, 10, 2);
+                Session session = new Session("gametuner_session_data.dict", 300);
+                // Session session = new Session("gametuner_session_data.dict", 5);
                 session.onSessionStart += OnSessionStartEvent;
                 session.onSessionEnd += OnSessionEndEvent;
 
@@ -315,25 +314,13 @@ namespace GametunerTracker
         /// <summary>
         /// Method subscribed to sesson end event.
         /// </summary>
-        private static void OnSessionEndEvent(EventData eventData) { 
+        private static void OnSessionEndEvent() { 
             if (!isInitialized)
             {
                 Log.Error("Tracker isn't initialized");
                 return;
             }
-            OnSessionEndEvent(eventData.EventTimestamp, eventData.EventSessionTime);
-        }
-
-        /// <summary>       
-        /// Call on session end.
-        /// </summary>
-        /// <param name="isTimeout">Is session timeouted</param>
-        private static void OnSessionEndEvent(long eventTimestamp = 0, float sessionTime = 0) { 
-            if (!isInitialized) {
-                Log.Error("Tracker isn't initialized");
-                return;
-            }
-            //placehodler for future use    
+            //placeholder
         }
 
         /// <summary>
@@ -432,8 +419,10 @@ namespace GametunerTracker
                 return;
             }
 
-            tracker.GetSession().CheckNewSession(false);
+            tracker.GetSession().CheckNewSession(UserActivity.GetTimeSinceLastActivity(UnityUtils.GetTimeSinceStartupInt()));
             
+            Log.Debug("trigger event " + eventName + " with schema " + schema + " and priority " + priority);
+
             Dictionary<string, object> eventParams = new Dictionary<string, object>();       
             //if parameters are are null, send empty dictionary
             //if event in schema has parameters, parameters is sent as empty dictionary if we don't want to send any parameters
@@ -469,7 +458,6 @@ namespace GametunerTracker
             tracker.GetSession().SetLastActivityTick(UnityUtils.GetTimeSinceStartup());
             
             SessionContext sessionContext = tracker.GetSession().GetSessionContext();
-            sessionContext.SetSessionTime(tracker.GetSession().GetSessionTime());
 
             int eventIndex = GetEventIndex();
             EventContext eventContext = GetEventContext(GetLastEventName(eventName), eventIndex);
@@ -513,11 +501,10 @@ namespace GametunerTracker
             
             if(focus) {
                 StartEventTracking();
+                UserActivity.PingActivity(UnityUtils.GetTimeSinceStartupInt());
             } else {  
                 StopEventTracking();
-            }
-
-            tracker.GetSession().SetBackground(!focus);            
+            }          
         }
 
         /// <summary>

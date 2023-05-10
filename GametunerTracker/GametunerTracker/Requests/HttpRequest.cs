@@ -1,7 +1,7 @@
 ﻿using System;
 using System.Net.Http;
 
-namespace SnowplowTracker.Requests
+namespace GametunerTracker.Requests
 {
     internal class HttpRequest
     {

@@ -23,9 +23,9 @@ using System.Collections.Generic;
 using System.Net;
 using System.Net.Http;
 using System.Threading.Tasks;
-using SnowplowTracker.Collections;
+using GametunerTracker.Collections;
 
-namespace SnowplowTracker.Requests
+namespace GametunerTracker.Requests
 {
     internal class ReadyRequest
     {

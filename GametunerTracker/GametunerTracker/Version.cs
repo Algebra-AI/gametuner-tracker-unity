@@ -20,7 +20,7 @@
 
 using System;
 
-namespace SnowplowTracker {
+namespace GametunerTracker {
 	internal class Version {
 		public static string VERSION = "unity-0.07.01";
 	}

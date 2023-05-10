@@ -3,6 +3,7 @@ using System.Collections;
 using System.Collections.Generic;
 using System;
 using System.Threading.Tasks;
+using GametunerTracker.Logging;
 
 namespace GametunerTracker
 {
@@ -16,10 +17,13 @@ namespace GametunerTracker
         private static readonly Queue<Action> _executionQueue = new Queue<Action>();
         private static volatile float timeSinceInit = 0f;
         private static bool dispatcherInitialized = false;
+        private static bool dispatcherPaused = false;
         public delegate void OnFocus(bool focus);
         public delegate void OnQuit();
         public OnFocus onFocus;
         public OnQuit onQuit;
+
+        private float _tempTickerTimer = 0f;
 
 
         public void FixedUpdate()
@@ -28,12 +32,30 @@ namespace GametunerTracker
             {
                 while (_executionQueue.Count > 0)
                 {
-                    _executionQueue.Dequeue().Invoke();
+                    try
+                    {
+                        _executionQueue.Dequeue().Invoke();
+                    }
+                    catch (System.Exception e)
+                    {
+                        Log.Error("Error while executing action on main thread: " + e.Message);
+                    }
                 }
             }
 
-            if (dispatcherInitialized) {
-                timeSinceInit = Time.realtimeSinceStartup;
+            if (dispatcherInitialized && !dispatcherPaused) {
+                UpdateTickTimes();
+            }
+        }
+
+        private void UpdateTickTimes() { 
+            timeSinceInit = Time.realtimeSinceStartup;
+
+            if (_tempTickerTimer < 1.0f) { 
+                _tempTickerTimer += Time.fixedDeltaTime;
+            } else {
+                _tempTickerTimer = 0f;
+                UserActivity.PingActivity(Convert.ToInt64(timeSinceInit));
             }
         }
 
@@ -112,10 +134,12 @@ namespace GametunerTracker
         /// </summary>
         /// <param name="focus">Focus</param>
         /// <returns></returns>
-        private  IEnumerator OnApplicationFocus(bool focus)
+        /// IEnumerator
+        private void OnApplicationFocus(bool focus)
         {
-            yield return new WaitForEndOfFrame();
-            yield return new WaitForFixedUpdate();
+            Log.Debug("OnApplicationFocus: " + focus);
+            UpdateTickTimes();
+            dispatcherPaused = !focus;
 
             if (onFocus != null)
             {

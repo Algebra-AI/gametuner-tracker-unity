@@ -20,7 +20,6 @@
 
 using System;
 using System.Collections.Generic;
-using SnowplowTracker;
 
 namespace GametunerTracker {
 	internal class EventNames {

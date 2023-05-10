@@ -20,10 +20,10 @@
 
 using System;
 using System.Collections.Generic;
-using SnowplowTracker.Payloads;
-using SnowplowTracker.Payloads.Contexts;
+using GametunerTracker.Payloads;
+using GametunerTracker.Payloads.Contexts;
 
-namespace SnowplowTracker.Events
+namespace GametunerTracker.Events
 {
     internal abstract class AbstractEvent<T> : IEvent {
 

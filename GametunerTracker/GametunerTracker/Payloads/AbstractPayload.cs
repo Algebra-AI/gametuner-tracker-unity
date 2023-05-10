@@ -20,7 +20,7 @@
 
 using System.Collections.Generic;
 
-namespace SnowplowTracker.Payloads {
+namespace GametunerTracker.Payloads {
 	internal abstract class AbstractPayload : IPayload {
 
 		protected Dictionary<string, object> payload = new Dictionary<string, object>();

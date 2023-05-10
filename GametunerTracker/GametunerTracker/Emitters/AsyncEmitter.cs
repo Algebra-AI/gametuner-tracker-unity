@@ -21,14 +21,14 @@
 using System;
 using System.Collections.Generic;
 using System.Threading;
-using SnowplowTracker.Payloads;
-using SnowplowTracker.Enums;
-using SnowplowTracker.Requests;
-using SnowplowTracker.Storage;
-using SnowplowTracker.Collections;
-using SnowplowTracker.Logging;
+using GametunerTracker.Payloads;
+using GametunerTracker.Enums;
+using GametunerTracker.Requests;
+using GametunerTracker.Storage;
+using GametunerTracker.Collections;
+using GametunerTracker.Logging;
 
-namespace SnowplowTracker.Emitters
+namespace GametunerTracker.Emitters
 {
     internal class AsyncEmitter : AbstractEmitter {
 
@@ -161,7 +161,6 @@ namespace SnowplowTracker.Emitters
 
 				if (emitLock != null) {
 				    lock (emitLock) {
-					    // events = GetValidatedEvents(eventStore.GetEvents(sendLimit));
 						events = eventStore.GetEvents(sendLimit);
 					    Monitor.Pulse(emitLock);
 				    }

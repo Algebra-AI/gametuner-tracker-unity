@@ -19,14 +19,14 @@
  */
 
 using System.Collections.Generic;
-using SnowplowTracker.Payloads;
-using SnowplowTracker.Enums;
-using SnowplowTracker.Requests;
-using SnowplowTracker.Storage;
-using SnowplowTracker.Logging;
+using GametunerTracker.Payloads;
+using GametunerTracker.Enums;
+using GametunerTracker.Requests;
+using GametunerTracker.Storage;
+using GametunerTracker.Logging;
 using System;
 
-namespace SnowplowTracker.Emitters
+namespace GametunerTracker.Emitters
 {
     internal class SyncEmitter : AbstractEmitter {
 

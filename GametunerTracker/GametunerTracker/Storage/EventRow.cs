@@ -19,9 +19,9 @@
  */
 
 using System;
-using SnowplowTracker.Payloads;
+using GametunerTracker.Payloads;
 
-namespace SnowplowTracker.Storage
+namespace GametunerTracker.Storage
 {
     internal class EventRow {
 

@@ -18,7 +18,7 @@
  * License: Apache License Version 2.0
  */
 
-namespace SnowplowTracker.Enums
+namespace GametunerTracker.Enums
 {
     internal class StorageMechanism {
 		

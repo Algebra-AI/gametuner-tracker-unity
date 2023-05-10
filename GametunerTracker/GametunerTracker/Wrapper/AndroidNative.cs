@@ -1,6 +1,6 @@
 using System;
 using UnityEngine;
-using SnowplowTracker.Logging;
+using GametunerTracker.Logging;
 
 namespace GametunerTracker
 {

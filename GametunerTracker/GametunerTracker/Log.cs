@@ -19,10 +19,9 @@
  */
 
 using System;
-using GametunerTracker;
 using UnityEngine;
 
-namespace SnowplowTracker.Logging {
+namespace GametunerTracker.Logging {
 	internal class Log : MonoBehaviour {
 
 		private static LoggingLevel level = LoggingLevel.Verbose;

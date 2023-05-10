@@ -21,7 +21,7 @@
 using System;
 using System.Collections.Generic;
 
-namespace SnowplowTracker.Payloads {
+namespace GametunerTracker.Payloads {
 	internal interface IPayload {
 
 		/// <summary>

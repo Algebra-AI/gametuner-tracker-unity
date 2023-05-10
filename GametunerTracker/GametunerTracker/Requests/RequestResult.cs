@@ -21,7 +21,7 @@
 using System;
 using System.Collections.Generic;
 
-namespace SnowplowTracker.Requests
+namespace GametunerTracker.Requests
 {
     internal class RequestResult
     {

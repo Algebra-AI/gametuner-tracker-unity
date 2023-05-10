@@ -24,10 +24,10 @@ using System.Collections;
 using System.Collections.Generic;
 using System.Runtime.Serialization.Formatters.Binary;
 using System.Web;
-using SnowplowTracker.Logging;
+using GametunerTracker.Logging;
 using Newtonsoft.Json;
 
-namespace SnowplowTracker
+namespace GametunerTracker
 {
     internal class Utils
     {
