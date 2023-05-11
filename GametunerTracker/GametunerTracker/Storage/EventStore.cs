@@ -22,12 +22,12 @@ using System;
 using System.Linq;
 using System.Collections.Generic;
 using System.Threading;
-using SnowplowTracker.Payloads;
-using SnowplowTracker.Logging;
+using GametunerTracker.Payloads;
+using GametunerTracker.Logging;
 using UnityEngine;
 using LiteDB;
 
-namespace SnowplowTracker.Storage
+namespace GametunerTracker.Storage
 {
     internal class EventStore : IStore
     {

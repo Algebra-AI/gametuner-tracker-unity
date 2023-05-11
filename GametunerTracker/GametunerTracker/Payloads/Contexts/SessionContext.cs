@@ -18,9 +18,9 @@
  * License: Apache License Version 2.0
  */
 
-using SnowplowTracker.Enums;
+using GametunerTracker.Enums;
 
-namespace SnowplowTracker.Payloads.Contexts
+namespace GametunerTracker.Payloads.Contexts
 {
     internal class SessionContext : AbstractContext<SessionContext> {
 

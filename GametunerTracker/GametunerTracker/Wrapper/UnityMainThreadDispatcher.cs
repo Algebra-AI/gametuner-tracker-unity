@@ -112,10 +112,12 @@ namespace GametunerTracker
         /// </summary>
         /// <param name="focus">Focus</param>
         /// <returns></returns>
-        private  IEnumerator OnApplicationFocus(bool focus)
+        private IEnumerator OnApplicationFocus(bool focus)
         {
-            yield return new WaitForEndOfFrame();
-            yield return new WaitForFixedUpdate();
+            if (focus) {
+                yield return new WaitForEndOfFrame();
+                yield return new WaitForFixedUpdate();
+            }
 
             if (onFocus != null)
             {

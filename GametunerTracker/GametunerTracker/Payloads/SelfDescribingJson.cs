@@ -20,7 +20,7 @@
 
 using System;
 
-namespace SnowplowTracker.Payloads
+namespace GametunerTracker.Payloads
 {
     internal class SelfDescribingJson : AbstractPayload {
 

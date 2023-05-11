@@ -20,9 +20,9 @@
 
 using System;
 using System.Collections.Generic;
-using SnowplowTracker.Payloads;
+using GametunerTracker.Payloads;
 
-namespace SnowplowTracker {
+namespace GametunerTracker {
 	internal class Subject {
 
 		private TrackerPayload standardDict;

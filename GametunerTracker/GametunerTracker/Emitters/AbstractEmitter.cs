@@ -20,16 +20,16 @@
 
 using System;
 using System.Collections.Generic;
-using SnowplowTracker.Payloads;
-using SnowplowTracker.Enums;
-using SnowplowTracker.Storage;
-using SnowplowTracker.Collections;
-using SnowplowTracker.Requests;
-using SnowplowTracker.Logging;
+using GametunerTracker.Payloads;
+using GametunerTracker.Enums;
+using GametunerTracker.Storage;
+using GametunerTracker.Collections;
+using GametunerTracker.Requests;
+using GametunerTracker.Logging;
 using System.Net.Http;
 using System.Text;
 
-namespace SnowplowTracker.Emitters
+namespace GametunerTracker.Emitters
 {
     internal abstract class AbstractEmitter : IEmitter
     {

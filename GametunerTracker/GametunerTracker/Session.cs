@@ -21,13 +21,13 @@
 using System;
 using System.Collections.Generic;
 using System.Threading;
-using SnowplowTracker.Enums;
-using SnowplowTracker.Payloads.Contexts;
-using SnowplowTracker.Logging;
+using GametunerTracker.Enums;
+using GametunerTracker.Payloads.Contexts;
+using GametunerTracker.Logging;
 using GametunerTracker;
 using UnityEngine;
 
-namespace SnowplowTracker
+namespace GametunerTracker
 {
     internal class Session
     {
@@ -59,7 +59,7 @@ namespace SnowplowTracker
         /// <param name="foregroundTimeout">Foreground timeout.</param>
         /// <param name="backgroundTimeout">Background timeout.</param>
         /// <param name="checkInterval">Check interval.</param>
-        public Session(string sessionPath, long foregroundTimeout = 600, long backgroundTimeout = 300, long checkInterval = 15)
+        public Session(string sessionPath, long foregroundTimeout = 600, long backgroundTimeout = 300)
         {
             this.foregroundTimeout = foregroundTimeout * 1000;
             this.backgroundTimeout = backgroundTimeout * 1000;
@@ -116,8 +116,11 @@ namespace SnowplowTracker
         /// <returns>The session context.</returns>
         public SessionContext GetSessionContext()
         {
-            //UpdateAccessedLast();
-            return sessionContext;
+            return new SessionContext()
+                    .SetSessionId(currentSessionId)
+                    .SetSessionIndex(sessionIndex)
+                    .SetSessionTime(GetSessionTime())
+                    .Build();
         }
 
         /// <summary>

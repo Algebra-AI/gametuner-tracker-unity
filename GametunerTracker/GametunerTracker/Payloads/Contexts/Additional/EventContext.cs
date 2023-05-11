@@ -19,9 +19,9 @@
  */
 
 using System;
-using SnowplowTracker.Enums;
+using GametunerTracker.Enums;
 
-namespace SnowplowTracker.Payloads.Contexts
+namespace GametunerTracker.Payloads.Contexts
 {
 	/// <summary>
 	/// Event context.

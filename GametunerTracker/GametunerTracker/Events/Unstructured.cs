@@ -18,9 +18,9 @@
  * License: Apache License Version 2.0
  */
 
-using SnowplowTracker.Payloads;
+using GametunerTracker.Payloads;
 
-namespace SnowplowTracker.Events
+namespace GametunerTracker.Events
 {
     internal class Unstructured : AbstractEvent<Unstructured> {
 		

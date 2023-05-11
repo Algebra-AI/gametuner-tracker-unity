@@ -19,11 +19,11 @@
  */
 
 using System;
-using SnowplowTracker.Payloads;
-using SnowplowTracker.Enums;
-using SnowplowTracker.Storage;
+using GametunerTracker.Payloads;
+using GametunerTracker.Enums;
+using GametunerTracker.Storage;
 
-namespace SnowplowTracker.Emitters {
+namespace GametunerTracker.Emitters {
 	internal interface IEmitter {
 
 		/// <summary>

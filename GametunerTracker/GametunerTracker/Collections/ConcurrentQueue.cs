@@ -26,7 +26,7 @@ using System.Collections;
 using System.Collections.Generic;
 using System.IO;
 
-namespace SnowplowTracker.Collections {
+namespace GametunerTracker.Collections {
 	internal class ConcurrentQueue<T> {
 
 		private readonly Queue<T> q = new Queue<T>();

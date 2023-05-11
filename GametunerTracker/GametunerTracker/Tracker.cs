@@ -21,14 +21,14 @@
 using System;
 using System.Threading;
 using System.Collections.Generic;
-using SnowplowTracker.Emitters;
-using SnowplowTracker.Payloads;
-using SnowplowTracker.Payloads.Contexts;
-using SnowplowTracker.Events;
-using SnowplowTracker.Enums;
-using SnowplowTracker.Logging;
+using GametunerTracker.Emitters;
+using GametunerTracker.Payloads;
+using GametunerTracker.Payloads.Contexts;
+using GametunerTracker.Events;
+using GametunerTracker.Enums;
+using GametunerTracker.Logging;
 
-namespace SnowplowTracker
+namespace GametunerTracker
 {
     internal class Tracker
     {

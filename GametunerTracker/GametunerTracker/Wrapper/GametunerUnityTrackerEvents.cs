@@ -1,6 +1,6 @@
 using System.Collections.Generic;
-using SnowplowTracker.Logging;
-using SnowplowTracker;
+using GametunerTracker.Logging;
+using GametunerTracker;
 
 namespace GametunerTracker
 {

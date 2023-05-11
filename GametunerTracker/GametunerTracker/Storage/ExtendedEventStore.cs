@@ -1,7 +1,7 @@
 using System;
-using SnowplowTracker.Logging;
+using GametunerTracker.Logging;
 
-namespace SnowplowTracker.Storage
+namespace GametunerTracker.Storage
 {
     /// <summary>
     /// Extension of the EventStore to store additional data localy.

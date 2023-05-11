@@ -1,14 +1,14 @@
 using System;
 using System.Collections.Generic;
 using System.Linq;
-using SnowplowTracker.Emitters;
-using SnowplowTracker.Enums;
-using SnowplowTracker.Events;
-using SnowplowTracker.Payloads;
-using SnowplowTracker.Payloads.Contexts;
-using SnowplowTracker.Storage;
-using SnowplowTracker.Logging;
-using SnowplowTracker;
+using GametunerTracker.Emitters;
+using GametunerTracker.Enums;
+using GametunerTracker.Events;
+using GametunerTracker.Payloads;
+using GametunerTracker.Payloads.Contexts;
+using GametunerTracker.Storage;
+using GametunerTracker.Logging;
+using GametunerTracker;
 
 namespace GametunerTracker
 {
@@ -65,8 +65,8 @@ namespace GametunerTracker
                 IEmitter emitter = new AsyncEmitter(endpointUrl, protocol, HttpMethod.POST, sendLimit: 100, 52000, 52000, extendedStore);
                 
                 //TODO: zameniti sekunde sa dogovorenim vrednostima
-                Session session = new Session("gametuner_session_data.dict", 72000, 300, 15);
-                // Session session = new Session("gametuner_session_data.dict", 60, 10, 2);
+                Session session = new Session("gametuner_session_data.dict", 72000, 300);
+                // Session session = new Session("gametuner_session_data.dict", 60, 5);
                 session.onSessionStart += OnSessionStartEvent;
                 session.onSessionEnd += OnSessionEndEvent;
 
@@ -469,7 +469,6 @@ namespace GametunerTracker
             tracker.GetSession().SetLastActivityTick(UnityUtils.GetTimeSinceStartup());
             
             SessionContext sessionContext = tracker.GetSession().GetSessionContext();
-            sessionContext.SetSessionTime(tracker.GetSession().GetSessionTime());
 
             int eventIndex = GetEventIndex();
             EventContext eventContext = GetEventContext(GetLastEventName(eventName), eventIndex);
@@ -529,16 +528,16 @@ namespace GametunerTracker
                 .SetAdvertisingID(AndroidNative.GetAdvertisingID())
                 .SetBuildVersion(UnityUtils.GetBuildVersion())
                 .SetCampaign(string.Empty)
-                .SetCpuType(UnityUtils.GetCpuType())
-                .SetDeviceCategory(UnityUtils.GetDeviceCategory())
+                // .SetCpuType(UnityUtils.GetCpuType())
+                // .SetDeviceCategory(UnityUtils.GetDeviceCategory())
                 .SetDeviceId(UnityUtils.GetDevideID())
                 .SetDeviceLanguage(UnityUtils.GetDeviceLanguage())
                 .SetDeviceManufacturer(UnityUtils.GetDeviceManufacturer())
                 .SetDeviceModel(UnityUtils.GetDeviceModel())
                 .SetDeviceTimezone(UnityUtils.GetDeviceTimeZone())
                 .SetGpu(UnityUtils.GetGpu())
-                .SetIDFA(IOSNative.GetIDFA())
-                .SetIDFV(IOSNative.GetIDFV())
+                // .SetIDFA(IOSNative.GetIDFA())
+                // .SetIDFV(IOSNative.GetIDFV())
                 .SetIsHacked(UnityUtils.GetRootStatus())
                 .SetMedium(string.Empty)
                 .SetOsVersion(UnityUtils.GetOSVersion())

@@ -21,7 +21,7 @@
 using System;
 using System.Collections.Generic;
 
-namespace SnowplowTracker.Payloads.Contexts
+namespace GametunerTracker.Payloads.Contexts
 {
     internal abstract class AbstractContext<T> : IContext {
 

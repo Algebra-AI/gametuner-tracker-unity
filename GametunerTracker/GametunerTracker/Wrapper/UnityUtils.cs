@@ -1,6 +1,6 @@
 using System;
 using System.Globalization;
-using SnowplowTracker.Enums;
+using GametunerTracker.Enums;
 using UnityEngine;
 
 namespace GametunerTracker

@@ -20,7 +20,7 @@
 
 using System;
 
-namespace SnowplowTracker {
+namespace GametunerTracker {
 	internal class Constants {
 
 		// Schemas

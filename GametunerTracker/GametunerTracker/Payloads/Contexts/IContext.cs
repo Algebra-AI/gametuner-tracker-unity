@@ -20,7 +20,7 @@
 
 using System.Collections.Generic;
 
-namespace SnowplowTracker.Payloads.Contexts
+namespace GametunerTracker.Payloads.Contexts
 {
     internal interface IContext {
 

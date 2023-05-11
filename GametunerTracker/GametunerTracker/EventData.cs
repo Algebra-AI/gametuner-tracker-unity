@@ -1,4 +1,4 @@
-namespace SnowplowTracker
+namespace GametunerTracker
 {
     internal class EventData
     {
