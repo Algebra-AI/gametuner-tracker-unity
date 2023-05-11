@@ -1,3 +1,7 @@
+Version 0.5.17 (2023-05-11)
+--------------------------
+Fix - Session trigger from background
+
 Version 0.5.16 (2022-12-27)
 --------------------------
 Fix - Session time counter didn't reset after new session trigger

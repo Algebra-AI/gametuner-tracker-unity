@@ -39,7 +39,6 @@ namespace SnowplowTracker
         private long accessedLast;
         private long backgroundAccessedTimestamp;
         private float backgroundAccessedTimeFromStart;
-        private bool background;
         private string firstEventId;
         private string userId;
         private string currentSessionId;
@@ -165,7 +164,6 @@ namespace SnowplowTracker
         /// <param name="truth">If set to <c>true</c> truth.</param>
         public void SetBackground(bool truth)
         {
-            this.background = truth;
             if (truth) {
                 GoToBackground();
             } else {
@@ -194,12 +192,12 @@ namespace SnowplowTracker
         /// Checks is new session is triggered.
         /// </summary>
         public void CheckNewSession(bool triggerFromBackground = true) {
-
+           
             long checkTime = Utils.GetTimestamp();
             
-            long startTime = background ? backgroundAccessedTimestamp : accessedLast;
-            long range = background ? backgroundTimeout : foregroundTimeout;
-
+            long startTime = triggerFromBackground ? backgroundAccessedTimestamp : accessedLast;
+            long range = triggerFromBackground ? backgroundTimeout : foregroundTimeout;
+            
             if (!Utils.IsTimeInRange(startTime, checkTime, range))
             {
                 UpdateAccessedLast();
@@ -245,15 +243,6 @@ namespace SnowplowTracker
         public long GetBackgroundTimeout()
         {
             return this.backgroundTimeout / 1000;
-        }
-
-        /// <summary>
-        /// Gets the background state.
-        /// </summary>
-        /// <returns><c>true</c>, if background was gotten, <c>false</c> otherwise.</returns>
-        public bool GetBackground()
-        {
-            return this.background;
         }
 
         /// <summary>
