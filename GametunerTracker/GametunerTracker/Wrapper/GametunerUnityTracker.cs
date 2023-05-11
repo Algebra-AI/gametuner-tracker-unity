@@ -64,7 +64,6 @@ namespace GametunerTracker
                 HttpProtocol protocol = HttpProtocol.HTTPS;
                 IEmitter emitter = new AsyncEmitter(endpointUrl, protocol, HttpMethod.POST, sendLimit: 100, 52000, 52000, extendedStore);
                 
-                //TODO: zameniti sekunde sa dogovorenim vrednostima
                 Session session = new Session("gametuner_session_data.dict", 72000, 300);
                 // Session session = new Session("gametuner_session_data.dict", 60, 5);
                 session.onSessionStart += OnSessionStartEvent;
@@ -528,16 +527,16 @@ namespace GametunerTracker
                 .SetAdvertisingID(AndroidNative.GetAdvertisingID())
                 .SetBuildVersion(UnityUtils.GetBuildVersion())
                 .SetCampaign(string.Empty)
-                .SetCpuType(UnityUtils.GetCpuType())
-                .SetDeviceCategory(UnityUtils.GetDeviceCategory())
+                // .SetCpuType(UnityUtils.GetCpuType())
+                // .SetDeviceCategory(UnityUtils.GetDeviceCategory())
                 .SetDeviceId(UnityUtils.GetDevideID())
                 .SetDeviceLanguage(UnityUtils.GetDeviceLanguage())
                 .SetDeviceManufacturer(UnityUtils.GetDeviceManufacturer())
                 .SetDeviceModel(UnityUtils.GetDeviceModel())
                 .SetDeviceTimezone(UnityUtils.GetDeviceTimeZone())
                 .SetGpu(UnityUtils.GetGpu())
-                .SetIDFA(IOSNative.GetIDFA())
-                .SetIDFV(IOSNative.GetIDFV())
+                // .SetIDFA(IOSNative.GetIDFA())
+                // .SetIDFV(IOSNative.GetIDFV())
                 .SetIsHacked(UnityUtils.GetRootStatus())
                 .SetMedium(string.Empty)
                 .SetOsVersion(UnityUtils.GetOSVersion())

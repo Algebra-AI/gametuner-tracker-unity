@@ -61,11 +61,69 @@ There are help methods for logging common events. You can use them to trigger co
 
 
 ```csharp
-public static void LogEventAdStarted(string groupId, string adPlacement, string adPlacementGroup, string adProvider, string adType, int limit, int limitCounter, int durationSeconds, string crosspromo);
-public static void LogEventAdWatched(string groupId, string ad_placement, string ad_placement_group, string adProvider, string adType, bool rewardClaimed, int limit, int limitCounter, int durationSeconds, int secondsWatched, string crosspromo);
-public static void LogEventCurrencyChange(string groupId, string currency, int stashUpdated, int amountChange, int currencyLimit, int amountWasted, string reason, string gameMode, string screen);
-public static void LogEventPurchase(string transactionId, string paymentProvider, string payload, string packageName, string packageContents, int premiumCurrency, double price, string priceCurrency, double priceUsd, double paidAmount, string paidCurrency, double paidUsd, string gameMode, string shopPlacement, string screen, string transactionCountryCode, string group_id, Dictionary<string, int> packageItems);
-public static void LogEventPurchaseInitiated(string paymentProvider, string packageName, string packageContents, int premiumCurrency, double price, string priceCurrency, float priceUSD, string shopPlacement, string gameMode, string screen, string groupId);
+public static void LogEventAdStarted(
+        string adPlacement,
+        string groupId = null,
+        string adPlacementGroup = null, 
+        string adProvider = null, 
+        string adType = null, 
+        int limit = int.MinValue, 
+        int limitCounter = int.MinValue, 
+        int durationSeconds = int.MinValue, 
+        string crosspromo = null);
+public static void LogEventAdWatched(
+        string adPlacement, 
+        bool rewardClaimed,
+        string groupId = null,                                             
+        string adPlacementGroup = null, 
+        string adProvider = null, 
+        string adType = null, 
+        int limit = int.MinValue, 
+        int limitCounter = int.MinValue, 
+        int durationSeconds = int.MinValue, 
+        int secondsWatched = int.MinValue, 
+        string crosspromo = null);
+public static void LogEventCurrencyChange(
+        string currency, 
+        long amountChange,       
+        string groupId = null,
+        long stashUpdated = int.MinValue, 
+        long currencyLimit = int.MinValue, 
+        long amountWasted = int.MinValue, 
+        string reason = null, 
+        string gameMode = null, 
+        string screen = null);
+public static void LogEventPurchaseInitiated(
+        string packageName, 
+        string paymentProvider = null, 
+        string packageContents = null, 
+        long premiumCurrency = int.MinValue,   
+        double price = double.MinValue, 
+        string priceCurrency = null,                                                   
+        float priceUSD = float.MinValue, 
+        string shopPlacement = null, 
+        string gameMode = null, 
+        string screen = null, 
+        string groupId = null);
+public static void LogEventPurchase(
+        string packageName, 
+        double paidAmount, 
+        string paidCurrency, 
+        string transactionId = null, 
+        string paymentProvider = null, 
+        string payload = null,  
+        string packageContents = null, 
+        long premiumCurrency = int.MinValue, 
+        double price = double.MinValue, 
+        string priceCurrency = null, 
+        double priceUsd = double.MinValue,                                            
+        double paidUsd = double.MinValue, 
+        string gameMode = null, 
+        string shopPlacement = null, 
+        string screen = null, 
+        string transactionCountryCode = null, 
+        string groupId = null, 
+        Dictionary<string, int> packageItems = null);
 ```
 
 ### Logging 

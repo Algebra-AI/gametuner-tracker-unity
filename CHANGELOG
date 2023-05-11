@@ -1,3 +1,9 @@
+Version 0.07.02 (2023-05-11)
+--------------------------
+Fix trigger new session when app goes to background
+Fix concurrent access to session context
+Change SnowplowTracker to GameTunerTracker namespace
+
 Version 0.07.01 (2023-04-11)
 --------------------------
 Small fix for map object type
