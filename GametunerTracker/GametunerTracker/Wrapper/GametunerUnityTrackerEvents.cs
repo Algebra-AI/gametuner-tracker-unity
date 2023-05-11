@@ -133,7 +133,8 @@ namespace GametunerTracker
                                                     string shopPlacement = null, 
                                                     string gameMode = null, 
                                                     string screen = null, 
-                                                    string groupId = null)
+                                                    string groupId = null,
+                                                    Dictionary<string, int> packageItems = null)
         {
             if (!isInitialized) { 
                 Log.Error("Tracker is not initialized");
@@ -162,6 +163,8 @@ namespace GametunerTracker
                 eventData.Add("screen", screen);
             if (groupId != null)
                 eventData.Add("group_id", groupId);
+            if (packageItems != null)
+                eventData.Add("package_items", packageItems);
 
             LogEvent(EventNames.EVENT_PURCHASE_INITIATED, Constants.EVENT_PURCHASE_INITIATED_SCHEMA, eventData, null, 0);
         }

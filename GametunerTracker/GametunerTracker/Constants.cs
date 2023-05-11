@@ -37,7 +37,7 @@ namespace GametunerTracker {
 		public readonly static string EVENT_AD_STARTED_SCHEMA 		= "iglu:com.algebraai.gametuner.event/ad_started/jsonschema/1-0-0";
 		public readonly static string EVENT_AD_WATCHED_SCHEMA 		= "iglu:com.algebraai.gametuner.event/ad_watched/jsonschema/1-0-0";
 		public readonly static string EVENT_CURRENCY_CHANGE_SCHEMA 	= "iglu:com.algebraai.gametuner.event/currency_change/jsonschema/1-0-0";
-		public readonly static string EVENT_PURCHASE_INITIATED_SCHEMA 	= "iglu:com.algebraai.gametuner.event/purchase_initiated/jsonschema/1-0-0";
+		public readonly static string EVENT_PURCHASE_INITIATED_SCHEMA 	= "iglu:com.algebraai.gametuner.event/purchase_initiated/jsonschema/1-0-1";
 
 		// Event Types
 		public readonly static string EVENT_UNSTRUCTURED    = "ue";
