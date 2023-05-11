@@ -164,7 +164,14 @@ namespace GametunerTracker
             if (groupId != null)
                 eventData.Add("group_id", groupId);
             if (packageItems != null)
-                eventData.Add("package_items", packageItems);
+            {
+                Dictionary<string, object> _packageItems = new Dictionary<string, object>();
+                foreach (var item in packageItems)
+                {
+                    _packageItems.Add(item.Key, item.Value);
+                }
+                eventData.Add("package_items", _packageItems);
+            }
 
             LogEvent(EventNames.EVENT_PURCHASE_INITIATED, Constants.EVENT_PURCHASE_INITIATED_SCHEMA, eventData, null, 0);
         }
@@ -227,7 +234,14 @@ namespace GametunerTracker
             if (groupId != null)    
                 eventData.Add("group_id", groupId);
             if (packageItems != null)
-                eventData.Add("package_items", packageItems);
+            {
+                Dictionary<string, object> _packageItems = new Dictionary<string, object>();
+                foreach (var item in packageItems)
+                {
+                    _packageItems.Add(item.Key, item.Value);
+                }
+                eventData.Add("package_items", _packageItems);
+            }
 
             LogEvent(EventNames.EVENT_PURCHASE, Constants.EVENT_PURCHASE_SCHEMA, eventData, null, 0);
         }
