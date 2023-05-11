@@ -104,7 +104,8 @@ public static void LogEventPurchaseInitiated(
         string shopPlacement = null, 
         string gameMode = null, 
         string screen = null, 
-        string groupId = null);
+        string groupId = null,
+        Dictionary<string, int> packageItems = null);
 public static void LogEventPurchase(
         string packageName, 
         double paidAmount, 
