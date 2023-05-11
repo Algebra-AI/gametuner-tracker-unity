@@ -370,20 +370,5 @@ namespace GametunerTracker
                 return 0;
             }            
         }
-
-        /// <summary>
-        /// Gets time since init in seconds.
-        /// </summary>
-        /// <returns>Time since init</returns>
-        public static long GetTimeSinceStartupInt() {
-            try
-            {
-                return Convert.ToInt64(GetTimeSinceStartup());
-            }
-            catch
-            {
-                return 0;
-            }            
-        }
     }
 }

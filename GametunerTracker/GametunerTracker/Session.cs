@@ -24,6 +24,7 @@ using System.Threading;
 using GametunerTracker.Enums;
 using GametunerTracker.Payloads.Contexts;
 using GametunerTracker.Logging;
+using GametunerTracker;
 using UnityEngine;
 
 namespace GametunerTracker
@@ -35,7 +36,11 @@ namespace GametunerTracker
 
         private SessionContext sessionContext;
 
-        private long sessionTimeout;
+        private long foregroundTimeout;
+        private long backgroundTimeout;
+        private long accessedLast;
+        private long backgroundAccessedTimestamp;
+        private float backgroundAccessedTimeFromStart;
         private string currentSessionId;
         private string previousSessionId;
         private int sessionIndex;
@@ -44,7 +49,7 @@ namespace GametunerTracker
         private string SessionPath;
         private readonly StorageMechanism sessionStorage = StorageMechanism.Litedb;
         public delegate void OnSessionStart(string launchMode);
-        public delegate void OnSessionEnd();
+        public delegate void OnSessionEnd(EventData eventData);
         public OnSessionStart onSessionStart;        
         public OnSessionEnd onSessionEnd;
 
@@ -54,9 +59,10 @@ namespace GametunerTracker
         /// <param name="foregroundTimeout">Foreground timeout.</param>
         /// <param name="backgroundTimeout">Background timeout.</param>
         /// <param name="checkInterval">Check interval.</param>
-        public Session(string sessionPath, long sessionTimeout = 300)
+        public Session(string sessionPath, long foregroundTimeout = 600, long backgroundTimeout = 300)
         {
-            this.sessionTimeout = sessionTimeout * 1000;
+            this.foregroundTimeout = foregroundTimeout * 1000;
+            this.backgroundTimeout = backgroundTimeout * 1000;
 
             SessionPath = $"{Application.persistentDataPath }/{sessionPath ?? SESSION_DEFAULT_PATH}";
 
@@ -77,8 +83,7 @@ namespace GametunerTracker
                 }
             }
 
-            StartNewSession(); 
-            UserActivity.OnUserActivity += CheckNewSession;          
+            StartNewSession();           
         }
 
         /// <summary>
@@ -95,11 +100,11 @@ namespace GametunerTracker
         /// <summary>
         /// Invokes the session end.
         /// </summary>
-        private void DelegateSessionEnd()
+        private void DelegateSessionEnd(EventData eventData)
         {
             if (onSessionEnd != null)
             {
-                onSessionEnd();
+                onSessionEnd(eventData);
             }
         }
 
@@ -118,15 +123,108 @@ namespace GametunerTracker
                     .Build();
         }
 
-        public void CheckNewSession(long millisecondsSinceLastActivity) {
-            Log.Debug("Checking new session. Last activity: " + millisecondsSinceLastActivity + " Session timeout: " + sessionTimeout);
+        /// <summary>
+        /// Sets the foreground timeout seconds.
+        /// </summary>
+        /// <param name="timeout">Timeout.</param>
+        public void SetForegroundTimeoutSeconds(long timeout)
+        {
+            this.foregroundTimeout = timeout * 1000;
+        }
 
-            if (millisecondsSinceLastActivity > sessionTimeout)
-            {
-                DelegateSessionEnd();
-                StartNewSession();
-                DelegateSessionStart(Constants.LOGIN_LAUNCH_MODE_SESSION_TIMEOUT);
+        /// <summary>
+        /// Sets the background timeout seconds.
+        /// </summary>
+        /// <param name="timeout">Timeout.</param>
+        public void SetBackgroundTimeoutSeconds(long timeout)
+        {
+            this.backgroundTimeout = timeout * 1000;
+        }
+
+        /// <summary>
+        /// Sets the background truth.
+        /// </summary>
+        /// <param name="truth">If set to <c>true</c> truth.</param>
+        public void SetBackground(bool truth)
+        {
+            if (truth) {
+                GoToBackground();
+            } else {
+                GoToForeground();
             }
+        }
+
+        /// <summary>
+        /// Set time when the app was last accessed.
+        /// </summary>
+        private void GoToBackground()
+        {
+            backgroundAccessedTimestamp = Utils.GetTimestamp();
+            backgroundAccessedTimeFromStart = UnityUtils.GetTimeSinceStartup();
+        }  
+
+        /// <summary>
+        /// Returns from backgorund.
+        /// </summary>
+        private void GoToForeground()
+        {
+            CheckNewSession(true);
+        }
+
+        /// <summary>
+        /// Checks is new session is triggered.
+        /// </summary>
+        public void CheckNewSession(bool backgroundCheck) {
+            long checkTime = Utils.GetTimestamp();
+            long startTime = backgroundCheck ? backgroundAccessedTimestamp : accessedLast;
+            long timeout = backgroundCheck ? backgroundTimeout : foregroundTimeout;
+            string launchMode = backgroundCheck ? Constants.LOGIN_LAUNCH_MODE_FROM_BACKGROUND : Constants.LOGIN_LAUNCH_MODE_SESSION_TIMEOUT;
+
+            if (!Utils.IsTimeInRange(startTime, checkTime, timeout))
+            {
+                UpdateAccessedLast();
+                DelegateSessionEnd(GetSessionEndEventData(backgroundCheck));
+                StartNewSession();
+                DelegateSessionStart(launchMode);
+            }
+
+            UpdateAccessedLast();
+        }
+
+        /// <summary>
+        /// Returns the session end timestamp.
+        /// </summary>
+        /// <returns>Event data of session end</returns>
+        private EventData GetSessionEndEventData(bool returnFromBackground)
+        {
+            EventData eventData = new EventData();
+            eventData.EventTimestamp = 0;            
+            eventData.EventSessionTime = 0;
+
+            if (returnFromBackground) {       
+                eventData.EventTimestamp = this.backgroundAccessedTimestamp + this.backgroundTimeout;
+                eventData.EventSessionTime = this.backgroundAccessedTimeFromStart + (this.backgroundTimeout / 1000) - this.startAppTick;                
+            } 
+
+            return eventData;
+        }
+
+        /// <summary>
+        /// Gets the foreground timeout.
+        /// </summary>
+        /// <returns>The foreground timeout.</returns>
+        public long GetForegroundTimeout()
+        {
+            return this.foregroundTimeout / 1000;
+        }
+
+        /// <summary>
+        /// Gets the background timeout.
+        /// </summary>
+        /// <returns>The background timeout.</returns>
+        public long GetBackgroundTimeout()
+        {
+            return this.backgroundTimeout / 1000;
         }
 
         /// <summary>
@@ -176,7 +274,7 @@ namespace GametunerTracker
         /// </summary>
         private void StartNewSession() { 
             UpdateSession();
-            UserActivity.UpdateLastActivityTimestamp(UnityUtils.GetTimeSinceStartupInt());
+            UpdateAccessedLast();
             UpdateTimeFromStart(UnityUtils.GetTimeSinceStartup());
             UpdateSessionDict();
             Utils.WriteDictionaryToFile(SessionPath, sessionContext.GetData());
@@ -190,6 +288,14 @@ namespace GametunerTracker
             previousSessionId = currentSessionId;
             currentSessionId = Utils.GetGUID();
             sessionIndex++;
+        }
+
+        /// <summary>
+        /// Updates the accessed last.
+        /// </summary>
+        private void UpdateAccessedLast()
+        {
+            accessedLast = Utils.GetTimestamp();
         }
 
         /// <summary>

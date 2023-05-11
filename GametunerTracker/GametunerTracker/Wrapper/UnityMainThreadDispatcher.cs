@@ -17,13 +17,10 @@ namespace GametunerTracker
         private static readonly Queue<Action> _executionQueue = new Queue<Action>();
         private static volatile float timeSinceInit = 0f;
         private static bool dispatcherInitialized = false;
-        private static bool dispatcherPaused = false;
         public delegate void OnFocus(bool focus);
         public delegate void OnQuit();
         public OnFocus onFocus;
         public OnQuit onQuit;
-
-        private float _tempTickerTimer = 0f;
 
 
         public void FixedUpdate()
@@ -43,19 +40,8 @@ namespace GametunerTracker
                 }
             }
 
-            if (dispatcherInitialized && !dispatcherPaused) {
-                UpdateTickTimes();
-            }
-        }
-
-        private void UpdateTickTimes() { 
-            timeSinceInit = Time.realtimeSinceStartup;
-
-            if (_tempTickerTimer < 1.0f) { 
-                _tempTickerTimer += Time.fixedDeltaTime;
-            } else {
-                _tempTickerTimer = 0f;
-                UserActivity.PingActivity(Convert.ToInt64(timeSinceInit));
+            if (dispatcherInitialized) {
+                timeSinceInit = Time.realtimeSinceStartup;
             }
         }
 
@@ -134,12 +120,12 @@ namespace GametunerTracker
         /// </summary>
         /// <param name="focus">Focus</param>
         /// <returns></returns>
-        /// IEnumerator
-        private void OnApplicationFocus(bool focus)
+        private IEnumerator OnApplicationFocus(bool focus)
         {
-            Log.Debug("OnApplicationFocus: " + focus);
-            UpdateTickTimes();
-            dispatcherPaused = !focus;
+            if (focus) {
+                yield return new WaitForEndOfFrame();
+                yield return new WaitForFixedUpdate();
+            }
 
             if (onFocus != null)
             {

@@ -1,5 +1,6 @@
 using System.Collections.Generic;
 using GametunerTracker.Logging;
+using GametunerTracker;
 
 namespace GametunerTracker
 {

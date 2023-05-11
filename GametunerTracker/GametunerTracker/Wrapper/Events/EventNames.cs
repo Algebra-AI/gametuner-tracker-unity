@@ -20,6 +20,7 @@
 
 using System;
 using System.Collections.Generic;
+using GametunerTracker;
 
 namespace GametunerTracker {
 	internal class EventNames {
