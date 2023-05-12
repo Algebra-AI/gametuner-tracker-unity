@@ -41,8 +41,12 @@ namespace GametunerTracker
             }
 
             if (dispatcherInitialized) {
-                timeSinceInit = Time.realtimeSinceStartup;
+                UpdataTimeSinceInit();
             }
+        }
+
+        private void UpdataTimeSinceInit() { 
+            timeSinceInit = Time.realtimeSinceStartup;
         }
 
         /// <summary>
@@ -120,12 +124,9 @@ namespace GametunerTracker
         /// </summary>
         /// <param name="focus">Focus</param>
         /// <returns></returns>
-        private IEnumerator OnApplicationFocus(bool focus)
+        private void OnApplicationFocus(bool focus)
         {
-            if (focus) {
-                yield return new WaitForEndOfFrame();
-                yield return new WaitForFixedUpdate();
-            }
+            UpdataTimeSinceInit();
 
             if (onFocus != null)
             {

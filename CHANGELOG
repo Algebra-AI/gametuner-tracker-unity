@@ -1,3 +1,8 @@
+Version 0.07.06 (2023-05-12)
+--------------------------
+Fix trigger events when app back from background
+Log when event is discarded
+
 Version 0.07.05 (2023-05-11)
 --------------------------
 Fix wrapped purchase initiated event (data type)

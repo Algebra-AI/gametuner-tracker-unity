@@ -117,6 +117,7 @@ namespace GametunerTracker
         {
             if (!dataCollection)
             {
+                Log.Debug("dataCollection is disabled. Event is discarded");
                 return;
             }
             SetLastTrackEventTime(newEvent.GetTimestamp());
