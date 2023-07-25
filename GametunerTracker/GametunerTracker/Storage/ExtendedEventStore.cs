@@ -106,67 +106,34 @@ namespace GametunerTracker.Storage
         }
 
         /// <summary>
-        /// Gets the event indix
+        /// Gets and update the event index
         /// </summary>
         /// <returns>Event index</returns>
-        public int GetEventIndex() { 
+        public int GetAndUpdateEventIndex() { 
             try
             {
-                _dbLock.EnterReadLock();
+                _dbLock.EnterWriteLock();
                 // Get event collection
                 var colData = _db.GetCollection<EventsMetaData>(COLLECTION_METADATA);
-
+                int lastEventIndex = 0;
                 var result = colData.FindOne(x => x.Id == COLLECTION_METADATA_EVENT_INDEX);
-                if (result == null) {
-                    return 0;
+                if (result != null) {
+                    lastEventIndex = result.ValueInt;
+                }
+                
+                EventsMetaData metaDataIndex = new EventsMetaData { Id = COLLECTION_METADATA_EVENT_INDEX, ValueInt = (lastEventIndex + 1)};
+
+                if (!colData.Update(metaDataIndex)) {
+                    colData.Insert(metaDataIndex);
                 }
 
-                return result.ValueInt;
+                return lastEventIndex;
             }
             catch (Exception e)
             {
                 Log.Error($"EventStore: Get event index failed");
                 Log.Error(e.ToString());
                 return 0;
-            }
-            finally
-            {
-                _dbLock.ExitReadLock();
-            }
-        }
-
-        /// <summary>
-        /// Update event index
-        /// </summary>
-        /// <returns>Is event index updated</returns>
-        public bool UpdateEventIndex()
-        { 
-            try
-            {
-                _dbLock.EnterWriteLock();
-                // Get event collection
-                var colData = _db.GetCollection<EventsMetaData>(COLLECTION_METADATA);
-
-                int lastEventIndex = 0;
-                var result = colData.FindOne(x => x.Id == COLLECTION_METADATA_EVENT_INDEX);
-                if (result != null) {
-                    lastEventIndex = result.ValueInt;
-                }
-
-                lastEventIndex += 1;
-                EventsMetaData metaDataIndex = new EventsMetaData { Id = COLLECTION_METADATA_EVENT_INDEX, ValueInt = lastEventIndex };
-
-                if (!colData.Update(metaDataIndex)) {
-                    colData.Insert(metaDataIndex);
-                }
-               
-                return true;
-            }
-            catch (Exception e)
-            {
-                Log.Error("EventStore: Last event failed to save");
-                Log.Error(e.ToString());
-                return false;
             }
             finally
             {

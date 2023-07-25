@@ -374,8 +374,7 @@ namespace GametunerTracker
         /// <returns>Event index</returns>
         private static int GetEventIndex() { 
             ExtendedEventStore store = (ExtendedEventStore)(tracker.GetEmitter().GetEventStore());
-            int eventIndex = store.GetEventIndex();
-            store.UpdateEventIndex();
+            int eventIndex = store.GetAndUpdateEventIndex();
             return eventIndex;
         }
 
