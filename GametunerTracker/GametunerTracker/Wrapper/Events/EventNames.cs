@@ -47,6 +47,7 @@ namespace GametunerTracker {
 		public const string EVENT_ERROR           		= "error";
 		public const string EVENT_SHOW_POPUP      		= "show_popup";
 		public const string EVENT_NOTIFICATION    		= "notification";
+		public const string EVENT_GDPR_DELETE_REQUEST	= "gdpr_delete_request";
 
 		public static bool IsInStandardEvents(string eventName) {
 			foreach (StandardEvent standardEvent in standardEvents) {

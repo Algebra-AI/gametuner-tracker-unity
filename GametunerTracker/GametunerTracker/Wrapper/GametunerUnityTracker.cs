@@ -226,6 +226,18 @@ namespace GametunerTracker
         }
 
         /// <summary>
+        /// Sends GDPR data delete request. On server gdpr data will be deleted in 30 days.
+        /// </summary>
+        public static void RequestDataDelete() {
+            if (!isInitialized) {
+                Log.Error("Tracker isn't initialized");
+                return;
+            }
+
+            LogEvent(EventNames.EVENT_GDPR_DELETE_REQUEST, Constants.EVENT_GDPR_DELETE_REQUEST, null, GetContexts(null), 1000);
+        }
+
+        /// <summary>
         /// Stops tracker.
         /// </summary>
         internal static void StopEventTracking() {
