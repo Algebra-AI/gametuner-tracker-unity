@@ -26,6 +26,7 @@ namespace GametunerTracker
         private const string endpointUrl = "api.gametuner.ai";
         private static string storeName;
         private static string appID;
+        private static bool isOptOut;
         public delegate void OnSessionStarted(string sessionId, int sessionIndex, string previousSessionId);
         public static OnSessionStarted onSessionStartEvent;  
 
@@ -65,7 +66,7 @@ namespace GametunerTracker
                 IEmitter emitter = new AsyncEmitter(endpointUrl, protocol, HttpMethod.POST, sendLimit: 100, 52000, 52000, extendedStore);
                 
                 Session session = new Session("gametuner_session_data.dict", 72000, 300);
-                // Session session = new Session("gametuner_session_data.dict", 60, 5);
+                
                 session.onSessionStart += OnSessionStartEvent;
                 session.onSessionEnd += OnSessionEndEvent;
 
@@ -83,6 +84,8 @@ namespace GametunerTracker
                     installationId = Utils.GetGUID();
                     UpdateInstallationIDInCache(installationId, extendedStore);
                 }
+
+                isOptOut = GetOptOutFromDB(extendedStore);
 
                 subject.SetUserId(tempUserID);
                 subject.SetInstallationId(installationId);
@@ -235,6 +238,19 @@ namespace GametunerTracker
             }
 
             LogEvent(EventNames.EVENT_GDPR_DELETE_REQUEST, Constants.EVENT_GDPR_DELETE_REQUEST, null, GetContexts(null), 1000);
+        }
+
+        /// <summary>
+        /// Sets opt out flag. If opt out flag is set to true, no events will be sent to server.
+        /// </summary>
+        /// <param name="isOptedOut"></param>
+        public static void SetOptOut(bool isOptedOut) {
+            if (!isInitialized) {
+                Log.Error("Tracker isn't initialized");
+                return;
+            }
+
+            ((ExtendedEventStore)tracker.GetEmitter().GetEventStore()).SetOptOut(isOptedOut);
         }
 
         /// <summary>
@@ -425,6 +441,15 @@ namespace GametunerTracker
         }
 
         /// <summary>
+        /// Gets opt out value from cache.
+        /// </summary>
+        /// <param name="extendedStore">Event store</param> 
+        /// <returns>Opt out value</returns>
+        private static bool GetOptOutFromDB(ExtendedEventStore extendedStore) { 
+            return extendedStore.GetOptOut();
+        }
+
+        /// <summary>
         /// Log analytics event.
         /// </summary>
         /// <param name="eventName">Name of event</param>
@@ -439,6 +464,11 @@ namespace GametunerTracker
                 int priority) { 
             if (!isInitialized) {
                 Log.Error("Tracker isn't initialized");
+                return;
+            }
+
+            if(isOptOut){
+                Log.Debug("Opt out is enabled. Event won't be sent");
                 return;
             }
 
@@ -538,16 +568,16 @@ namespace GametunerTracker
                 .SetAdvertisingID(AndroidNative.GetAdvertisingID())
                 .SetBuildVersion(UnityUtils.GetBuildVersion())
                 .SetCampaign(string.Empty)
-                // .SetCpuType(UnityUtils.GetCpuType())
-                // .SetDeviceCategory(UnityUtils.GetDeviceCategory())
+                .SetCpuType(UnityUtils.GetCpuType())
+                .SetDeviceCategory(UnityUtils.GetDeviceCategory())
                 .SetDeviceId(UnityUtils.GetDevideID())
                 .SetDeviceLanguage(UnityUtils.GetDeviceLanguage())
                 .SetDeviceManufacturer(UnityUtils.GetDeviceManufacturer())
                 .SetDeviceModel(UnityUtils.GetDeviceModel())
                 .SetDeviceTimezone(UnityUtils.GetDeviceTimeZone())
                 .SetGpu(UnityUtils.GetGpu())
-                // .SetIDFA(IOSNative.GetIDFA())
-                // .SetIDFV(IOSNative.GetIDFV())
+                .SetIDFA(IOSNative.GetIDFA())
+                .SetIDFV(IOSNative.GetIDFV())
                 .SetIsHacked(UnityUtils.GetRootStatus())
                 .SetMedium(string.Empty)
                 .SetOsVersion(UnityUtils.GetOSVersion())

@@ -22,6 +22,7 @@ namespace GametunerTracker.Storage
         private const string COLLECTION_METADATA_USER_ID                = "userId";
         private const string COLLECTION_METADATA_INSTALLATION_ID        = "installationId";
         private const string COLLECTION_METADATA_REGISTRATION_TIME      = "registrationTime";
+        private const string COLLECTION_METADATA_OPT_OUT                = "optOut";
 
         public ExtendedEventStore(string filename = "snowplow_events_lite.db") : base(filename) { 
             try
@@ -424,6 +425,71 @@ namespace GametunerTracker.Storage
             catch (Exception e)
             {
                 Log.Error("EventStore: FirstOpenTime failed to save");
+                Log.Error(e.ToString());
+                return false;
+            }
+            finally
+            {
+                _dbLock.ExitWriteLock();
+            }
+        }
+
+        /// <summary>
+        /// Gets optout option.
+        /// </summary>
+        /// <returns>Optout option</returns>
+        public bool GetOptOut() { 
+            try
+            {
+                _dbLock.EnterReadLock();
+                // Get event collection
+                var colData = _db.GetCollection<EventsMetaData>(COLLECTION_METADATA);
+
+                var result = colData.FindOne(x => x.Id == COLLECTION_METADATA_OPT_OUT);
+                if (result == null) {
+                    return false;
+                }
+
+                return Convert.ToBoolean(result.ValueInt);
+            }
+            catch (Exception e)
+            {
+                Log.Error($"EventStore: Get user id failed");
+                Log.Error(e.ToString());
+                return false;
+            }
+            finally
+            {
+                _dbLock.ExitReadLock();
+            }
+        }
+
+        /// <summary>
+        /// Update optout option.
+        /// </summary>
+        /// <returns>Is optout updated</returns>
+        public bool SetOptOut(bool isUserOptOut)
+        {
+            try
+            {
+                _dbLock.EnterWriteLock();
+                // Get event collection
+                var colData = _db.GetCollection<EventsMetaData>(COLLECTION_METADATA);
+
+                var result = colData.FindOne(x => x.Id == COLLECTION_METADATA_OPT_OUT);
+                EventsMetaData metadata = new EventsMetaData { Id = COLLECTION_METADATA_OPT_OUT, ValueInt = Convert.ToInt32(isUserOptOut) };
+
+                if (result == null) { 
+                    colData.Insert(metadata);
+                } else {
+                    colData.Update(metadata);
+                }
+               
+                return true;
+            }
+            catch (Exception e)
+            {
+                Log.Error("EventStore: UserID failed to save");
                 Log.Error(e.ToString());
                 return false;
             }
