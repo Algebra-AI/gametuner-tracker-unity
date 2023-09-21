@@ -22,6 +22,6 @@ using System;
 
 namespace GametunerTracker {
 	internal class Version {
-		public static string VERSION = "unity-0.07.06";
+		public static string VERSION = "unity-0.07.07";
 	}
 }

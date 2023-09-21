@@ -1,3 +1,9 @@
+Version 0.07.07 (2023-09-21)
+--------------------------
+Fix double event index in event context
+Add delete user data method
+Add opt-out method
+
 Version 0.07.06 (2023-05-12)
 --------------------------
 Fix trigger events when app back from background
