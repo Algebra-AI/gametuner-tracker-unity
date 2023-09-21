@@ -1,5 +1,12 @@
 {
   "dependencies": {
+    "com.algebraai.gametunertracker": {
+      "version": "https://github.com/Algebra-AI/gametuner-tracker-unity.git?path=/unity-package",
+      "depth": 0,
+      "source": "git",
+      "dependencies": {},
+      "hash": "1510daad92ab1ea1cc83a804cf6695ccf8047677"
+    },
     "com.unity.2d.sprite": {
       "version": "1.0.0",
       "depth": 0,
