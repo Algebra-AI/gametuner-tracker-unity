@@ -15,7 +15,10 @@ namespace GametunerTracker
                                             int limit = int.MinValue, 
                                             int limitCounter = int.MinValue, 
                                             int durationSeconds = int.MinValue, 
-                                            string crosspromo = null)
+                                            string crosspromo = null,
+                                            Dictionary<string, object> customParameters = null,
+                                            string schemaVersion = null,
+                                            int priority = 0)
         {
             if (!isInitialized) { 
                 Log.Error("Tracker is not initialized");
@@ -40,8 +43,20 @@ namespace GametunerTracker
                 eventData.Add("duration_seconds", durationSeconds);
             if (crosspromo != null) 
                 eventData.Add("crosspromo", crosspromo);
+            if (customParameters != null)
+            {
+                foreach (var item in customParameters)
+                {
+                    eventData[item.Key] = item.Value;
+                }
+            }
 
-            LogEvent(EventNames.EVENT_AD_STARTED, Constants.EVENT_AD_STARTED_SCHEMA, eventData, null, 0);
+            if(customParameters != null && schemaVersion == null)
+                Log.Error("Schema version is required when custom parameters are used");
+            else if (customParameters != null && schemaVersion != null)
+                LogEvent(EventNames.EVENT_AD_STARTED, schemaVersion, eventData, priority);
+            else
+                LogEvent(EventNames.EVENT_AD_STARTED, Constants.EVENT_AD_STARTED_SCHEMA, eventData, null, priority);
         }
 
         public static void LogEventAdWatched(string adPlacement, 
@@ -54,7 +69,10 @@ namespace GametunerTracker
                                             int limitCounter = int.MinValue, 
                                             int durationSeconds = int.MinValue, 
                                             int secondsWatched = int.MinValue, 
-                                            string crosspromo = null)
+                                            string crosspromo = null,
+                                            Dictionary<string, object> customParameters = null,
+                                            string schemaVersion = null,
+                                            int priority = 0)
         {
             if (!isInitialized) { 
                 Log.Error("Tracker is not initialized");
@@ -82,9 +100,20 @@ namespace GametunerTracker
                 eventData.Add("seconds_watched", secondsWatched);
             if (crosspromo != null) 
                 eventData.Add("crosspromo", crosspromo);
-            
+            if (customParameters != null)
+            {
+                foreach (var item in customParameters)
+                {
+                    eventData[item.Key] = item.Value;
+                }
+            }
 
-            LogEvent(EventNames.EVENT_AD_WATCHED, Constants.EVENT_AD_WATCHED_SCHEMA, eventData, null, 0);
+            if(customParameters != null && schemaVersion == null)
+                Log.Error("Schema version is required when custom parameters are used");
+            else if (customParameters != null && schemaVersion != null)
+                LogEvent(EventNames.EVENT_AD_WATCHED, schemaVersion, eventData, priority);
+            else
+                LogEvent(EventNames.EVENT_AD_WATCHED, Constants.EVENT_AD_WATCHED_SCHEMA, eventData, null, priority);
         }
 
         public static void LogEventCurrencyChange(string currency, 
@@ -95,7 +124,10 @@ namespace GametunerTracker
                                                 long amountWasted = int.MinValue, 
                                                 string reason = null, 
                                                 string gameMode = null, 
-                                                string screen = null)
+                                                string screen = null,
+                                                Dictionary<string, object> customParameters = null,
+                                                string schemaVersion = null,
+                                                int priority = 0)
         {
             if (!isInitialized) { 
                 Log.Error("Tracker is not initialized");
@@ -119,8 +151,20 @@ namespace GametunerTracker
                 eventData.Add("game_mode", gameMode);
             if (screen != null)
                 eventData.Add("screen", screen);
+            if (customParameters != null)
+            {
+                foreach (var item in customParameters)
+                {
+                    eventData[item.Key] = item.Value;
+                }
+            }
 
-            LogEvent(EventNames.EVENT_CURRENCY_CHANGE, Constants.EVENT_CURRENCY_CHANGE_SCHEMA, eventData, null, 0);
+            if(customParameters != null && schemaVersion == null)
+                Log.Error("Schema version is required when custom parameters are used");
+            else if (customParameters != null && schemaVersion != null)
+                LogEvent(EventNames.EVENT_CURRENCY_CHANGE, schemaVersion, eventData, priority);
+            else
+                LogEvent(EventNames.EVENT_CURRENCY_CHANGE, Constants.EVENT_CURRENCY_CHANGE_SCHEMA, eventData, null, priority);
         }
 
         public static void LogEventPurchaseInitiated(string packageName, 
@@ -134,7 +178,10 @@ namespace GametunerTracker
                                                     string gameMode = null, 
                                                     string screen = null, 
                                                     string groupId = null,
-                                                    Dictionary<string, int> packageItems = null)
+                                                    Dictionary<string, int> packageItems = null,
+                                                    Dictionary<string, object> customParameters = null,
+                                                    string schemaVersion = null,
+                                                    int priority = 0)
         {
             if (!isInitialized) { 
                 Log.Error("Tracker is not initialized");
@@ -172,8 +219,20 @@ namespace GametunerTracker
                 }
                 eventData.Add("package_items", _packageItems);
             }
+            if (customParameters != null)
+            {
+                foreach (var item in customParameters)
+                {
+                    eventData[item.Key] = item.Value;
+                }
+            }
 
-            LogEvent(EventNames.EVENT_PURCHASE_INITIATED, Constants.EVENT_PURCHASE_INITIATED_SCHEMA, eventData, null, 0);
+            if(customParameters != null && schemaVersion == null)
+                Log.Error("Schema version is required when custom parameters are used");
+            else if (customParameters != null && schemaVersion != null)
+                LogEvent(EventNames.EVENT_PURCHASE_INITIATED, schemaVersion, eventData, priority);
+            else
+                LogEvent(EventNames.EVENT_PURCHASE_INITIATED, Constants.EVENT_PURCHASE_INITIATED_SCHEMA, eventData, null, priority);
         }
 
         //Create method to log event Purchase with parameters
@@ -194,7 +253,10 @@ namespace GametunerTracker
                                             string screen = null, 
                                             string transactionCountryCode = null, 
                                             string groupId = null, 
-                                            Dictionary<string, int> packageItems = null)
+                                            Dictionary<string, int> packageItems = null,
+                                            Dictionary<string, object> customParameters = null,
+                                            string schemaVersion = null,
+                                            int priority = 0)
         {
             if (!isInitialized) { 
                 Log.Error("Tracker is not initialized");
@@ -242,8 +304,20 @@ namespace GametunerTracker
                 }
                 eventData.Add("package_items", _packageItems);
             }
+            if (customParameters != null)
+            {
+                foreach (var item in customParameters)
+                {
+                    eventData[item.Key] = item.Value;
+                }
+            }
 
-            LogEvent(EventNames.EVENT_PURCHASE, Constants.EVENT_PURCHASE_SCHEMA, eventData, null, 0);
+            if(customParameters != null && schemaVersion == null)
+                Log.Error("Schema version is required when custom parameters are used");
+            else if (customParameters != null && schemaVersion != null)
+                LogEvent(EventNames.EVENT_PURCHASE, schemaVersion, eventData, priority);
+            else
+                LogEvent(EventNames.EVENT_PURCHASE, Constants.EVENT_PURCHASE_SCHEMA, eventData, null, priority);
         }
         
     }
