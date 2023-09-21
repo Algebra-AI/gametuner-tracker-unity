@@ -1,3 +1,7 @@
+Version 0.07.08 (2023-09-21)
+--------------------------
+Extend common events trigger methods with optional parameter for event
+
 Version 0.07.07 (2023-09-21)
 --------------------------
 Fix double event index in event context
