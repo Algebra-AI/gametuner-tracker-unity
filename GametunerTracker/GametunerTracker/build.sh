@@ -11,3 +11,4 @@ fi
 dotnet build GametunerTracker.csproj --configuration $release_mode --framework netstandard2.0
 cp bin/$release_mode/netstandard2.0/GametunerTracker.dll ../../SnowplowTracker.Demo/Assets/Plugins/GametunerTracker/GametunerTracker.dll
 cp bin/$release_mode/netstandard2.0/GametunerTracker.dll ../../SnowplowTracker.Tests/Assets/Plugins/GametunerTracker/GametunerTracker.dll
+cp bin/$release_mode/netstandard2.0/GametunerTracker.dll ../../unity-package/GametunerTracker.dll
