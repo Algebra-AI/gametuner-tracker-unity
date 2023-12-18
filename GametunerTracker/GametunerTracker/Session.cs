@@ -18,6 +18,12 @@
  * License: Apache License Version 2.0
  */
 
+/*
+ * Modified by AlgebraAI on 2024-01-31
+ * - Add triggers on start end end session
+ * - Changed session fields
+ */
+
 using System;
 using System.Collections.Generic;
 using System.Threading;

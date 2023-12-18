@@ -1,8 +1,8 @@
 /*
  * DeviceContext.cs
- * SnowplowTracker.Payloads.Contexts
+ * GametunerTracker.Payloads.Contexts
  * 
- * Copyright (c) 2015 Snowplow Analytics Ltd. All rights reserved.
+ * Copyright (c) 2024 AlgebraAI. All rights reserved.
  *
  * This program is licensed to you under the Apache License Version 2.0,
  * and you may not use this file except in compliance with the Apache License Version 2.0.
@@ -13,8 +13,8 @@
  * "AS IS" BASIS, WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
  * See the Apache License Version 2.0 for the specific language governing permissions and limitations there under.
  * 
- * Authors: Joshua Beemster, Paul Boocock
- * Copyright: Copyright (c) 2015-2019 Snowplow Analytics Ltd
+ * Author: Djordje Smiljanic
+ * Copyright: Copyright (c) 2022-2024 AlgebraAI
  * License: Apache License Version 2.0
  */
 

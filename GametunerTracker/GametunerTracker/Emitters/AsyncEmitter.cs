@@ -18,6 +18,11 @@
  * License: Apache License Version 2.0
  */
 
+/*
+ * Modified by AlgebraAI on 2024-01-31
+ * - Change namespace from SnowplowTracker.Emitters to GametunerTracker.Emitters
+ */
+
 using System;
 using System.Collections.Generic;
 using System.Threading;
@@ -167,7 +172,7 @@ namespace GametunerTracker.Emitters
 				}
 				// Send events!
 				if (events.Count != 0) {
-                    events = AddSendBulkID(events);
+                    events = AddBundleID(events);
                     Log.Debug("Emitter: Event count: " + events.Count);
 					List<RequestResult> results = SendRequests(events);
 					events = null;

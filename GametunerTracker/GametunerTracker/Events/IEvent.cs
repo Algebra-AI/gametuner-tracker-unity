@@ -18,6 +18,11 @@
  * License: Apache License Version 2.0
  */
 
+/*
+ * Modified by AlgebraAI on 2024-01-31
+ * - Change namespace from SnowplowTracker.Events to GametunerTracker.Events
+ */
+
 using System.Collections.Generic;
 using GametunerTracker.Payloads;
 using GametunerTracker.Payloads.Contexts;

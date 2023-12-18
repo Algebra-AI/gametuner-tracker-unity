@@ -18,6 +18,12 @@
  * License: Apache License Version 2.0
  */
 
+/*
+ * Modified by AlgebraAI on 2024-01-31
+ * - Added bundle ID to events data to mesure conunt fo events in a single request.
+ * - Added is online flag to events data to mesure if event was sent online or offline.
+ */
+
 using System;
 using System.Collections.Generic;
 using GametunerTracker.Payloads;
@@ -267,10 +273,10 @@ namespace GametunerTracker.Emitters
         }
 
         /// <summary>
-        /// Adds the sent bulk ID to events data
+        /// Adds the events bundle ID to events data to mesure conunt fo events in a single request.
         /// </summary>
-        /// <param name="events">The event list to add the stm to</param>
-        protected List<EventRow> AddSendBulkID(List<EventRow> events)
+        /// <param name="events">The event list to add the bundle ID to</param>
+        protected List<EventRow> AddBundleID(List<EventRow> events)
         {
             List<EventRow> resultRows = new List<EventRow>();
             if (events == null) { 
@@ -282,89 +288,26 @@ namespace GametunerTracker.Emitters
             }
 
             ExtendedEventStore store = (ExtendedEventStore)eventStore;
-            int lastTransaction = store.GetLastTransactionId();
+            int lastBundleID = store.GetLastBundleId();
            
             foreach (EventRow item in events)
             {
-                EventRow tempItem = AddTransactionIDToContext(item, lastTransaction);
+                EventRow tempItem = AddBundleIDToContext(item, lastBundleID);
                 resultRows.Add(tempItem);
                 store.UpdateEvent(item);
             }
 
-            store.UpdateLastTransactionId();
+            store.UpdateLastBundleId();
             return resultRows;
         }
 
         /// <summary>
-        /// Gets valid events. Checks if the event has user_id field and if it has, adds the stm to the event.
-        /// </summary>
-        /// <param name="events">List of events in storage</param>
-        /// <returns>List of validated events</returns>
-        protected List<EventRow> GetValidatedEvents(List<EventRow> events) { 
-            List<EventRow> resultRows = new List<EventRow>();
-            if (events == null) { 
-                return events;
-            }
-
-            if (typeof(ExtendedEventStore) != eventStore.GetType()) {
-                return events;
-            }
-
-            ExtendedEventStore store = (ExtendedEventStore)eventStore;
-            string userId = store.GetCacheUserId();
-        
-            foreach (EventRow item in events)
-            {
-                EventRow tempEvent = CheckUserId(item, userId);
-                if(tempEvent != null) {
-                    resultRows.Add(tempEvent);
-                }
-            }
-
-            return resultRows;
-        }
-
-        /// <summary>
-        /// Checks if the event has user_id field.
+        /// Adds the bundle ID to the event context.
         /// </summary>
         /// <param name="eventRow">Event data</param>
-        /// <param name="userID">Cached userID</param>
-        /// <returns>Validated event or null</returns>
-        private EventRow CheckUserId(EventRow eventRow, string userID) {
-
-            try
-            {
-                Dictionary<string, object> dict = eventRow.GetPayload().GetDictionary();
-                string encodedData = string.Empty;
-
-                if (dict.ContainsKey(Constants.UID))
-                {
-                    if(!string.IsNullOrEmpty(dict[Constants.UID].ToString())) {
-                        return eventRow;
-                    }
-                } 
-
-                if(string.IsNullOrEmpty(userID)) {
-                    return null;
-                }
-
-                dict[Constants.UID] = userID;
-                return new EventRow(eventRow.GetRowId(), TrackerPayload.From(Utils.DictToJSONString(dict)));
-            }
-            catch (System.Exception e)
-            {
-                Log.Error("Emitter: caught exception in CheckUserId: " + e.Message);
-                return eventRow;
-            }    
-        }
-
-        /// <summary>
-        /// Adds the bulk ID to the event context.
-        /// </summary>
-        /// <param name="eventRow">Event data</param>
-        /// <param name="transactionId">Transaction id</param>
+        /// <param name="bundleID">Bundle id</param>
         /// <returns>Updated event</returns>
-        private EventRow AddTransactionIDToContext(EventRow eventRow, int transactionId) { 
+        private EventRow AddBundleIDToContext(EventRow eventRow, int bundleID) { 
 
             try
             {
@@ -373,7 +316,6 @@ namespace GametunerTracker.Emitters
 
                 foreach (KeyValuePair<string, object> dicitem in dict)
                 {                    
-                    //if (dicitem.Key == Constants.UNSTRUCTURED_ENCODED) { 
                     if (dicitem.Key == Constants.CONTEXT_ENCODED) { 
                         string decodedData = Utils.Base64DecodeString(dicitem.Value.ToString());
                         Dictionary<string, object> dataDict = Utils.JSONStringToDict(decodedData);
@@ -383,7 +325,7 @@ namespace GametunerTracker.Emitters
                         {
                             if (contextItem["schema"].ToString() == Constants.SCHEMA_EVENT_CONTEXT) { 
                                 Newtonsoft.Json.Linq.JObject event_ContextData = (Newtonsoft.Json.Linq.JObject)contextItem["data"];
-                                event_ContextData[Constants.EVENT_TRANSACTION_ID] = transactionId;
+                                event_ContextData[Constants.EVENT_BUNDLE_ID] = bundleID;
                                 bool containsKey = false;
                                 foreach (var item in event_ContextData)
                                 {
@@ -413,7 +355,7 @@ namespace GametunerTracker.Emitters
             }
             catch (System.Exception e)
             {
-                Log.Error("Emitter: caught exception in AddTransactionIDToContext: " + e.Message);
+                Log.Error("Emitter: caught exception in AddBundleIDToContext: " + e.Message);
                 return eventRow;
             }            
         }

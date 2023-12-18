@@ -18,6 +18,11 @@
  * License: Apache License Version 2.0
  */
 
+/*
+ * Modified by AlgebraAI on 2024-01-31
+ * - Added priority and eventIndex to AbstractEvent
+ */
+
 using System;
 using System.Collections.Generic;
 using GametunerTracker.Payloads;

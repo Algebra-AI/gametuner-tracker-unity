@@ -18,6 +18,12 @@
  * License: Apache License Version 2.0
  */
 
+/*
+ * Modified by AlgebraAI on 2024-01-31
+ * - Added event schemas
+ * - Changed namespace of schema
+ */
+
 using System;
 
 namespace GametunerTracker {
@@ -78,7 +84,7 @@ namespace GametunerTracker {
 		//Event Context
 		public readonly static string EVENT_INDEX	 	    = "event_index"; 
 		public readonly static string EVENT_PREVIOUS_EVENT  = "previous_event"; 
-        public readonly static string EVENT_TRANSACTION_ID  = "event_bundle_id";
+        public readonly static string EVENT_BUNDLE_ID 		= "event_bundle_id";
 		public readonly static string EVENT_IS_ONLINE  		= "is_online";
 
 		// Commmon Payload Keys

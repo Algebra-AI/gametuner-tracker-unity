@@ -1,3 +1,23 @@
+/*
+ * ExtendedEventStore.cs
+ * GametunerTracker.Storage
+ * 
+ * Copyright (c) 2024 AlgebraAI. All rights reserved.
+ *
+ * This program is licensed to you under the Apache License Version 2.0,
+ * and you may not use this file except in compliance with the Apache License Version 2.0.
+ * You may obtain a copy of the Apache License Version 2.0 at http://www.apache.org/licenses/LICENSE-2.0.
+ *
+ * Unless required by applicable law or agreed to in writing,
+ * software distributed under the Apache License Version 2.0 is distributed on an
+ * "AS IS" BASIS, WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+ * See the Apache License Version 2.0 for the specific language governing permissions and limitations there under.
+ * 
+ * Author: Djordje Smiljanic
+ * Copyright: Copyright (c) 2022-2024 AlgebraAI
+ * License: Apache License Version 2.0
+ */
+
 using System;
 using GametunerTracker.Logging;
 
@@ -17,7 +37,7 @@ namespace GametunerTracker.Storage
 
         private const string COLLECTION_METADATA                        = "eventsData";
         private const string COLLECTION_METADATA_LAST_ADDED_EVENT       = "lastAddedEventName";
-        private const string COLLECTION_METADATA_LAST_TRANSACTION_ID    = "lastTransactionId";
+        private const string COLLECTION_METADATA_LAST_BUNDLE_ID         = "lastTransactionId";
         private const string COLLECTION_METADATA_EVENT_INDEX            = "eventIndex";
         private const string COLLECTION_METADATA_USER_ID                = "userId";
         private const string COLLECTION_METADATA_INSTALLATION_ID        = "installationId";
@@ -143,17 +163,17 @@ namespace GametunerTracker.Storage
         }
 
         /// <summary>
-        /// Gets last transaction id.
+        /// Gets last bundle id.
         /// </summary>
-        /// <returns>ID of last transaction</returns>
-        public int GetLastTransactionId() { 
+        /// <returns>ID of last bundle</returns>
+        public int GetLastBundleId() { 
             try
             {
                 _dbLock.EnterReadLock();
                 // Get event collection
                 var colData = _db.GetCollection<EventsMetaData>(COLLECTION_METADATA);
 
-                var result = colData.FindOne(x => x.Id == COLLECTION_METADATA_LAST_TRANSACTION_ID);
+                var result = colData.FindOne(x => x.Id == COLLECTION_METADATA_LAST_BUNDLE_ID);
                 if (result == null) {
                     return 0;
                 }
@@ -162,7 +182,7 @@ namespace GametunerTracker.Storage
             }
             catch (Exception e)
             {
-                Log.Error($"EventStore: Get last added event failed");
+                Log.Error($"EventStore: Get last bundel event failed");
                 Log.Error(e.ToString());
                 return 0;
             }
@@ -173,10 +193,10 @@ namespace GametunerTracker.Storage
         }
 
         /// <summary>
-        /// Update last transaction id.
+        /// Update last bundel id.
         /// </summary>
-        /// <returns>Is last transaction updated</returns>
-        public bool UpdateLastTransactionId()
+        /// <returns>Is last bundle updated</returns>
+        public bool UpdateLastBundleId()
         {
             try
             {
@@ -184,14 +204,14 @@ namespace GametunerTracker.Storage
                 // Get event collection
                 var colData = _db.GetCollection<EventsMetaData>(COLLECTION_METADATA);
 
-                var result = colData.FindOne(x => x.Id == COLLECTION_METADATA_LAST_TRANSACTION_ID);
-                EventsMetaData metadata = new EventsMetaData { Id = COLLECTION_METADATA_LAST_TRANSACTION_ID, ValueInt = 0 };
+                var result = colData.FindOne(x => x.Id == COLLECTION_METADATA_LAST_BUNDLE_ID);
+                EventsMetaData metadata = new EventsMetaData { Id = COLLECTION_METADATA_LAST_BUNDLE_ID, ValueInt = 0 };
 
                 if (result == null) { 
                     colData.Insert(metadata);
                 } else {
-                    int transactionID = result.ValueInt + 1;
-                    metadata.ValueInt = transactionID;
+                    int bundleID = result.ValueInt + 1;
+                    metadata.ValueInt = bundleID;
                     colData.Update(metadata);
                 }
                
@@ -199,7 +219,7 @@ namespace GametunerTracker.Storage
             }
             catch (Exception e)
             {
-                Log.Error("EventStore: Last transaction failed to save");
+                Log.Error("EventStore: Last bundle failed to save");
                 Log.Error(e.ToString());
                 return false;
             }

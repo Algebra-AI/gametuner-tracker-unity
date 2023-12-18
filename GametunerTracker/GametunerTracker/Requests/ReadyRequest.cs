@@ -18,6 +18,11 @@
  * License: Apache License Version 2.0
  */
 
+/*
+ * Modified by AlgebraAI on 2024-01-31
+ * - Increase http client timeout
+ */
+
 using System;
 using System.Collections.Generic;
 using System.Net;
